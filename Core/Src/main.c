@@ -157,6 +157,54 @@ uint32_t ulApplicationGetNextSequenceNumber( uint32_t ulSourceAddress,
 	return 306;
 }
 
+static void vUDPSendUsingStandardInterface( void *pvParameters )
+{
+	Socket_t xSocket;
+	struct freertos_sockaddr xDestinationAddress;
+	uint8_t cString[ 50 ];
+	uint32_t ulCount = 0UL;
+	const TickType_t x1000ms = 1000UL / portTICK_PERIOD_MS;
+
+   /* Send strings to port 10000 on IP address 192.168.0.50. */
+   xDestinationAddress.sin_addr = FreeRTOS_inet_addr( "192.168.10.111" );
+   xDestinationAddress.sin_port = FreeRTOS_htons( 10000 );
+
+   /* Create the socket. */
+   xSocket = FreeRTOS_socket( FREERTOS_AF_INET,
+                              FREERTOS_SOCK_DGRAM,/*FREERTOS_SOCK_DGRAM for UDP.*/
+                              FREERTOS_IPPROTO_UDP );
+
+   /* Check the socket was created. */
+   configASSERT( xSocket != FREERTOS_INVALID_SOCKET );
+
+   /* NOTE: FreeRTOS_bind() is not called.  This will only work if
+   ipconfigALLOW_SOCKET_SEND_WITHOUT_BIND is set to 1 in FreeRTOSIPConfig.h. */
+
+   for( ;; )
+   {
+       /* Create the string that is sent. */
+       sprintf( cString,
+                "Standard send message number %lurn",
+                ulCount );
+
+       /* Send the string to the UDP socket.  ulFlags is set to 0, so the standard
+       semantics are used.  That means the data from cString[] is copied
+       into a network buffer inside FreeRTOS_sendto(), and cString[] can be
+       reused as soon as FreeRTOS_sendto() has returned. */
+       FreeRTOS_sendto( xSocket,
+                        cString,
+                        strlen( cString ),
+                        0,
+                        &xDestinationAddress,
+                        sizeof( xDestinationAddress ) );
+
+       ulCount++;
+
+       /* Wait until it is time to send again. */
+       vTaskDelay( x1000ms );
+   }
+}
+
 void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent )
 {
 static BaseType_t xTasksAlreadyCreated = pdFALSE;
@@ -164,6 +212,7 @@ static BaseType_t xTasksAlreadyCreated = pdFALSE;
     if( eNetworkEvent == eNetworkUp )
     {
     	HAL_GPIO_WritePin(LD_USER2_GPIO_Port, LD_USER2_Pin, 1);
+    	xTaskCreate( vUDPSendUsingStandardInterface, "UDPSend", configMINIMAL_STACK_SIZE, NULL, mainLED_TASK_PRIORITY, NULL );
         /* Create the tasks that use the TCP/IP stack if they have not already
         been created. */
         if( xTasksAlreadyCreated == pdFALSE )
@@ -256,7 +305,7 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_ETH_Init();
+//  MX_ETH_Init();
   MX_RNG_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */

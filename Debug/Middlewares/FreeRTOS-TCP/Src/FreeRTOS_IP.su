@@ -42,7 +42,7 @@ FreeRTOS_IP.c:1961:33:prvProcessIPPacket	72	static
 FreeRTOS_IP.c:2202:37:prvProcessICMPEchoRequest	32	static
 FreeRTOS_IP.c:2255:37:prvProcessICMPPacket	24	static
 FreeRTOS_IP.c:2298:23:xCheckSizeFields	56	static
-FreeRTOS_IP.c:2440:10:usGenerateProtocolChecksum	64	static
+FreeRTOS_IP.c:2440:10:usGenerateProtocolChecksum	80	static
 FreeRTOS_IP.c:2764:10:usGenerateChecksum	64	static
 FreeRTOS_IP.c:2918:6:vReturnEthernetFrame	40	static
 FreeRTOS_IP.c:3011:10:vPrintResourceStats	16	static

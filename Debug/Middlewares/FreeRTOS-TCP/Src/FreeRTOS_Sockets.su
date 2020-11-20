@@ -31,8 +31,8 @@ FreeRTOS_Sockets.c:1021:9:FreeRTOS_sendto	72	static
 FreeRTOS_Sockets.c:1187:12:FreeRTOS_bind	48	static
 FreeRTOS_Sockets.c:1268:12:vSocketBind	48	static
 FreeRTOS_Sockets.c:1419:12:FreeRTOS_closesocket	32	static
-FreeRTOS_Sockets.c:1476:8:vSocketClose	24	static
-FreeRTOS_Sockets.c:1588:17:prvTCPSetSocketCount	32	static
+FreeRTOS_Sockets.c:1476:8:vSocketClose	48	static
+FreeRTOS_Sockets.c:1588:17:prvTCPSetSocketCount	40	static
 FreeRTOS_Sockets.c:1634:23:prvSockopt_so_buffer	32	static
 FreeRTOS_Sockets.c:1694:12:FreeRTOS_setsockopt	40	static
 FreeRTOS_Sockets.c:2068:17:prvGetPrivatePortNumber	32	static
@@ -60,7 +60,7 @@ FreeRTOS_Sockets.c:3645:16:xTCPTimerCheck	48	static
 FreeRTOS_Sockets.c:3741:25:pxTCPSocketLookup	48	static
 FreeRTOS_Sockets.c:3804:35:FreeRTOS_get_rx_buf	24	static
 FreeRTOS_Sockets.c:3833:29:prvTCPCreateStream	32	static
-FreeRTOS_Sockets.c:3921:13:lTCPAddRxdata	40	static
+FreeRTOS_Sockets.c:3921:13:lTCPAddRxdata	64	static
 FreeRTOS_Sockets.c:4068:16:FreeRTOS_GetRemoteAddress	24	static
 FreeRTOS_Sockets.c:4109:16:FreeRTOS_maywrite	24	static
 FreeRTOS_Sockets.c:4155:16:FreeRTOS_tx_space	24	static

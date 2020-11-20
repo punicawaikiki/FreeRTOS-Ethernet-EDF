@@ -104,6 +104,16 @@ void HAL_ETH_MspInit(ETH_HandleTypeDef* ethHandle)
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /* USER CODE BEGIN ETH_MspInit 1 */
+    /* PD5 as PXER */
+  __HAL_RCC_GPIOD_CLK_ENABLE();
+  GPIO_InitStruct.Pin = GPIO_PIN_5;
+  GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+  GPIO_InitStruct.Alternate = GPIO_AF11_ETH;
+  HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+
+
   HAL_NVIC_SetPriority(ETH_IRQn, 0x7, 0);
   HAL_NVIC_EnableIRQ(ETH_IRQn);
 

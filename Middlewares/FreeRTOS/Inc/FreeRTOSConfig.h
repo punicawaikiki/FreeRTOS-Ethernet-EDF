@@ -162,14 +162,14 @@ configure the real network connection to use. */
 ipconfigUSE_DNS is set to 1 but a DNS server cannot be contacted. */
 #define configIP_ADDR0		192
 #define configIP_ADDR1		168
-#define configIP_ADDR2		10
+#define configIP_ADDR2		1
 #define configIP_ADDR3		5
 
 /* Default gateway IP address configuration.  Used in ipconfigUSE_DNS is set to
 0, or ipconfigUSE_DNS is set to 1 but a DNS server cannot be contacted. */
 #define configGATEWAY_ADDR0	192
 #define configGATEWAY_ADDR1	168
-#define configGATEWAY_ADDR2	10
+#define configGATEWAY_ADDR2	1
 #define configGATEWAY_ADDR3	1
 
 /* Default netmask configuration.  Used in ipconfigUSE_DNS is set to 0, or
@@ -184,7 +184,7 @@ ipconfigUSE_DNS is set to 1 but a DNS server cannot be contacted. */
 to 1 but a DNS server cannot be contacted.*/
 #define configDNS_SERVER_ADDR0 	192
 #define configDNS_SERVER_ADDR1 	168
-#define configDNS_SERVER_ADDR2 	10
+#define configDNS_SERVER_ADDR2 	1
 #define configDNS_SERVER_ADDR3 	1
 
 #define ipconfigUSE_RMII 1
