@@ -66,6 +66,12 @@ static const uint8_t ucDNSServerAddress[ 4 ] = { configDNS_SERVER_ADDR0, configD
 
 /* Use by the pseudo random number generator. */
 static UBaseType_t ulNextRand;
+
+struct sample_struct{
+	int sample_number;
+	float x;
+	float y;
+};
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -230,6 +236,7 @@ static void vUDPReceivingUsingStandardInterface( void *pvParameters )
 {
 	int32_t lBytes;
 	uint8_t *pucUDPPayloadBuffer;
+	struct sample_struct receivedStruct, structBuffer;
 	struct freertos_sockaddr xClient, xBindAddress;
 	uint32_t xClientLength = sizeof( xClient ), ulIPAddress;
 	Socket_t xListeningSocket;
@@ -257,44 +264,16 @@ static void vUDPReceivingUsingStandardInterface( void *pvParameters )
 	   needed.  By default the block time is portMAX_DELAY but it can be
 	   changed using FreeRTOS_setsockopt(). */
 	   lBytes = FreeRTOS_recvfrom( xListeningSocket,
-								   &pucUDPPayloadBuffer,
+								   &structBuffer,
+								   sizeof( structBuffer ),
 								   0,
-								   FREERTOS_ZERO_COPY,
 								   &xClient,
 								   &xClientLength );
 
 	   if( lBytes > 0 )
 	   {
+		   receivedStruct = structBuffer;
 		   HAL_GPIO_WritePin(LD_USER1_GPIO_Port, LD_USER1_Pin, 1);
-		   /* declare buffer String */
-		   char* bufferArray = (char*) malloc(1*sizeof(char));
-		   int array_size = 1;
-		   char str[20] = "";
-		   /* iterate over String Array */
-		   for(uint32_t i = 0; i<lBytes; i++){
-			   char bufferChar = (char) pucUDPPayloadBuffer[i];
-			   /* Check for value or delimiter */
-			   if (bufferChar != ','){
-				   bufferArray = (char*) realloc(bufferArray, array_size * sizeof(char));
-				   array_size++;
-				   bufferArray[array_size - 1] = bufferChar;
-				   /* Copy char into String Array */
-				   strncat(str, &bufferChar, 1);
-			   }
-			   else{
-//				   double tes = atof(str);
-//				   uint64_t value = hex2double(&str);
-//				   uint64_t test1 = hex2double(bufferArray);
-				   double lalala = atof("0x3fc8f8b83c69a60a");
-				   double lala = atof(&bufferArray);
-				   memset(bufferArray, 0, sizeof bufferArray);
-				   memset(str, 0, sizeof str);
-//				   uint64_t lu = &test1;
-				   array_size = 1;
-
-			   }
-		   }
-		   char myString = pucUDPPayloadBuffer[1];
 		   vTaskDelay(100UL / portTICK_PERIOD_MS);
 		   HAL_GPIO_WritePin(LD_USER1_GPIO_Port, LD_USER1_Pin, 0);
 		   /* Data was received and can be processed here. */
