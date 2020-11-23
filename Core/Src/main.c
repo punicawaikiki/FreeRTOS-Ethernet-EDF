@@ -31,6 +31,7 @@
 #include "FreeRTOS_IP.h"
 #include "queue.h"
 #include "FreeRTOS_Sockets.h"
+#include <stdlib.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -207,6 +208,24 @@ static void vUDPSendUsingStandardInterface( void *pvParameters )
    }
 }
 
+
+uint64_t hex2double(char * hexString[]){
+//	https://stackoverflow.com/questions/21323099/convert-a-hexadecimal-to-a-float-and-viceversa-in-c
+//	int test = sizeof(hexString);
+//	uint64_t num;
+//	uint64_t d;
+//	sscanf(hexString, "%x", &num);
+//	d = *((uint64_t*)&num);
+//	return d;
+	double test = atof(hexString);
+	double f;
+	double l;
+
+	l = strtol(hexString, (char**)NULL, 16);
+	f = (double)l;
+	return f;
+}
+
 static void vUDPReceivingUsingStandardInterface( void *pvParameters )
 {
 	int32_t lBytes;
@@ -247,6 +266,34 @@ static void vUDPReceivingUsingStandardInterface( void *pvParameters )
 	   if( lBytes > 0 )
 	   {
 		   HAL_GPIO_WritePin(LD_USER1_GPIO_Port, LD_USER1_Pin, 1);
+		   /* declare buffer String */
+		   char* bufferArray = (char*) malloc(1*sizeof(char));
+		   int array_size = 1;
+		   char str[20] = "";
+		   /* iterate over String Array */
+		   for(uint32_t i = 0; i<lBytes; i++){
+			   char bufferChar = (char) pucUDPPayloadBuffer[i];
+			   /* Check for value or delimiter */
+			   if (bufferChar != ','){
+				   bufferArray = (char*) realloc(bufferArray, array_size * sizeof(char));
+				   array_size++;
+				   bufferArray[array_size - 1] = bufferChar;
+				   /* Copy char into String Array */
+				   strncat(str, &bufferChar, 1);
+			   }
+			   else{
+//				   double tes = atof(str);
+//				   uint64_t value = hex2double(&str);
+//				   uint64_t test1 = hex2double(bufferArray);
+				   double lalala = atof("0x3fc8f8b83c69a60a");
+				   double lala = atof(&bufferArray);
+				   memset(bufferArray, 0, sizeof bufferArray);
+				   memset(str, 0, sizeof str);
+//				   uint64_t lu = &test1;
+				   array_size = 1;
+
+			   }
+		   }
 		   char myString = pucUDPPayloadBuffer[1];
 		   vTaskDelay(100UL / portTICK_PERIOD_MS);
 		   HAL_GPIO_WritePin(LD_USER1_GPIO_Port, LD_USER1_Pin, 0);
@@ -267,46 +314,6 @@ static void vUDPReceivingUsingStandardInterface( void *pvParameters )
 		   FreeRTOS_ReleaseUDPPayloadBuffer( pucUDPPayloadBuffer );
 	   }
    }
-//
-//
-//	long lBytes;
-//	uint8_t cReceivedString[ 256 ];
-//	struct freertos_sockaddr xClient, xBindAddress;
-//	uint32_t xClientLength = sizeof( xClient );
-//	Socket_t xListeningSocket;
-//
-//   /* Attempt to open the socket. */
-//   xListeningSocket = FreeRTOS_socket( FREERTOS_AF_INET,
-//                                       FREERTOS_SOCK_DGRAM,/*FREERTOS_SOCK_DGRAM for UDP.*/
-//                                       FREERTOS_IPPROTO_UDP );
-//
-//   /* Check the socket was created. */
-//   configASSERT( xListeningSocket != FREERTOS_INVALID_SOCKET );
-//
-//   /* Bind to port 55556. */
-//   xBindAddress.sin_port = FreeRTOS_htons( 55556 );
-//   FreeRTOS_bind( xListeningSocket, &xBindAddress, sizeof( xBindAddress ) );
-//
-//   for( ;; )
-//   {
-//       /* Receive data from the socket.  ulFlags is zero, so the standard
-//       interface is used.  By default the block time is portMAX_DELAY, but it
-//       can be changed using FreeRTOS_setsockopt(). */
-//       lBytes = FreeRTOS_recvfrom( xListeningSocket,
-//                                   cReceivedString,
-//                                   sizeof( cReceivedString ),
-//                                   0,
-//                                   &xClient,
-//                                   &xClientLength );
-//
-//       if( lBytes > 0 )
-//       {
-//		   HAL_GPIO_WritePin(LD_USER1_GPIO_Port, LD_USER1_Pin, 1);
-//		   vTaskDelay(100UL / portTICK_PERIOD_MS);
-//		   HAL_GPIO_WritePin(LD_USER1_GPIO_Port, LD_USER1_Pin, 0);
-//           /* Data was received and can be process here. */
-//       }
-//   }
 }
 
 void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent )
