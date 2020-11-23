@@ -272,7 +272,9 @@ static void vUDPReceivingUsingStandardInterface( void *pvParameters )
 
 	   if( lBytes > 0 )
 	   {
-		   receivedStruct = structBuffer;
+		   receivedStruct.sample_number = FreeRTOS_ntohl(structBuffer.sample_number);
+		   receivedStruct.x = FreeRTOS_ntohl(structBuffer.x);
+		   receivedStruct.y = FreeRTOS_ntohl(structBuffer.y);
 		   HAL_GPIO_WritePin(LD_USER1_GPIO_Port, LD_USER1_Pin, 1);
 		   vTaskDelay(100UL / portTICK_PERIOD_MS);
 		   HAL_GPIO_WritePin(LD_USER1_GPIO_Port, LD_USER1_Pin, 0);
