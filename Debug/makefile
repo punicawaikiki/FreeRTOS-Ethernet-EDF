@@ -33,34 +33,34 @@ endif
 
 -include ../makefile.defs
 
-BUILD_ARTIFACT_NAME := freertos-ethernet-edf
+BUILD_ARTIFACT_NAME := FreeRTOS Ethernet EDF
 BUILD_ARTIFACT_EXTENSION := elf
 BUILD_ARTIFACT_PREFIX := 
 BUILD_ARTIFACT := $(BUILD_ARTIFACT_PREFIX)$(BUILD_ARTIFACT_NAME).$(BUILD_ARTIFACT_EXTENSION)
 
 # Add inputs and outputs from these tool invocations to the build variables 
 EXECUTABLES += \
-freertos-ethernet-edf.elf \
+FreeRTOS\ Ethernet\ EDF.elf \
 
 SIZE_OUTPUT += \
 default.size.stdout \
 
 OBJDUMP_LIST += \
-freertos-ethernet-edf.list \
+FreeRTOS\ Ethernet\ EDF.list \
 
 OBJCOPY_BIN += \
-freertos-ethernet-edf.bin \
+FreeRTOS\ Ethernet\ EDF.bin \
 
 
 # All Target
 all: main-build
 
 # Main-build Target
-main-build: freertos-ethernet-edf.elf secondary-outputs
+main-build: FreeRTOS\ Ethernet\ EDF.elf secondary-outputs
 
 # Tool invocations
-freertos-ethernet-edf.elf: $(OBJS) $(USER_OBJS) C:\Users\fabia\STM32CubeIDE\workspace_1.4.0\freertos-ethernet-edf\STM32F769NIHX_FLASH.ld
-	arm-none-eabi-gcc -o "freertos-ethernet-edf.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m7 -T"C:\Users\fabia\STM32CubeIDE\workspace_1.4.0\freertos-ethernet-edf\STM32F769NIHX_FLASH.ld" --specs=nosys.specs -Wl,-Map="freertos-ethernet-edf.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+FreeRTOS\ Ethernet\ EDF.elf: $(OBJS) $(USER_OBJS) C:\Users\fabia\STM32CubeIDE\workspace_1.4.0\freertos-ethernet-edf\STM32F769NIHX_FLASH.ld
+	arm-none-eabi-gcc -o "FreeRTOS Ethernet EDF.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m7 -T"C:\Users\fabia\STM32CubeIDE\workspace_1.4.0\freertos-ethernet-edf\STM32F769NIHX_FLASH.ld" --specs=nosys.specs -Wl,-Map="FreeRTOS Ethernet EDF.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -69,13 +69,13 @@ default.size.stdout: $(EXECUTABLES)
 	@echo 'Finished building: $@'
 	@echo ' '
 
-freertos-ethernet-edf.list: $(EXECUTABLES)
-	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "freertos-ethernet-edf.list"
+FreeRTOS\ Ethernet\ EDF.list: $(EXECUTABLES)
+	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "FreeRTOS Ethernet EDF.list"
 	@echo 'Finished building: $@'
 	@echo ' '
 
-freertos-ethernet-edf.bin: $(EXECUTABLES)
-	arm-none-eabi-objcopy  -O binary $(EXECUTABLES) "freertos-ethernet-edf.bin"
+FreeRTOS\ Ethernet\ EDF.bin: $(EXECUTABLES)
+	arm-none-eabi-objcopy  -O binary $(EXECUTABLES) "FreeRTOS Ethernet EDF.bin"
 	@echo 'Finished building: $@'
 	@echo ' '
 

@@ -32,6 +32,7 @@
 #include "queue.h"
 #include "FreeRTOS_Sockets.h"
 #include <stdlib.h>
+#include <stdio.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -44,6 +45,9 @@
 #define mainLED_TASK_PRIORITY          ( tskIDLE_PRIORITY )
 #define mainHOST_NAME					"RTOSDemo"
 #define mainDEVICE_NICK_NAME			"stm32"
+#define PACKED_BEGIN_ _Pragma("pack(1)")
+#define PACKED_END_   _Pragma("pack()")
+#define PACKED_       __attribute__((packed))
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -67,11 +71,12 @@ static const uint8_t ucDNSServerAddress[ 4 ] = { configDNS_SERVER_ADDR0, configD
 /* Use by the pseudo random number generator. */
 static UBaseType_t ulNextRand;
 
-struct sample_struct{
-	int sample_number;
-	float x;
-	float y;
-};
+typedef struct{
+	uint32_t number;
+    uint32_t x;
+	uint32_t y;
+}sample_struct;
+
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -168,13 +173,23 @@ static void vUDPSendUsingStandardInterface( void *pvParameters )
 {
 	Socket_t xSocket;
 	struct freertos_sockaddr xDestinationAddress;
-	uint8_t cString[ 50 ];
-	uint32_t ulCount = 0UL;
+
 	const TickType_t x900ms = 900UL / portTICK_PERIOD_MS;
 
    /* Send strings to port 55555 on IP address 192.168.1.1. */
    xDestinationAddress.sin_addr = FreeRTOS_inet_addr( "192.168.1.1" );
    xDestinationAddress.sin_port = FreeRTOS_htons( 55555 );
+
+   struct samples_struct{
+	   double number;
+	   double x;
+	   double y;
+   };
+   struct samples_struct sendStruct;
+   sendStruct.number = 0;
+   sendStruct.x = 1.1;
+   sendStruct.y = 2.12345;
+
 
    /* Create the socket. */
    xSocket = FreeRTOS_socket( FREERTOS_AF_INET,
@@ -186,27 +201,22 @@ static void vUDPSendUsingStandardInterface( void *pvParameters )
 
    /* NOTE: FreeRTOS_bind() is not called.  This will only work if
    ipconfigALLOW_SOCKET_SEND_WITHOUT_BIND is set to 1 in FreeRTOSIPConfig.h. */
-
    for( ;; )
    {
-	   HAL_GPIO_WritePin(LD_USER2_GPIO_Port, LD_USER2_Pin, 1);
+	   HAL_GPIO_TogglePin(LD_USER2_GPIO_Port, LD_USER2_Pin);
        /* Create the string that is sent. */
-       sprintf( cString,
-                "Standard send message number %lurn",
-                ulCount );
 
        /* Send the string to the UDP socket.  ulFlags is set to 0, so the standard
        semantics are used.  That means the data from cString[] is copied
        into a network buffer inside FreeRTOS_sendto(), and cString[] can be
        reused as soon as FreeRTOS_sendto() has returned. */
        FreeRTOS_sendto( xSocket,
-                        cString,
-                        strlen( cString ),
+                        &sendStruct,
+                        sizeof( sendStruct ),
                         0,
                         &xDestinationAddress,
                         sizeof( xDestinationAddress ) );
 
-       ulCount++;
        vTaskDelay( 100UL / portTICK_PERIOD_MS);
        HAL_GPIO_WritePin(LD_USER2_GPIO_Port, LD_USER2_Pin, 0);
        /* Wait until it is time to send again. */
@@ -214,32 +224,19 @@ static void vUDPSendUsingStandardInterface( void *pvParameters )
    }
 }
 
-
-uint64_t hex2double(char * hexString[]){
-//	https://stackoverflow.com/questions/21323099/convert-a-hexadecimal-to-a-float-and-viceversa-in-c
-//	int test = sizeof(hexString);
-//	uint64_t num;
-//	uint64_t d;
-//	sscanf(hexString, "%x", &num);
-//	d = *((uint64_t*)&num);
-//	return d;
-	double test = atof(hexString);
-	double f;
-	double l;
-
-	l = strtol(hexString, (char**)NULL, 16);
-	f = (double)l;
-	return f;
-}
-
 static void vUDPReceivingUsingStandardInterface( void *pvParameters )
 {
 	int32_t lBytes;
-	uint8_t *pucUDPPayloadBuffer;
-	struct sample_struct receivedStruct, structBuffer;
 	struct freertos_sockaddr xClient, xBindAddress;
 	uint32_t xClientLength = sizeof( xClient ), ulIPAddress;
 	Socket_t xListeningSocket;
+
+	struct samples_struct{
+		   double number;
+		   double x;
+		   double y;
+	};
+	struct samples_struct receiveStruct;
 
    /* Attempt to open the socket. */
    xListeningSocket = FreeRTOS_socket( FREERTOS_AF_INET,
@@ -264,38 +261,72 @@ static void vUDPReceivingUsingStandardInterface( void *pvParameters )
 	   needed.  By default the block time is portMAX_DELAY but it can be
 	   changed using FreeRTOS_setsockopt(). */
 	   lBytes = FreeRTOS_recvfrom( xListeningSocket,
-								   &structBuffer,
-								   sizeof( structBuffer ),
+								   &receiveStruct,
+								   sizeof( receiveStruct ),
 								   0,
 								   &xClient,
 								   &xClientLength );
 
 	   if( lBytes > 0 )
 	   {
-		   receivedStruct.sample_number = FreeRTOS_ntohl(structBuffer.sample_number);
-		   receivedStruct.x = FreeRTOS_ntohl(structBuffer.x);
-		   receivedStruct.y = FreeRTOS_ntohl(structBuffer.y);
 		   HAL_GPIO_WritePin(LD_USER1_GPIO_Port, LD_USER1_Pin, 1);
 		   vTaskDelay(100UL / portTICK_PERIOD_MS);
 		   HAL_GPIO_WritePin(LD_USER1_GPIO_Port, LD_USER1_Pin, 0);
 		   /* Data was received and can be processed here. */
 	   }
-
-	   if( lBytes >= 0 )
-	   {
-		   /* The receive was successful so this RTOS task is now responsible for
-		   the buffer.  The buffer must be freed once it is no longer
-		   needed. */
-           /* Data was received and can be process here. */
-		   /*
-			* The data can be processed here.
-			*/
-
-		   /* Return the buffer to the TCP/IP stack. */
-		   FreeRTOS_ReleaseUDPPayloadBuffer( pucUDPPayloadBuffer );
-	   }
    }
 }
+
+
+//static void vUDPReceivingUsingStandardInterface( void *pvParameters )
+//{
+//	long lBytes;
+//	uint8_t cReceivedString[ 60 ];
+//	struct freertos_sockaddr xClient, xBindAddress;
+//	uint32_t xClientLength = sizeof( xClient );
+//	Socket_t xListeningSocket;
+//
+//
+//	struct samples_struct{
+//		   double number;
+//		   double x;
+//		   double y;
+//	};
+//	struct samples_struct receiveStruct;
+//
+//   /* Attempt to open the socket. */
+//   xListeningSocket = FreeRTOS_socket( FREERTOS_AF_INET,
+//                                       FREERTOS_SOCK_DGRAM,/*FREERTOS_SOCK_DGRAM for UDP.*/
+//                                       FREERTOS_IPPROTO_UDP );
+//
+//   /* Check the socket was created. */
+//   configASSERT( xListeningSocket != FREERTOS_INVALID_SOCKET );
+//
+//   /* Bind to port 10000. */
+//   xBindAddress.sin_port = FreeRTOS_htons( 10000 );
+//   FreeRTOS_bind( xListeningSocket, &xBindAddress, sizeof( xBindAddress ) );
+//
+//   for( ;; )
+//   {
+//       /* Receive data from the socket.  ulFlags is zero, so the standard
+//       interface is used.  By default the block time is portMAX_DELAY, but it
+//       can be changed using FreeRTOS_setsockopt(). */
+//       lBytes = FreeRTOS_recvfrom( xListeningSocket,
+//    		   	   	   	   	   	   &receiveStruct,
+//                                   sizeof( receiveStruct ),
+//                                   0,
+//                                   &xClient,
+//                                   &xClientLength );
+//
+//       if( lBytes > 0 )
+//       {
+//           /* Data was received and can be process here. */
+//    	   HAL_GPIO_WritePin(LD_USER1_GPIO_Port, LD_USER1_Pin, 1);
+//		   vTaskDelay(100UL / portTICK_PERIOD_MS);
+//		   HAL_GPIO_WritePin(LD_USER1_GPIO_Port, LD_USER1_Pin, 0);
+//       }
+//   }
+//}
 
 void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent )
 {

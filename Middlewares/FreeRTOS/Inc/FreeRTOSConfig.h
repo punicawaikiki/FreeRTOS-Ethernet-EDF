@@ -188,6 +188,7 @@ to 1 but a DNS server cannot be contacted.*/
 #define configDNS_SERVER_ADDR3 	1
 
 #define ipconfigUSE_RMII 1
+#define configUSE_NEWLIB_REENTRANT 1
 
 #endif /* FREERTOS_CONFIG_H */
 
