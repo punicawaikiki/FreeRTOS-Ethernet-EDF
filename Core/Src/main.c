@@ -231,10 +231,11 @@ static void vUDPReceivingUsingStandardInterface( void *pvParameters )
 	uint32_t xClientLength = sizeof( xClient ), ulIPAddress;
 	Socket_t xListeningSocket;
 
+	// TODO: why only low array sizes working?
 	struct samples_struct{
-		   double number;
-		   double x;
-		   double y;
+		   double number[10];
+		   double x[10];
+		   double y[10];
 	};
 	struct samples_struct receiveStruct;
 
@@ -276,57 +277,6 @@ static void vUDPReceivingUsingStandardInterface( void *pvParameters )
 	   }
    }
 }
-
-
-//static void vUDPReceivingUsingStandardInterface( void *pvParameters )
-//{
-//	long lBytes;
-//	uint8_t cReceivedString[ 60 ];
-//	struct freertos_sockaddr xClient, xBindAddress;
-//	uint32_t xClientLength = sizeof( xClient );
-//	Socket_t xListeningSocket;
-//
-//
-//	struct samples_struct{
-//		   double number;
-//		   double x;
-//		   double y;
-//	};
-//	struct samples_struct receiveStruct;
-//
-//   /* Attempt to open the socket. */
-//   xListeningSocket = FreeRTOS_socket( FREERTOS_AF_INET,
-//                                       FREERTOS_SOCK_DGRAM,/*FREERTOS_SOCK_DGRAM for UDP.*/
-//                                       FREERTOS_IPPROTO_UDP );
-//
-//   /* Check the socket was created. */
-//   configASSERT( xListeningSocket != FREERTOS_INVALID_SOCKET );
-//
-//   /* Bind to port 10000. */
-//   xBindAddress.sin_port = FreeRTOS_htons( 10000 );
-//   FreeRTOS_bind( xListeningSocket, &xBindAddress, sizeof( xBindAddress ) );
-//
-//   for( ;; )
-//   {
-//       /* Receive data from the socket.  ulFlags is zero, so the standard
-//       interface is used.  By default the block time is portMAX_DELAY, but it
-//       can be changed using FreeRTOS_setsockopt(). */
-//       lBytes = FreeRTOS_recvfrom( xListeningSocket,
-//    		   	   	   	   	   	   &receiveStruct,
-//                                   sizeof( receiveStruct ),
-//                                   0,
-//                                   &xClient,
-//                                   &xClientLength );
-//
-//       if( lBytes > 0 )
-//       {
-//           /* Data was received and can be process here. */
-//    	   HAL_GPIO_WritePin(LD_USER1_GPIO_Port, LD_USER1_Pin, 1);
-//		   vTaskDelay(100UL / portTICK_PERIOD_MS);
-//		   HAL_GPIO_WritePin(LD_USER1_GPIO_Port, LD_USER1_Pin, 0);
-//       }
-//   }
-//}
 
 void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent )
 {
