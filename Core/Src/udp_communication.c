@@ -5,6 +5,12 @@
 #include "FreeRTOS.h"
 #include "FreeRTOS_Sockets.h"
 #include "FreeRTOS_IP.h"
+#include "queue.h"
+#include "user_structs.h"
+
+
+QueueHandle_t receivedQueue = NULL;
+static samples_struct receivedStruct;
 
 void udpReceivingTask( void *pvParameters )
 {
@@ -13,7 +19,7 @@ void udpReceivingTask( void *pvParameters )
 	uint32_t xClientLength = sizeof( xClient );
 	Socket_t xListeningSocket;
 
-	samples_struct receiveStruct;
+	receivedQueue = xQueueCreate( 20, sizeof(samples_struct * ));
 
    /* Attempt to open the socket. */
    xListeningSocket = FreeRTOS_socket( FREERTOS_AF_INET,
@@ -31,8 +37,8 @@ void udpReceivingTask( void *pvParameters )
    {
 	   // Receive UDP Packet
 	   lBytes = FreeRTOS_recvfrom( xListeningSocket,
-								   &receiveStruct,
-								   sizeof( receiveStruct ),
+								   &receivedStruct,
+								   sizeof( receivedStruct ),
 								   0,
 								   &xClient,
 								   &xClientLength );
@@ -43,6 +49,7 @@ void udpReceivingTask( void *pvParameters )
 		   /* Toggle LED for visual signaling */
 		   HAL_GPIO_TogglePin(LD_USER1_GPIO_Port, LD_USER1_Pin);
 		   /* Put Received Data into the input_samples Queue */
+		   xQueueSend( receivedQueue, &receivedStruct, ( TickType_t ) 0);
 	   }
    }
 }
@@ -58,7 +65,6 @@ void udpSendingTask( void *pvParameters )
    xDestinationAddress.sin_addr = FreeRTOS_inet_addr( "192.168.1.1" );
    xDestinationAddress.sin_port = FreeRTOS_htons( 55555 );
    single_sample_struct sendStruct;
-   sendStruct.number = 0;
    sendStruct.x = 1.1;
    sendStruct.y = 2.12345;
 

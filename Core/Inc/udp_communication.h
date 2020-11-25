@@ -4,20 +4,6 @@
 #define __UDP_COMMUNICATION_H
 
 
-// define structs
-typedef struct{
-	int number;
-    double x;
-	double y;
-}single_sample_struct;
-
-// TODO: why only low array sizes working?
-typedef struct{
-	   int number[10];
-	   double x[10];
-	   double y[10];
-}samples_struct;
-
 // Return Type: void
 // Name: udpReceivingTask
 // Parameters: void *pvParameters

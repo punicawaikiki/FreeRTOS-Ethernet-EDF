@@ -51,7 +51,8 @@ Core/Src/udp_communication.o: ../Core/Src/udp_communication.c \
  ../Middlewares/FreeRTOS-TCP/Inc/FreeRTOS_errno_TCP.h \
  ../Middlewares/FreeRTOS-TCP/Inc/IPTraceMacroDefaults.h \
  ../Middlewares/FreeRTOS-TCP/Src/portable/GCC/pack_struct_start.h \
- ../Middlewares/FreeRTOS-TCP/Src/portable/GCC/pack_struct_end.h
+ ../Middlewares/FreeRTOS-TCP/Src/portable/GCC/pack_struct_end.h \
+ ../Middlewares/FreeRTOS/Inc/queue.h ../Core/Inc/user_structs.h
 
 ../Core/Inc/udp_communication.h:
 
@@ -162,3 +163,7 @@ Core/Src/udp_communication.o: ../Core/Src/udp_communication.c \
 ../Middlewares/FreeRTOS-TCP/Src/portable/GCC/pack_struct_start.h:
 
 ../Middlewares/FreeRTOS-TCP/Src/portable/GCC/pack_struct_end.h:
+
+../Middlewares/FreeRTOS/Inc/queue.h:
+
+../Core/Inc/user_structs.h:

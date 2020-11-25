@@ -3,6 +3,7 @@
 #include "hooks.h"
 #include "udp_communication.h"
 #include "main.h"
+#include "fft.h"
 
 const char *pcApplicationHostnameHook( void )
 {
@@ -45,6 +46,7 @@ static BaseType_t xTasksAlreadyCreated = pdFALSE;
     {
     	xTaskCreate( udpSendingTask, "UDPSend", configMINIMAL_STACK_SIZE, NULL, standardTASK_PRIORITY, NULL );
     	xTaskCreate( udpReceivingTask, "UDPReceive", configMINIMAL_STACK_SIZE, NULL, standardTASK_PRIORITY, NULL );
+    	xTaskCreate( calculateFFT, "UDPReceive", configMINIMAL_STACK_SIZE, NULL, standardTASK_PRIORITY, NULL );
         /* Create the tasks that use the TCP/IP stack if they have not already
         been created. */
         if( xTasksAlreadyCreated == pdFALSE )

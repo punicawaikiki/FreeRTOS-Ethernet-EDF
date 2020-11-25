@@ -1,5 +1,4 @@
-Core/Src/hooks.o: ../Core/Src/hooks.c ../Core/Inc/hooks.h \
- ../Middlewares/FreeRTOS/Inc/FreeRTOS.h \
+Core/Src/fft.o: ../Core/Src/fft.c ../Middlewares/FreeRTOS/Inc/FreeRTOS.h \
  ../Middlewares/FreeRTOS/Inc/FreeRTOSConfig.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal.h \
  ../Core/Inc/stm32f7xx_hal_conf.h \
@@ -39,17 +38,8 @@ Core/Src/hooks.o: ../Core/Src/hooks.c ../Core/Inc/hooks.h \
  ../Middlewares/FreeRTOS/Inc/deprecated_definitions.h \
  ../Middlewares/FreeRTOS/Inc/portable/portmacro.h \
  ../Middlewares/FreeRTOS/Inc/mpu_wrappers.h \
- ../Middlewares/FreeRTOS-TCP/Inc/FreeRTOS_IP.h \
- ../Middlewares/FreeRTOS/Inc/task.h ../Middlewares/FreeRTOS/Inc/list.h \
- ../Middlewares/FreeRTOS-TCP/Inc/FreeRTOSIPConfig.h \
- ../Middlewares/FreeRTOS-TCP/Inc/FreeRTOSIPConfigDefaults.h \
- ../Middlewares/FreeRTOS-TCP/Inc/FreeRTOS_errno_TCP.h \
- ../Middlewares/FreeRTOS-TCP/Inc/IPTraceMacroDefaults.h \
- ../Middlewares/FreeRTOS-TCP/Src/portable/GCC/pack_struct_start.h \
- ../Middlewares/FreeRTOS-TCP/Src/portable/GCC/pack_struct_end.h \
- ../Core/Inc/udp_communication.h ../Core/Inc/main.h ../Core/Inc/fft.h
-
-../Core/Inc/hooks.h:
+ ../Middlewares/FreeRTOS/Inc/queue.h ../Middlewares/FreeRTOS/Inc/task.h \
+ ../Middlewares/FreeRTOS/Inc/list.h ../Core/Inc/user_structs.h
 
 ../Middlewares/FreeRTOS/Inc/FreeRTOS.h:
 
@@ -131,26 +121,10 @@ Core/Src/hooks.o: ../Core/Src/hooks.c ../Core/Inc/hooks.h \
 
 ../Middlewares/FreeRTOS/Inc/mpu_wrappers.h:
 
-../Middlewares/FreeRTOS-TCP/Inc/FreeRTOS_IP.h:
+../Middlewares/FreeRTOS/Inc/queue.h:
 
 ../Middlewares/FreeRTOS/Inc/task.h:
 
 ../Middlewares/FreeRTOS/Inc/list.h:
 
-../Middlewares/FreeRTOS-TCP/Inc/FreeRTOSIPConfig.h:
-
-../Middlewares/FreeRTOS-TCP/Inc/FreeRTOSIPConfigDefaults.h:
-
-../Middlewares/FreeRTOS-TCP/Inc/FreeRTOS_errno_TCP.h:
-
-../Middlewares/FreeRTOS-TCP/Inc/IPTraceMacroDefaults.h:
-
-../Middlewares/FreeRTOS-TCP/Src/portable/GCC/pack_struct_start.h:
-
-../Middlewares/FreeRTOS-TCP/Src/portable/GCC/pack_struct_end.h:
-
-../Core/Inc/udp_communication.h:
-
-../Core/Inc/main.h:
-
-../Core/Inc/fft.h:
+../Core/Inc/user_structs.h:
