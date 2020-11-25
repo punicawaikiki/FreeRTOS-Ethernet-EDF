@@ -1,0 +1,3 @@
+hooks.c:7:13:pcApplicationHostnameHook	4	static
+hooks.c:16:12:xApplicationDNSQueryHook	24	static
+hooks.c:40:6:vApplicationIPNetworkEventHook	24	static

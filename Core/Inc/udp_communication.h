@@ -1,4 +1,4 @@
-/* Functions for cummunicate with the UDP Interface*/
+/* Functions for communicate with the UDP Interface*/
 
 #ifndef __UDP_COMMUNICATION_H
 #define __UDP_COMMUNICATION_H

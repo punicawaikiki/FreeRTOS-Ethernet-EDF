@@ -33,7 +33,8 @@
 #include "FreeRTOS_Sockets.h"
 #include <stdlib.h>
 #include <stdio.h>
-#include "udp_communication.h"
+#include "hooks.h"
+#include "helper_functions.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -42,12 +43,6 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define mainLED_TASK_PRIORITY          ( tskIDLE_PRIORITY )
-#define mainHOST_NAME					"RTOSDemo"
-#define mainDEVICE_NICK_NAME			"stm32"
-#define PACKED_BEGIN_ _Pragma("pack(1)")
-#define PACKED_END_   _Pragma("pack()")
-#define PACKED_       __attribute__((packed))
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -68,129 +63,11 @@ static const uint8_t ucNetMask[ 4 ] = { configNET_MASK0, configNET_MASK1, config
 static const uint8_t ucGatewayAddress[ 4 ] = { configGATEWAY_ADDR0, configGATEWAY_ADDR1, configGATEWAY_ADDR2, configGATEWAY_ADDR3 };
 static const uint8_t ucDNSServerAddress[ 4 ] = { configDNS_SERVER_ADDR0, configDNS_SERVER_ADDR1, configDNS_SERVER_ADDR2, configDNS_SERVER_ADDR3 };
 
-/* Use by the pseudo random number generator. */
-static UBaseType_t ulNextRand;
-
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-const char *pcApplicationHostnameHook( void )
-{
-	/* Assign the name "rtosdemo" to this network node.  This function will be
-	called during the DHCP: the machine will be registered with an IP address
-	plus this name. */
-	return mainHOST_NAME;
-}
-
-static void prvSRand( UBaseType_t ulSeed )
-{
-	/* Utility function to seed the pseudo random number generator. */
-	ulNextRand = ulSeed;
-}
-
-UBaseType_t uxRand( void )
-{
-const uint32_t ulMultiplier = 0x015a4e35UL, ulIncrement = 1UL;
-static BaseType_t xInitialised = pdFALSE;
-
-	/* Don't initialise until the scheduler is running, as the timeout in the
-	random number generator uses the tick count. */
-	if( xInitialised == pdFALSE )
-	{
-		if( xTaskGetSchedulerState() !=  taskSCHEDULER_NOT_STARTED )
-		{
-		RNG_HandleTypeDef xRND;
-		uint32_t ulSeed;
-
-			/* Generate a random number with which to seed the local pseudo random
-			number generating function. */
-			HAL_RNG_Init( &xRND );
-			HAL_RNG_GenerateRandomNumber( &xRND, &ulSeed );
-			prvSRand( ulSeed );
-			xInitialised = pdTRUE;
-		}
-	}
-
-	/* Utility function to generate a pseudo random number. */
-
-	ulNextRand = ( ulMultiplier * ulNextRand ) + ulIncrement;
-	return( ( int ) ( ulNextRand >> 16UL ) & 0x7fffUL );
-}
-
-void vLoggingPrintf( const char *pcFormatString, ... ){
-	return;
-}
-
-BaseType_t xApplicationDNSQueryHook( const char *pcName )
-{
-BaseType_t xReturn;
-
-	/* Determine if a name lookup is for this node.  Two names are given
-	to this node: that returned by pcApplicationHostnameHook() and that set
-	by mainDEVICE_NICK_NAME. */
-	if( strcasecmp( pcName, pcApplicationHostnameHook() ) == 0 )
-	{
-		xReturn = pdPASS;
-	}
-	else if( strcasecmp( pcName, mainDEVICE_NICK_NAME ) == 0 )
-	{
-		xReturn = pdPASS;
-	}
-	else
-	{
-		xReturn = pdFAIL;
-	}
-
-	return xReturn;
-}
-
-/*
- * Supply a random number to FreeRTOS+TCP stack.
- * THIS IS ONLY A DUMMY IMPLEMENTATION THAT RETURNS A PSEUDO RANDOM NUMBER
- * SO IS NOT INTENDED FOR USE IN PRODUCTION SYSTEMS.
- */
-BaseType_t xApplicationGetRandomNumber(uint32_t* pulNumber)
-{
-	*(pulNumber) = uxRand();
-	return pdTRUE;
-}
-uint32_t ulApplicationGetNextSequenceNumber( uint32_t ulSourceAddress,
-													uint16_t usSourcePort,
-													uint32_t ulDestinationAddress,
-													uint16_t usDestinationPort ){
-	return 306;
-}
-
-void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent )
-{
-static BaseType_t xTasksAlreadyCreated = pdFALSE;
-    /* Both eNetworkUp and eNetworkDown events can be processed here. */
-    if( eNetworkEvent == eNetworkUp )
-    {
-    	xTaskCreate( udpSendingTask, "UDPSend", configMINIMAL_STACK_SIZE, NULL, mainLED_TASK_PRIORITY, NULL );
-    	xTaskCreate( udpReceivingTask, "UDPReceive", configMINIMAL_STACK_SIZE, NULL, mainLED_TASK_PRIORITY, NULL );
-        /* Create the tasks that use the TCP/IP stack if they have not already
-        been created. */
-        if( xTasksAlreadyCreated == pdFALSE )
-        {
-            /*
-             * For convenience, tasks that use FreeRTOS+TCP can be created here
-             * to ensure they are not created before the network is usable.
-             */
-
-            xTasksAlreadyCreated = pdTRUE;
-        }
-    }
-    else
-    {
-    	if (HAL_GPIO_ReadPin(LD_USER1_GPIO_Port, LD_USER1_Pin) != 1)
-    	{
-    		HAL_GPIO_WritePin(LD_USER1_GPIO_Port, LD_USER1_Pin, 1);
-    	}
-    }
-}
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -201,27 +78,6 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
-void vAssertCalled( uint32_t ulLine, const char *pcFile )
-{
-volatile unsigned long ul = 0;
-
-	( void ) pcFile;
-	( void ) ulLine;
-
-	taskENTER_CRITICAL();
-	{
-		/* Set ul to a non-zero value using the debugger to step out of this
-		function. */
-		while( ul == 0 )
-		{
-			__NOP();
-		}
-	}
-	taskEXIT_CRITICAL();
-}
-
-
 /* USER CODE END 0 */
 
 /**
@@ -371,22 +227,5 @@ void Error_Handler(void)
   }
   /* USER CODE END Error_Handler_Debug */
 }
-
-#ifdef  USE_FULL_ASSERT
-/**
-  * @brief  Reports the name of the source file and the source line number
-  *         where the assert_param error has occurred.
-  * @param  file: pointer to the source file name
-  * @param  line: assert_param error line source number
-  * @retval None
-  */
-void assert_failed(uint8_t *file, uint32_t line)
-{
-  /* USER CODE BEGIN 6 */
-  /* User can add his own implementation to report the file name and line number,
-     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
-  /* USER CODE END 6 */
-}
-#endif /* USE_FULL_ASSERT */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

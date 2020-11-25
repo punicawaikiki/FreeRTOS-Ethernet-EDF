@@ -10,7 +10,7 @@ void udpReceivingTask( void *pvParameters )
 {
 	int32_t lBytes;
 	struct freertos_sockaddr xClient, xBindAddress;
-	uint32_t xClientLength = sizeof( xClient ), ulIPAddress;
+	uint32_t xClientLength = sizeof( xClient );
 	Socket_t xListeningSocket;
 
 	samples_struct receiveStruct;

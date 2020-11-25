@@ -313,4 +313,5 @@ disconnecting stage will timeout after a period of non-activity. */
 #define ipconfigUSE_LINKED_RX_MESSAGES                1
 #define ipconfigETHERNET_MINIMUM_PACKET_BYTES 60
 
+
 #endif /* FREERTOS_IP_CONFIG_H */
