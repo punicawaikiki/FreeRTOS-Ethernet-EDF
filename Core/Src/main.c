@@ -33,11 +33,11 @@
 #include "FreeRTOS_Sockets.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include "udp_communication.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -70,12 +70,6 @@ static const uint8_t ucDNSServerAddress[ 4 ] = { configDNS_SERVER_ADDR0, configD
 
 /* Use by the pseudo random number generator. */
 static UBaseType_t ulNextRand;
-
-typedef struct{
-	uint32_t number;
-    uint32_t x;
-	uint32_t y;
-}sample_struct;
 
 /* USER CODE END PM */
 
@@ -169,123 +163,14 @@ uint32_t ulApplicationGetNextSequenceNumber( uint32_t ulSourceAddress,
 	return 306;
 }
 
-static void vUDPSendUsingStandardInterface( void *pvParameters )
-{
-	Socket_t xSocket;
-	struct freertos_sockaddr xDestinationAddress;
-
-	const TickType_t x900ms = 900UL / portTICK_PERIOD_MS;
-
-   /* Send strings to port 55555 on IP address 192.168.1.1. */
-   xDestinationAddress.sin_addr = FreeRTOS_inet_addr( "192.168.1.1" );
-   xDestinationAddress.sin_port = FreeRTOS_htons( 55555 );
-
-   struct samples_struct{
-	   double number;
-	   double x;
-	   double y;
-   };
-   struct samples_struct sendStruct;
-   sendStruct.number = 0;
-   sendStruct.x = 1.1;
-   sendStruct.y = 2.12345;
-
-
-   /* Create the socket. */
-   xSocket = FreeRTOS_socket( FREERTOS_AF_INET,
-                              FREERTOS_SOCK_DGRAM,/*FREERTOS_SOCK_DGRAM for UDP.*/
-                              FREERTOS_IPPROTO_UDP );
-
-   /* Check the socket was created. */
-   configASSERT( xSocket != FREERTOS_INVALID_SOCKET );
-
-   /* NOTE: FreeRTOS_bind() is not called.  This will only work if
-   ipconfigALLOW_SOCKET_SEND_WITHOUT_BIND is set to 1 in FreeRTOSIPConfig.h. */
-   for( ;; )
-   {
-	   HAL_GPIO_TogglePin(LD_USER2_GPIO_Port, LD_USER2_Pin);
-       /* Create the string that is sent. */
-
-       /* Send the string to the UDP socket.  ulFlags is set to 0, so the standard
-       semantics are used.  That means the data from cString[] is copied
-       into a network buffer inside FreeRTOS_sendto(), and cString[] can be
-       reused as soon as FreeRTOS_sendto() has returned. */
-       FreeRTOS_sendto( xSocket,
-                        &sendStruct,
-                        sizeof( sendStruct ),
-                        0,
-                        &xDestinationAddress,
-                        sizeof( xDestinationAddress ) );
-
-       vTaskDelay( 100UL / portTICK_PERIOD_MS);
-       HAL_GPIO_WritePin(LD_USER2_GPIO_Port, LD_USER2_Pin, 0);
-       /* Wait until it is time to send again. */
-       vTaskDelay( x900ms );
-   }
-}
-
-static void vUDPReceivingUsingStandardInterface( void *pvParameters )
-{
-	int32_t lBytes;
-	struct freertos_sockaddr xClient, xBindAddress;
-	uint32_t xClientLength = sizeof( xClient ), ulIPAddress;
-	Socket_t xListeningSocket;
-
-	// TODO: why only low array sizes working?
-	struct samples_struct{
-		   double number[10];
-		   double x[10];
-		   double y[10];
-	};
-	struct samples_struct receiveStruct;
-
-   /* Attempt to open the socket. */
-   xListeningSocket = FreeRTOS_socket( FREERTOS_AF_INET,
-									   FREERTOS_SOCK_DGRAM, /*FREERTOS_SOCK_DGRAM for UDP.*/
-									   FREERTOS_IPPROTO_UDP );
-
-   /* Check the socket was created. */
-   configASSERT( xListeningSocket != FREERTOS_INVALID_SOCKET );
-
-   /* Bind to port 55556. */
-   xBindAddress.sin_port = FreeRTOS_htons( 55556 );
-   FreeRTOS_bind( xListeningSocket, &xBindAddress, sizeof( xBindAddress ) );
-
-   for( ;; )
-   {
-	   /* Receive data from the socket.  ulFlags has the zero copy bit set
-	   (FREERTOS_ZERO_COPY) indicating to the stack that a reference to the
-	   received data should be passed out to this RTOS task using the second
-	   parameter to the FreeRTOS_recvfrom() call.  When this is done the
-	   IP stack is no longer responsible for releasing the buffer, and
-	   the RTOS task must return the buffer to the stack when it is no longer
-	   needed.  By default the block time is portMAX_DELAY but it can be
-	   changed using FreeRTOS_setsockopt(). */
-	   lBytes = FreeRTOS_recvfrom( xListeningSocket,
-								   &receiveStruct,
-								   sizeof( receiveStruct ),
-								   0,
-								   &xClient,
-								   &xClientLength );
-
-	   if( lBytes > 0 )
-	   {
-		   HAL_GPIO_WritePin(LD_USER1_GPIO_Port, LD_USER1_Pin, 1);
-		   vTaskDelay(100UL / portTICK_PERIOD_MS);
-		   HAL_GPIO_WritePin(LD_USER1_GPIO_Port, LD_USER1_Pin, 0);
-		   /* Data was received and can be processed here. */
-	   }
-   }
-}
-
 void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent )
 {
 static BaseType_t xTasksAlreadyCreated = pdFALSE;
     /* Both eNetworkUp and eNetworkDown events can be processed here. */
     if( eNetworkEvent == eNetworkUp )
     {
-    	xTaskCreate( vUDPSendUsingStandardInterface, "UDPSend", configMINIMAL_STACK_SIZE, NULL, mainLED_TASK_PRIORITY, NULL );
-    	xTaskCreate( vUDPReceivingUsingStandardInterface, "UDPReceive", configMINIMAL_STACK_SIZE, NULL, mainLED_TASK_PRIORITY, NULL );
+    	xTaskCreate( udpSendingTask, "UDPSend", configMINIMAL_STACK_SIZE, NULL, mainLED_TASK_PRIORITY, NULL );
+    	xTaskCreate( udpReceivingTask, "UDPReceive", configMINIMAL_STACK_SIZE, NULL, mainLED_TASK_PRIORITY, NULL );
         /* Create the tasks that use the TCP/IP stack if they have not already
         been created. */
         if( xTasksAlreadyCreated == pdFALSE )

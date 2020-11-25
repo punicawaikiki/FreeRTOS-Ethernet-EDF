@@ -1,4 +1,5 @@
-Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
+Core/Src/udp_communication.o: ../Core/Src/udp_communication.c \
+ ../Core/Inc/udp_communication.h ../Core/Inc/main.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal.h \
  ../Core/Inc/stm32f7xx_hal_conf.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_rcc.h \
@@ -32,8 +33,6 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_tim_ex.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_uart.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_uart_ex.h \
- ../Core/Inc/eth.h ../Core/Inc/main.h ../Core/Inc/rng.h \
- ../Core/Inc/usart.h ../Core/Inc/gpio.h \
  ../Middlewares/FreeRTOS/Inc/FreeRTOS.h \
  ../Middlewares/FreeRTOS/Inc/FreeRTOSConfig.h \
  ../Middlewares/FreeRTOS/Inc/projdefs.h \
@@ -41,18 +40,20 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Middlewares/FreeRTOS/Inc/deprecated_definitions.h \
  ../Middlewares/FreeRTOS/Inc/portable/portmacro.h \
  ../Middlewares/FreeRTOS/Inc/mpu_wrappers.h \
- ../Middlewares/FreeRTOS/Inc/task.h ../Middlewares/FreeRTOS/Inc/list.h \
- ../Middlewares/FreeRTOS-TCP/Inc/FreeRTOS_IP.h \
+ ../Middlewares/FreeRTOS-TCP/Inc/FreeRTOS_Sockets.h \
  ../Middlewares/FreeRTOS-TCP/Inc/FreeRTOSIPConfig.h \
+ ../Middlewares/FreeRTOS/Inc/event_groups.h \
+ ../Middlewares/FreeRTOS/Inc/timers.h ../Middlewares/FreeRTOS/Inc/task.h \
+ ../Middlewares/FreeRTOS/Inc/list.h \
+ ../Middlewares/FreeRTOS-TCP/Inc/FreeRTOS_IP.h \
+ ../Middlewares/FreeRTOS/Inc/task.h \
  ../Middlewares/FreeRTOS-TCP/Inc/FreeRTOSIPConfigDefaults.h \
  ../Middlewares/FreeRTOS-TCP/Inc/FreeRTOS_errno_TCP.h \
  ../Middlewares/FreeRTOS-TCP/Inc/IPTraceMacroDefaults.h \
  ../Middlewares/FreeRTOS-TCP/Src/portable/GCC/pack_struct_start.h \
- ../Middlewares/FreeRTOS-TCP/Src/portable/GCC/pack_struct_end.h \
- ../Middlewares/FreeRTOS/Inc/queue.h ../Middlewares/FreeRTOS/Inc/task.h \
- ../Middlewares/FreeRTOS-TCP/Inc/FreeRTOS_Sockets.h \
- ../Middlewares/FreeRTOS/Inc/event_groups.h \
- ../Middlewares/FreeRTOS/Inc/timers.h ../Core/Inc/udp_communication.h
+ ../Middlewares/FreeRTOS-TCP/Src/portable/GCC/pack_struct_end.h
+
+../Core/Inc/udp_communication.h:
 
 ../Core/Inc/main.h:
 
@@ -122,16 +123,6 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 
 ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_uart_ex.h:
 
-../Core/Inc/eth.h:
-
-../Core/Inc/main.h:
-
-../Core/Inc/rng.h:
-
-../Core/Inc/usart.h:
-
-../Core/Inc/gpio.h:
-
 ../Middlewares/FreeRTOS/Inc/FreeRTOS.h:
 
 ../Middlewares/FreeRTOS/Inc/FreeRTOSConfig.h:
@@ -146,13 +137,21 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 
 ../Middlewares/FreeRTOS/Inc/mpu_wrappers.h:
 
+../Middlewares/FreeRTOS-TCP/Inc/FreeRTOS_Sockets.h:
+
+../Middlewares/FreeRTOS-TCP/Inc/FreeRTOSIPConfig.h:
+
+../Middlewares/FreeRTOS/Inc/event_groups.h:
+
+../Middlewares/FreeRTOS/Inc/timers.h:
+
 ../Middlewares/FreeRTOS/Inc/task.h:
 
 ../Middlewares/FreeRTOS/Inc/list.h:
 
 ../Middlewares/FreeRTOS-TCP/Inc/FreeRTOS_IP.h:
 
-../Middlewares/FreeRTOS-TCP/Inc/FreeRTOSIPConfig.h:
+../Middlewares/FreeRTOS/Inc/task.h:
 
 ../Middlewares/FreeRTOS-TCP/Inc/FreeRTOSIPConfigDefaults.h:
 
@@ -163,15 +162,3 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Middlewares/FreeRTOS-TCP/Src/portable/GCC/pack_struct_start.h:
 
 ../Middlewares/FreeRTOS-TCP/Src/portable/GCC/pack_struct_end.h:
-
-../Middlewares/FreeRTOS/Inc/queue.h:
-
-../Middlewares/FreeRTOS/Inc/task.h:
-
-../Middlewares/FreeRTOS-TCP/Inc/FreeRTOS_Sockets.h:
-
-../Middlewares/FreeRTOS/Inc/event_groups.h:
-
-../Middlewares/FreeRTOS/Inc/timers.h:
-
-../Core/Inc/udp_communication.h:
