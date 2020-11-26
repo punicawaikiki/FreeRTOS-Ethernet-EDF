@@ -19,7 +19,7 @@ void udpReceivingTask( void *pvParameters )
 	uint32_t xClientLength = sizeof( xClient );
 	Socket_t xListeningSocket;
 
-	receivedQueue = xQueueCreate( 20, sizeof(samples_struct * ));
+	receivedQueue = xQueueCreate( 32, sizeof(samples_struct * ));
 
    /* Attempt to open the socket. */
    xListeningSocket = FreeRTOS_socket( FREERTOS_AF_INET,

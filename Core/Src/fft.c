@@ -1,22 +1,28 @@
 /* FFT Task and helper functions */
 
 
-//#include "arm_math.h"
+#include "arm_math.h"
 #include "FreeRTOS.h"
 #include "queue.h"
 #include "user_structs.h"
 
 /* define globals */
-#define EPOCHES 100
+#define EPOCHES 16
 static samples_struct samples_array[EPOCHES];
 
 void calculateFFT( void *pvParameters )
 {
-//	unsigned int epoches = 100;
 	uint32_t messageCounter = 0;
-	const TickType_t x1000ms = 1000UL / portTICK_PERIOD_MS;
 	extern QueueHandle_t receivedQueue;
 	samples_struct receivedStruct;
+	/* Create FFT Instances */
+	arm_rfft_instance_q15 RealFFT_Instance;
+	arm_cfft_radix4_instance_q15 MyComplexFFT_Instance;
+	/* Initialize the FFT Structures	 */
+	arm_rfft_init_q15(&RealFFT_Instance,
+					  128,
+					  0,
+					  1); //Normal Order
 //	samples_struct* samples_array;
 //	 = (samples_struct*) pvPortMalloc(epoches * sizeof(samples_struct));
 
@@ -47,6 +53,9 @@ void calculateFFT( void *pvParameters )
         	if (messageCounter == EPOCHES -1)
         	{
         		// TODO: Implement FFT here
+        		arm_rfft_q15(&RealFFT_Instance,
+        				     (q15_t *) receivedBuffer,
+							 /(q15_t *) fftOutput);
         		messageCounter = 0;
         	}
 }

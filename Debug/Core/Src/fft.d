@@ -1,4 +1,10 @@
-Core/Src/fft.o: ../Core/Src/fft.c ../Middlewares/FreeRTOS/Inc/FreeRTOS.h \
+Core/Src/fft.o: ../Core/Src/fft.c ../Middlewares/CMSIS-DSP/Inc/arm_math.h \
+ ../Middlewares/CMSIS-DSP/Inc/core_cm7.h \
+ ../Middlewares/CMSIS-DSP/Inc/core_cmInstr.h \
+ ../Drivers/CMSIS/Include/cmsis_gcc.h \
+ ../Middlewares/CMSIS-DSP/Inc/core_cmFunc.h \
+ ../Middlewares/CMSIS-DSP/Inc/core_cmSimd.h \
+ ../Middlewares/FreeRTOS/Inc/FreeRTOS.h \
  ../Middlewares/FreeRTOS/Inc/FreeRTOSConfig.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal.h \
  ../Core/Inc/stm32f7xx_hal_conf.h \
@@ -6,11 +12,7 @@ Core/Src/fft.o: ../Core/Src/fft.c ../Middlewares/FreeRTOS/Inc/FreeRTOS.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_def.h \
  ../Drivers/CMSIS/Device/ST/STM32F7xx/Include/stm32f7xx.h \
  ../Drivers/CMSIS/Device/ST/STM32F7xx/Include/stm32f769xx.h \
- ../Drivers/CMSIS/Include/core_cm7.h \
- ../Drivers/CMSIS/Include/cmsis_version.h \
- ../Drivers/CMSIS/Include/cmsis_compiler.h \
- ../Drivers/CMSIS/Include/cmsis_gcc.h \
- ../Drivers/CMSIS/Include/mpu_armv7.h \
+ ../Drivers/CMSIS/Include/core_cm7.h ../Drivers/CMSIS/Include/mpu_armv7.h \
  ../Drivers/CMSIS/Device/ST/STM32F7xx/Include/system_stm32f7xx.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_rcc_ex.h \
@@ -41,6 +43,18 @@ Core/Src/fft.o: ../Core/Src/fft.c ../Middlewares/FreeRTOS/Inc/FreeRTOS.h \
  ../Middlewares/FreeRTOS/Inc/queue.h ../Middlewares/FreeRTOS/Inc/task.h \
  ../Middlewares/FreeRTOS/Inc/list.h ../Core/Inc/user_structs.h
 
+../Middlewares/CMSIS-DSP/Inc/arm_math.h:
+
+../Middlewares/CMSIS-DSP/Inc/core_cm7.h:
+
+../Middlewares/CMSIS-DSP/Inc/core_cmInstr.h:
+
+../Drivers/CMSIS/Include/cmsis_gcc.h:
+
+../Middlewares/CMSIS-DSP/Inc/core_cmFunc.h:
+
+../Middlewares/CMSIS-DSP/Inc/core_cmSimd.h:
+
 ../Middlewares/FreeRTOS/Inc/FreeRTOS.h:
 
 ../Middlewares/FreeRTOS/Inc/FreeRTOSConfig.h:
@@ -58,12 +72,6 @@ Core/Src/fft.o: ../Core/Src/fft.c ../Middlewares/FreeRTOS/Inc/FreeRTOS.h \
 ../Drivers/CMSIS/Device/ST/STM32F7xx/Include/stm32f769xx.h:
 
 ../Drivers/CMSIS/Include/core_cm7.h:
-
-../Drivers/CMSIS/Include/cmsis_version.h:
-
-../Drivers/CMSIS/Include/cmsis_compiler.h:
-
-../Drivers/CMSIS/Include/cmsis_gcc.h:
 
 ../Drivers/CMSIS/Include/mpu_armv7.h:
 
