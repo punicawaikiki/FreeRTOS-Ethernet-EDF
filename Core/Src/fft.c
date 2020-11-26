@@ -38,16 +38,18 @@ void calculateFFT( void *pvParameters )
     	UBaseType_t waitingMessages = uxQueueMessagesWaiting(receivedQueue);
     	if (waitingMessages > 0)
     	{
-    		xQueueReceive( receivedQueue, &receivedStruct, ( TickType_t ) 0);
-    		samples_array[messageCounter] = receivedStruct;
-    		messageCounter++;
-    	}
-    	if (messageCounter == EPOCHES -1)
-    	{
-//    		TODO: Implement FFT here
-    		messageCounter = 0;
-    	}
-    	vTaskDelay(x1000ms);
+    		for (int i = 0; i < waitingMessages; i++)
+    		{
+        		xQueueReceive( receivedQueue, &receivedStruct, ( TickType_t ) 0);
+        		samples_array[messageCounter] = receivedStruct;
+        		messageCounter++;
+    		}
+        	if (messageCounter == EPOCHES -1)
+        	{
+        		// TODO: Implement FFT here
+        		messageCounter = 0;
+        	}
+}
 
     }
 }
