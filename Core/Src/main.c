@@ -33,6 +33,7 @@
 #include "FreeRTOS_Sockets.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <user_variables.h>
 #include "hooks.h"
 #include "helper_functions.h"
 /* USER CODE END Includes */
@@ -78,6 +79,8 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+QueueHandle_t receivedQueue = NULL;
+QueueHandle_t sendQueue = NULL;
 /* USER CODE END 0 */
 
 /**
@@ -87,7 +90,7 @@ void SystemClock_Config(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-
+//  HAL_NVIC_SetPriorityGrouping( NVIC_PRIORITYGROUP_4 );
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -96,7 +99,6 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -112,6 +114,9 @@ int main(void)
   MX_RNG_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
+
+  receivedQueue= xQueueCreate( 32, sizeof(samples_struct * ));
+  sendQueue= xQueueCreate( 32, sizeof(samples_struct * ));
   FreeRTOS_IPInit( ucIPAddress,
                    ucNetMask,
                    ucGatewayAddress,

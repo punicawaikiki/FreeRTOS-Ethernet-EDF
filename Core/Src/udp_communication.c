@@ -1,16 +1,17 @@
 /* Functions for sending Array Structs over UDP */
 
+#include <user_variables.h>
 #include "udp_communication.h"
 #include "main.h"
 #include "FreeRTOS.h"
 #include "FreeRTOS_Sockets.h"
 #include "FreeRTOS_IP.h"
 #include "queue.h"
-#include "user_structs.h"
+#include "arm_math.h"
 
 
-QueueHandle_t receivedQueue = NULL;
-static samples_struct receivedStruct;
+static samples_struct *receivedStruct;
+static float32_t *outputData[(SAMPLE_ARRAY_SIZE * EPOCHES) / 2];
 
 void udpReceivingTask( void *pvParameters )
 {
@@ -18,8 +19,7 @@ void udpReceivingTask( void *pvParameters )
 	struct freertos_sockaddr xClient, xBindAddress;
 	uint32_t xClientLength = sizeof( xClient );
 	Socket_t xListeningSocket;
-
-	receivedQueue = xQueueCreate( 32, sizeof(samples_struct * ));
+	extern QueueHandle_t receivedQueue;
 
    /* Attempt to open the socket. */
    xListeningSocket = FreeRTOS_socket( FREERTOS_AF_INET,
@@ -36,12 +36,12 @@ void udpReceivingTask( void *pvParameters )
    for( ;; )
    {
 	   // Receive UDP Packet
-	   lBytes = FreeRTOS_recvfrom( xListeningSocket,
-								   &receivedStruct,
-								   sizeof( receivedStruct ),
-								   0,
-								   &xClient,
-								   &xClientLength );
+       lBytes = FreeRTOS_recvfrom( xListeningSocket,
+                                   &receivedStruct,
+                                   0,
+                                   FREERTOS_ZERO_COPY,
+                                   &xClient,
+                                   &xClientLength );
 
 	   if( lBytes > 0 )
 	   {
@@ -49,7 +49,7 @@ void udpReceivingTask( void *pvParameters )
 		   /* Toggle LED for visual signaling */
 		   HAL_GPIO_TogglePin(LD_USER1_GPIO_Port, LD_USER1_Pin);
 		   /* Put Received Data into the input_samples Queue */
-		   xQueueSend( receivedQueue, &receivedStruct, ( TickType_t ) 0);
+		   xQueueSend( receivedQueue, &receivedStruct, ( TickType_t ) 0 );
 	   }
    }
 }
@@ -58,8 +58,8 @@ void udpSendingTask( void *pvParameters )
 {
 	Socket_t xSocket;
 	struct freertos_sockaddr xDestinationAddress;
-
-	const TickType_t x1000ms = 1000UL / portTICK_PERIOD_MS;
+	unsigned int waitingMessages;
+	extern QueueHandle_t sendQueue;
 
    /* Send strings to port 55555 on IP address 192.168.1.1. */
    xDestinationAddress.sin_addr = FreeRTOS_inet_addr( "192.168.1.1" );
@@ -81,14 +81,22 @@ void udpSendingTask( void *pvParameters )
    ipconfigALLOW_SOCKET_SEND_WITHOUT_BIND is set to 1 in FreeRTOSIPConfig.h. */
    for( ;; )
    {
-	   HAL_GPIO_TogglePin(LD_USER2_GPIO_Port, LD_USER2_Pin);
-       FreeRTOS_sendto( xSocket,
-                        &sendStruct,
-                        sizeof( sendStruct ),
-                        0,
-                        &xDestinationAddress,
-                        sizeof( xDestinationAddress ) );
-       /* Wait until it is time to send again. */
-       vTaskDelay( x1000ms );
+		UBaseType_t waitingMessages = uxQueueMessagesWaiting(sendQueue);
+		if (waitingMessages > 0)
+		{
+			for (int i = 0; i < waitingMessages; i++)
+			{
+				HAL_GPIO_TogglePin(LD_USER2_GPIO_Port, LD_USER2_Pin);
+	    		xQueueReceive( sendQueue,
+	        					   &outputData,
+								   ( TickType_t ) 0 );
+			    FreeRTOS_sendto( xSocket,
+								 &outputData,
+								 sizeof( outputData ),
+								 0,
+								 &xDestinationAddress,
+								 sizeof( xDestinationAddress ) );
+			}
+		}
    }
 }

@@ -1,26 +1,30 @@
 /* FFT Task and helper functions */
 
 
+#include <user_variables.h>
 #include "arm_math.h"
 #include "FreeRTOS.h"
 #include "queue.h"
-#include "user_structs.h"
 
 /* define globals */
-#define EPOCHES 16
-static samples_struct samples_array[EPOCHES];
+static float32_t fftInputData[SAMPLE_ARRAY_SIZE * EPOCHES];
+static float32_t fftOutputData[(SAMPLE_ARRAY_SIZE * EPOCHES) / 2];
+static float32_t fftOutputDataMag[(SAMPLE_ARRAY_SIZE * EPOCHES) / 2];
+static float32_t *bufferData[(SAMPLE_ARRAY_SIZE * EPOCHES) / 2];
+static samples_struct *bufferStruct;
 
 void calculateFFT( void *pvParameters )
 {
 	uint32_t messageCounter = 0;
 	extern QueueHandle_t receivedQueue;
-	samples_struct receivedStruct;
+	extern QueueHandle_t sendQueue;
+//	samples_struct receivedStruct;
 	/* Create FFT Instances */
 	arm_rfft_instance_q15 RealFFT_Instance;
 	arm_cfft_radix4_instance_q15 MyComplexFFT_Instance;
 	/* Initialize the FFT Structures	 */
 	arm_rfft_init_q15(&RealFFT_Instance,
-					  128,
+			FFT_SIZE,
 					  0,
 					  1); //Normal Order
 //	samples_struct* samples_array;
@@ -46,19 +50,40 @@ void calculateFFT( void *pvParameters )
     	{
     		for (int i = 0; i < waitingMessages; i++)
     		{
-        		xQueueReceive( receivedQueue, &receivedStruct, ( TickType_t ) 0);
-        		samples_array[messageCounter] = receivedStruct;
+        		xQueueReceive( receivedQueue,
+        					   &bufferStruct,
+							   ( TickType_t ) 0 );
+        		for (int i = 0; i < SAMPLE_ARRAY_SIZE; i++)
+        		{
+        			fftInputData[i + messageCounter * SAMPLE_ARRAY_SIZE] = bufferStruct->y[i];
+        		}
+            	if (messageCounter == EPOCHES -1 )
+            	{
+            		// TODO: Implement FFT here
+            		arm_rfft_q15(&RealFFT_Instance,
+            				     (q15_t *) fftInputData,
+    							 (q15_t *) fftOutputData);
+            		/* Process the data through the Complex Magnitude Module for
+            		  calculating the magnitude at each bin */
+            		arm_cmplx_mag_q15((q15_t *) fftOutputData,
+            						  (q15_t *) fftOutputDataMag,
+									  EPOCHES * SAMPLE_ARRAY_SIZE);
+            		/* Prepare Data for sending */
+//            		for (int ii = 0; ii < (SAMPLE_ARRAY_SIZE * EPOCHES) / 2; ii++)
+//            		{
+////            			float32_t test = fftOutputDataMag[ii];
+////            			int lasd = 0;
+//            			bufferData[ii] = &fftOutputDataMag[ii];
+//            		}
+            		/* send results to sendQueue */
+            		xQueueSend( sendQueue,
+            				    fftOutputDataMag,
+								( TickType_t ) 0 );
+            		messageCounter = 0;
+    			}
         		messageCounter++;
     		}
-        	if (messageCounter == EPOCHES -1)
-        	{
-        		// TODO: Implement FFT here
-        		arm_rfft_q15(&RealFFT_Instance,
-        				     (q15_t *) receivedBuffer,
-							 /(q15_t *) fftOutput);
-        		messageCounter = 0;
-        	}
-}
+    	}
 
     }
 }

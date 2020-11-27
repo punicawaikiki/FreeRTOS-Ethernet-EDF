@@ -4,17 +4,20 @@
 #define __USER_STRUCTS_H
 
 
+#define SAMPLE_ARRAY_SIZE 64
+#define EPOCHES 16
+#define FFT_SIZE 512
+
+
 // define structs
 typedef struct{
     double x;
 	double y;
 }single_sample_struct;
 
-// TODO: why only low array sizes working?
 typedef struct{
-	   double x[64];
-	   double y[64];
+	   double x[SAMPLE_ARRAY_SIZE];
+	   double y[SAMPLE_ARRAY_SIZE];
 }samples_struct;
-
 
 #endif /* __USER_STRUCTS_H */

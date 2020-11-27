@@ -1,4 +1,5 @@
-Core/Src/fft.o: ../Core/Src/fft.c ../Middlewares/CMSIS-DSP/Inc/arm_math.h \
+Core/Src/fft.o: ../Core/Src/fft.c ../Core/Inc/user_variables.h \
+ ../Middlewares/CMSIS-DSP/Inc/arm_math.h \
  ../Middlewares/CMSIS-DSP/Inc/core_cm7.h \
  ../Middlewares/CMSIS-DSP/Inc/core_cmInstr.h \
  ../Drivers/CMSIS/Include/cmsis_gcc.h \
@@ -41,7 +42,9 @@ Core/Src/fft.o: ../Core/Src/fft.c ../Middlewares/CMSIS-DSP/Inc/arm_math.h \
  ../Middlewares/FreeRTOS/Inc/portable/portmacro.h \
  ../Middlewares/FreeRTOS/Inc/mpu_wrappers.h \
  ../Middlewares/FreeRTOS/Inc/queue.h ../Middlewares/FreeRTOS/Inc/task.h \
- ../Middlewares/FreeRTOS/Inc/list.h ../Core/Inc/user_structs.h
+ ../Middlewares/FreeRTOS/Inc/list.h
+
+../Core/Inc/user_variables.h:
 
 ../Middlewares/CMSIS-DSP/Inc/arm_math.h:
 
@@ -134,5 +137,3 @@ Core/Src/fft.o: ../Core/Src/fft.c ../Middlewares/CMSIS-DSP/Inc/arm_math.h \
 ../Middlewares/FreeRTOS/Inc/task.h:
 
 ../Middlewares/FreeRTOS/Inc/list.h:
-
-../Core/Inc/user_structs.h:

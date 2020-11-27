@@ -1,6 +1,6 @@
 Core/Src/udp_communication.o: ../Core/Src/udp_communication.c \
- ../Core/Inc/udp_communication.h ../Core/Inc/main.h \
- ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal.h \
+ ../Core/Inc/user_variables.h ../Core/Inc/udp_communication.h \
+ ../Core/Inc/main.h ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal.h \
  ../Core/Inc/stm32f7xx_hal_conf.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_rcc.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_def.h \
@@ -52,7 +52,11 @@ Core/Src/udp_communication.o: ../Core/Src/udp_communication.c \
  ../Middlewares/FreeRTOS-TCP/Inc/IPTraceMacroDefaults.h \
  ../Middlewares/FreeRTOS-TCP/Src/portable/GCC/pack_struct_start.h \
  ../Middlewares/FreeRTOS-TCP/Src/portable/GCC/pack_struct_end.h \
- ../Middlewares/FreeRTOS/Inc/queue.h ../Core/Inc/user_structs.h
+ ../Middlewares/FreeRTOS/Inc/queue.h \
+ ../Middlewares/CMSIS-DSP/Inc/arm_math.h \
+ ../Middlewares/CMSIS-DSP/Inc/core_cm7.h
+
+../Core/Inc/user_variables.h:
 
 ../Core/Inc/udp_communication.h:
 
@@ -166,4 +170,6 @@ Core/Src/udp_communication.o: ../Core/Src/udp_communication.c \
 
 ../Middlewares/FreeRTOS/Inc/queue.h:
 
-../Core/Inc/user_structs.h:
+../Middlewares/CMSIS-DSP/Inc/arm_math.h:
+
+../Middlewares/CMSIS-DSP/Inc/core_cm7.h:
