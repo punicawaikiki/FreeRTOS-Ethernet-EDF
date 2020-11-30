@@ -11,7 +11,7 @@
 
 
 static samples_struct *receivedStruct;
-static float32_t *outputData[(SAMPLE_ARRAY_SIZE * EPOCHES) / 2];
+static test_struct *outputData;
 
 void udpReceivingTask( void *pvParameters )
 {
@@ -49,8 +49,23 @@ void udpReceivingTask( void *pvParameters )
 		   /* Toggle LED for visual signaling */
 		   HAL_GPIO_TogglePin(LD_USER1_GPIO_Port, LD_USER1_Pin);
 		   /* Put Received Data into the input_samples Queue */
-		   xQueueSend( receivedQueue, &receivedStruct, ( TickType_t ) 0 );
+		   xQueueSend( receivedQueue,
+				       &receivedStruct,
+					    ( TickType_t ) 0 );
 	   }
+       if( lBytes >= 0 )
+       {
+           /* The receive was successful so this RTOS task is now responsible for
+           the buffer.  The buffer must be freed once it is no longer
+           needed. */
+
+           /*
+            * The data can be processed here.
+            */
+
+           /* Return the buffer to the TCP/IP stack. */
+           FreeRTOS_ReleaseUDPPayloadBuffer( receivedStruct );
+       }
    }
 }
 
@@ -68,12 +83,6 @@ void udpSendingTask( void *pvParameters )
    sendStruct.x = 1.1;
    sendStruct.y = 2.12345;
 
-
-   /* Create the socket. */
-   xSocket = FreeRTOS_socket( FREERTOS_AF_INET,
-                              FREERTOS_SOCK_DGRAM,/*FREERTOS_SOCK_DGRAM for UDP.*/
-                              FREERTOS_IPPROTO_UDP );
-
    /* Check the socket was created. */
    configASSERT( xSocket != FREERTOS_INVALID_SOCKET );
 
@@ -87,15 +96,15 @@ void udpSendingTask( void *pvParameters )
 			for (int i = 0; i < waitingMessages; i++)
 			{
 				HAL_GPIO_TogglePin(LD_USER2_GPIO_Port, LD_USER2_Pin);
-	    		xQueueReceive( sendQueue,
-	        					   &outputData,
-								   ( TickType_t ) 0 );
-			    FreeRTOS_sendto( xSocket,
-								 &outputData,
-								 sizeof( outputData ),
-								 0,
-								 &xDestinationAddress,
-								 sizeof( xDestinationAddress ) );
+//	    		xQueueReceive( sendQueue,
+//	        				   &outputData,
+//							   ( TickType_t ) 0 );
+//			    FreeRTOS_sendto( xSocket,
+//								 &outputData,
+//								 sizeof( outputData ),
+//								 FREERTOS_ZERO_COPY,
+//								 &xDestinationAddress,
+//								 sizeof( xDestinationAddress ) );
 			}
 		}
    }

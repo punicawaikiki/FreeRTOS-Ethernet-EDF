@@ -10,7 +10,7 @@
 static float32_t fftInputData[SAMPLE_ARRAY_SIZE * EPOCHES];
 static float32_t fftOutputData[(SAMPLE_ARRAY_SIZE * EPOCHES) / 2];
 static float32_t fftOutputDataMag[(SAMPLE_ARRAY_SIZE * EPOCHES) / 2];
-static float32_t *bufferData[(SAMPLE_ARRAY_SIZE * EPOCHES) / 2];
+static test_struct *data;
 static samples_struct *bufferStruct;
 
 void calculateFFT( void *pvParameters )
@@ -69,15 +69,16 @@ void calculateFFT( void *pvParameters )
             						  (q15_t *) fftOutputDataMag,
 									  EPOCHES * SAMPLE_ARRAY_SIZE);
             		/* Prepare Data for sending */
-//            		for (int ii = 0; ii < (SAMPLE_ARRAY_SIZE * EPOCHES) / 2; ii++)
-//            		{
-////            			float32_t test = fftOutputDataMag[ii];
-////            			int lasd = 0;
-//            			bufferData[ii] = &fftOutputDataMag[ii];
-//            		}
+            		for (int ii = 0; ii < (SAMPLE_ARRAY_SIZE * EPOCHES) / 2; ii++)
+            		{
+//            			float32_t test = fftOutputDataMag[ii];
+//            			int lasd = 0;
+            			data->results[ii] = fftOutputDataMag[ii];
+            		}
+//            		memcpy( &bufferData, &fftOutputDataMag, 8 );
             		/* send results to sendQueue */
             		xQueueSend( sendQueue,
-            				    fftOutputDataMag,
+            				    &data,
 								( TickType_t ) 0 );
             		messageCounter = 0;
     			}

@@ -53,7 +53,9 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  ../Middlewares/FreeRTOS-TCP/Inc/FreeRTOS_Sockets.h \
  ../Middlewares/FreeRTOS/Inc/event_groups.h \
  ../Middlewares/FreeRTOS/Inc/timers.h ../Core/Inc/user_variables.h \
- ../Core/Inc/hooks.h ../Core/Inc/helper_functions.h
+ ../Middlewares/CMSIS-DSP/Inc/arm_math.h \
+ ../Middlewares/CMSIS-DSP/Inc/core_cm7.h ../Core/Inc/hooks.h \
+ ../Core/Inc/helper_functions.h
 
 ../Core/Inc/main.h:
 
@@ -176,6 +178,10 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
 ../Middlewares/FreeRTOS/Inc/timers.h:
 
 ../Core/Inc/user_variables.h:
+
+../Middlewares/CMSIS-DSP/Inc/arm_math.h:
+
+../Middlewares/CMSIS-DSP/Inc/core_cm7.h:
 
 ../Core/Inc/hooks.h:
 
