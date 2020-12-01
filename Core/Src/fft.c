@@ -68,18 +68,19 @@ void calculateFFT( void *pvParameters )
             		arm_cmplx_mag_q15((q15_t *) fftOutputData,
             						  (q15_t *) fftOutputDataMag,
 									  EPOCHES * SAMPLE_ARRAY_SIZE);
+            		unsigned int cnt = 0;
             		/* Prepare Data for sending */
-            		for (int ii = 0; ii < (SAMPLE_ARRAY_SIZE * EPOCHES) / 2; ii++)
+            		for (int ii = 0; ii < (EPOCHES / 2); ii++)
             		{
-//            			float32_t test = fftOutputDataMag[ii];
-//            			int lasd = 0;
-            			data->results[ii] = fftOutputDataMag[ii];
+            			for (int jj = 0; jj < SAMPLE_ARRAY_SIZE ; jj++)
+            			{
+            				data->results[jj] = (double) (fftOutputDataMag[cnt]);
+            				cnt++;
+                    		xQueueSend( sendQueue,
+                    				    &data,
+        								( TickType_t ) 0 );
+            			}
             		}
-//            		memcpy( &bufferData, &fftOutputDataMag, 8 );
-            		/* send results to sendQueue */
-            		xQueueSend( sendQueue,
-            				    &data,
-								( TickType_t ) 0 );
             		messageCounter = 0;
     			}
         		messageCounter++;

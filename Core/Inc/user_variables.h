@@ -23,7 +23,7 @@ typedef struct{
 }samples_struct;
 
 typedef struct{
-	   float32_t results[SAMPLE_ARRAY_SIZE * EPOCHES];
+	   double results[SAMPLE_ARRAY_SIZE];
 }test_struct;
 
 #endif /* __USER_STRUCTS_H */

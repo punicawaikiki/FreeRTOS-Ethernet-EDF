@@ -1,6 +1,6 @@
 /* Functions for sending Array Structs over UDP */
 
-#include <user_variables.h>
+#include "user_variables.h"
 #include "udp_communication.h"
 #include "main.h"
 #include "FreeRTOS.h"
@@ -75,13 +75,11 @@ void udpSendingTask( void *pvParameters )
 	struct freertos_sockaddr xDestinationAddress;
 	unsigned int waitingMessages;
 	extern QueueHandle_t sendQueue;
-
+	uint8_t *pucBuffer;
+	BaseType_t lReturned;
    /* Send strings to port 55555 on IP address 192.168.1.1. */
    xDestinationAddress.sin_addr = FreeRTOS_inet_addr( "192.168.1.1" );
    xDestinationAddress.sin_port = FreeRTOS_htons( 55555 );
-   single_sample_struct sendStruct;
-   sendStruct.x = 1.1;
-   sendStruct.y = 2.12345;
 
    /* Check the socket was created. */
    configASSERT( xSocket != FREERTOS_INVALID_SOCKET );
@@ -96,9 +94,27 @@ void udpSendingTask( void *pvParameters )
 			for (int i = 0; i < waitingMessages; i++)
 			{
 				HAL_GPIO_TogglePin(LD_USER2_GPIO_Port, LD_USER2_Pin);
-//	    		xQueueReceive( sendQueue,
-//	        				   &outputData,
-//							   ( TickType_t ) 0 );
+	    		xQueueReceive( sendQueue,
+	        				   &outputData,
+							   ( TickType_t ) 0 );
+				unsigned int test = (sizeof( double ) * SAMPLE_ARRAY_SIZE * EPOCHES);
+				pucBuffer = FreeRTOS_GetUDPPayloadBuffer( (sizeof( double ) * SAMPLE_ARRAY_SIZE * EPOCHES), portMAX_DELAY );
+
+				/* Check a buffer was obtained. */
+				configASSERT( pucBuffer );
+
+				/* Create the string that is sent. */
+				//			   sprintf( pucBuffer, “%s%lurn”, ucStringToSend, ulCount );
+
+				/* Pass the buffer into the send function.  ulFlags has the
+				FREERTOS_ZERO_COPY bit set so the TCP/IP stack will take control of the
+				buffer rather than copy data out of the buffer. */
+				lReturned = FreeRTOS_sendto( xSocket,
+										   (test_struct *) &outputData,
+										   sizeof( outputData ),
+										   0,
+										   &xDestinationAddress,
+										   sizeof( xDestinationAddress ) );
 //			    FreeRTOS_sendto( xSocket,
 //								 &outputData,
 //								 sizeof( outputData ),
