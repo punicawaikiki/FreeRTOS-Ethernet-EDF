@@ -20,10 +20,10 @@ typedef struct{
 typedef struct{
 	   double x[SAMPLE_ARRAY_SIZE];
 	   double y[SAMPLE_ARRAY_SIZE];
-}samples_struct;
+}samples_input_struct;
 
 typedef struct{
 	   double results[SAMPLE_ARRAY_SIZE];
-}test_struct;
+}samples_output_struct;
 
 #endif /* __USER_STRUCTS_H */

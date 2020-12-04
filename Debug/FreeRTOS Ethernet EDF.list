@@ -39,13 +39,13 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING
  17 .debug_line   00022d48  00000000  00000000  000ba9c7  2**0
                   CONTENTS, READONLY, DEBUGGING
- 18 .debug_str    00135551  00000000  00000000  000dd70f  2**0
+ 18 .debug_str    00135561  00000000  00000000  000dd70f  2**0
                   CONTENTS, READONLY, DEBUGGING
- 19 .comment      000000eb  00000000  00000000  00212c60  2**0
+ 19 .comment      000000eb  00000000  00000000  00212c70  2**0
                   CONTENTS, READONLY
- 20 .debug_frame  00008fac  00000000  00000000  00212d4c  2**2
+ 20 .debug_frame  00008fac  00000000  00000000  00212d5c  2**2
                   CONTENTS, READONLY, DEBUGGING
- 21 .debug_loc    00004600  00000000  00000000  0021bcf8  2**0
+ 21 .debug_loc    00004600  00000000  00000000  0021bd08  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -731,7 +731,7 @@ void HAL_ETH_MspInit(ETH_HandleTypeDef* ethHandle)
  800084c:	40020c00 	.word	0x40020c00
 
 08000850 <calculateFFT>:
-static samples_struct *bufferStruct;
+static samples_input_struct *bufferStruct;
 
 
 /* Task for receiving data from receivedQueue, calculate fft, calculate magnitude and push results to sendQueue */
@@ -1498,7 +1498,7 @@ int main(void)
  8000cae:	f000 fabd 	bl	800122c <MX_USART1_UART_Init>
   /* USER CODE BEGIN 2 */
 
-  receivedQueue= xQueueCreate( 32, sizeof(samples_struct * ));
+  receivedQueue= xQueueCreate( 32, sizeof(samples_input_struct * ));
  8000cb2:	2200      	movs	r2, #0
  8000cb4:	2104      	movs	r1, #4
  8000cb6:	2020      	movs	r0, #32
@@ -1506,7 +1506,7 @@ int main(void)
  8000cbc:	4602      	mov	r2, r0
  8000cbe:	4b0a      	ldr	r3, [pc, #40]	; (8000ce8 <main+0x50>)
  8000cc0:	601a      	str	r2, [r3, #0]
-  sendQueue= xQueueCreate( 32, sizeof(samples_struct * ));
+  sendQueue= xQueueCreate( 32, sizeof(samples_input_struct * ));
  8000cc2:	2200      	movs	r2, #0
  8000cc4:	2104      	movs	r1, #4
  8000cc6:	2020      	movs	r0, #32
@@ -2286,9 +2286,9 @@ void SystemInit(void)
  80010c0:	e000ed00 	.word	0xe000ed00
 
 080010c4 <udpReceivingTask>:
-static samples_struct *receivedStruct;
-static test_struct *outputDataPtr;
-static test_struct outputData;
+static samples_input_struct *receivedStruct;
+static samples_output_struct *outputDataPtr;
+static samples_output_struct outputData;
 
 void udpReceivingTask( void *pvParameters )
 {

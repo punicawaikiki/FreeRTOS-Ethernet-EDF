@@ -10,8 +10,8 @@
 static float32_t fftInputData[SAMPLE_ARRAY_SIZE * EPOCHES];
 static float32_t fftOutputData[(SAMPLE_ARRAY_SIZE * EPOCHES) / 2];
 static float32_t fftOutputDataMag[(SAMPLE_ARRAY_SIZE * EPOCHES) / 2];
-static test_struct *queueSendData;
-static samples_struct *bufferStruct;
+static samples_output_struct *queueSendData;
+static samples_input_struct *bufferStruct;
 
 
 /* Task for receiving data from receivedQueue, calculate fft, calculate magnitude and push results to sendQueue */

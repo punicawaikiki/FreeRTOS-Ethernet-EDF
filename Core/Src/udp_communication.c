@@ -10,9 +10,9 @@
 #include "arm_math.h"
 
 
-static samples_struct *receivedStruct;
-static test_struct *outputDataPtr;
-static test_struct outputData;
+static samples_input_struct *receivedStruct;
+static samples_output_struct *outputDataPtr;
+static samples_output_struct outputData;
 
 void udpReceivingTask( void *pvParameters )
 {
