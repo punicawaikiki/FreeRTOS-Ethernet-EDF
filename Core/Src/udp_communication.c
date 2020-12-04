@@ -10,7 +10,7 @@
 #include "arm_math.h"
 
 
-static samples_input_struct *receivedStruct;
+static samples_input_struct *receivedStructPtr;
 static samples_output_struct *outputDataPtr;
 static samples_output_struct outputData;
 
@@ -39,7 +39,7 @@ void udpReceivingTask( void *pvParameters )
    {
 	   // Receive UDP Packet
        lBytes = FreeRTOS_recvfrom( xListeningSocket,
-                                   &receivedStruct,
+                                   &receivedStructPtr,
                                    0,
                                    FREERTOS_ZERO_COPY,
                                    &xClient,
@@ -52,7 +52,7 @@ void udpReceivingTask( void *pvParameters )
 		   HAL_GPIO_TogglePin(LD_USER1_GPIO_Port, LD_USER1_Pin);
 		   /* Put Received Data into the input_samples Queue */
 		   xQueueSend( receivedQueue,
-				       &receivedStruct,
+				       &receivedStructPtr,
 					    ( TickType_t ) 0 );
 	   }
        if( lBytes >= 0 )
@@ -66,7 +66,7 @@ void udpReceivingTask( void *pvParameters )
             */
 
            /* Return the buffer to the TCP/IP stack. */
-           FreeRTOS_ReleaseUDPPayloadBuffer( receivedStruct );
+           FreeRTOS_ReleaseUDPPayloadBuffer( receivedStructPtr );
        }
    }
 }

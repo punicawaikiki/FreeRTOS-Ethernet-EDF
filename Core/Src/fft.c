@@ -6,18 +6,47 @@
 #include "FreeRTOS.h"
 #include "queue.h"
 
+
 /* define globals */
 static float32_t fftInputData[SAMPLE_ARRAY_SIZE * EPOCHES];
 static float32_t fftOutputData[(SAMPLE_ARRAY_SIZE * EPOCHES) / 2];
 static float32_t fftOutputDataMag[(SAMPLE_ARRAY_SIZE * EPOCHES) / 2];
-static samples_output_struct *queueSendData;
-static samples_input_struct *bufferStruct;
+static samples_output_struct *queueSendDataPtr;
+static samples_input_struct *bufferStructPtr;
+
+unsigned char checkBoolArrayTrue ( unsigned char* receivedPackets )
+{
+	unsigned int count = 0;
+	for (int entry = 0; entry < EPOCHES; entry++)
+	{
+		if (receivedPackets[entry])
+		{
+			count++;
+		}
+	}
+	if (count == EPOCHES)
+	{
+		return 1;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+void resetBoolArray ( unsigned char* receivedPackets )
+{
+	for (int entry = 0; entry < EPOCHES; entry++)
+	{
+		receivedPackets[entry] = 0;
+	}
+}
 
 
 /* Task for receiving data from receivedQueue, calculate fft, calculate magnitude and push results to sendQueue */
 void calculateFFT( void *pvParameters )
 {
-	uint32_t messageCounter = 0;
+	unsigned char receivedPackets[EPOCHES] = {0};
 	/* declare Queue`s */
 	extern QueueHandle_t receivedQueue;
 	extern QueueHandle_t sendQueue;
@@ -39,15 +68,19 @@ void calculateFFT( void *pvParameters )
     		{
     			/* get one message from receivedQueue */
         		xQueueReceive( receivedQueue,
-        					   &bufferStruct,
+        					   &bufferStructPtr,
 							   ( TickType_t ) 0 );
         		/* transform message array with SAMPLE_ARRAY_SIZE to array with size of (SAMPLE_ARRAY_SIZE * EPOCHES) */
-        		for (int i = 0; i < SAMPLE_ARRAY_SIZE; i++)
+        		for (unsigned int sampleCounter = 0; sampleCounter < SAMPLE_ARRAY_SIZE; sampleCounter++ )
         		{
-        			fftInputData[i + messageCounter * SAMPLE_ARRAY_SIZE] = bufferStruct->y[i];
+        			if (receivedPackets[bufferStructPtr->messageCounter] == 0)
+        			{
+            			fftInputData[sampleCounter + bufferStructPtr->messageCounter * SAMPLE_ARRAY_SIZE] = bufferStructPtr->y[sampleCounter];
+        			}
         		}
+        		receivedPackets[bufferStructPtr->messageCounter] = 1;
         		/* check for fftInputData is filled with (SAMPLE_ARRAY_SIZE * EPOCHES) of data */
-            	if (messageCounter < EPOCHES )
+            	if ( checkBoolArrayTrue(receivedPackets) )
             	{
             		/* calculate fft */
             		arm_rfft_q15(&RealFFT_Instance,
@@ -64,18 +97,17 @@ void calculateFFT( void *pvParameters )
             		{
             			for ( unsigned int sampleSizeCounter = 0; sampleSizeCounter < SAMPLE_ARRAY_SIZE ; sampleSizeCounter++)
             			{
-            				/* copy SAMPLE_SIZE_ARRAY of data into queueSendData array */
-            				queueSendData->results[sampleSizeCounter] = (double) (fftOutputDataMag[fftOuputDataMagCounter]);
+            				/* copy SAMPLE_SIZE_ARRAY of data into queueSendDataPtr array */
+            				queueSendDataPtr->results[sampleSizeCounter] = (double) (fftOutputDataMag[fftOuputDataMagCounter]);
             				fftOuputDataMagCounter++;
+                			/* put queueSendData into sendQueue */
+                    		xQueueSend( sendQueue,
+                    				    &queueSendDataPtr,
+        								( TickType_t ) 0 );
             			}
-            			/* put queueSendData into sendQueue */
-                		xQueueSend( sendQueue,
-                				    &queueSendData,
-    								( TickType_t ) 0 );
             		}
-            		messageCounter = 0;
+            		resetBoolArray( receivedPackets );
     			}
-        		messageCounter++;
     		}
     	}
 

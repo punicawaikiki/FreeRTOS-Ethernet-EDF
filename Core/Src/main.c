@@ -115,8 +115,8 @@ int main(void)
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
 
-  receivedQueue= xQueueCreate( 32, sizeof(samples_input_struct * ));
-  sendQueue= xQueueCreate( 32, sizeof(samples_input_struct * ));
+  receivedQueue= xQueueCreate( 128, sizeof(samples_input_struct * ));
+  sendQueue= xQueueCreate( 128, sizeof(samples_input_struct * ));
   FreeRTOS_IPInit( ucIPAddress,
                    ucNetMask,
                    ucGatewayAddress,

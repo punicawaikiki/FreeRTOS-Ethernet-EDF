@@ -1,1 +1,3 @@
-fft.c:18:6:calculateFFT	72	static
+fft.c:17:15:checkBoolArrayTrue	24	static
+fft.c:37:6:resetBoolArray	24	static
+fft.c:47:6:calculateFFT	80	static

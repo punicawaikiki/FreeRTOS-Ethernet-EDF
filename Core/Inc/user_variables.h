@@ -13,11 +13,13 @@
 
 // define structs
 typedef struct{
+	int messageNumber;
     double x;
 	double y;
 }single_sample_struct;
 
 typedef struct{
+	   int messageCounter;
 	   double x[SAMPLE_ARRAY_SIZE];
 	   double y[SAMPLE_ARRAY_SIZE];
 }samples_input_struct;
