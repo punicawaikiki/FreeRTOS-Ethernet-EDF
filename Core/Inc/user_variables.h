@@ -19,13 +19,14 @@ typedef struct{
 }single_sample_struct;
 
 typedef struct{
-	   int messageCounter;
-	   double x[SAMPLE_ARRAY_SIZE];
-	   double y[SAMPLE_ARRAY_SIZE];
+	int messageCounter;
+	double x[SAMPLE_ARRAY_SIZE];
+	double y[SAMPLE_ARRAY_SIZE];
 }samples_input_struct;
 
 typedef struct{
-	   double results[SAMPLE_ARRAY_SIZE];
+	double messageCounter;
+	double results[SAMPLE_ARRAY_SIZE];
 }samples_output_struct;
 
 #endif /* __USER_STRUCTS_H */

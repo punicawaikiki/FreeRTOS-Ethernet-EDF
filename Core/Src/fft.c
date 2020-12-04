@@ -77,6 +77,10 @@ void calculateFFT( void *pvParameters )
         			{
             			fftInputData[sampleCounter + bufferStructPtr->messageCounter * SAMPLE_ARRAY_SIZE] = bufferStructPtr->y[sampleCounter];
         			}
+        			else
+        			{
+        				break;
+        			}
         		}
         		receivedPackets[bufferStructPtr->messageCounter] = 1;
         		/* check for fftInputData is filled with (SAMPLE_ARRAY_SIZE * EPOCHES) of data */
@@ -95,16 +99,18 @@ void calculateFFT( void *pvParameters )
             		/* Split results in pieces of SAMPLE_ARRAY_SIZE and put it into sendQueue */
             		for ( unsigned int epochesCounter = 0; epochesCounter < (EPOCHES / 2); epochesCounter++)
             		{
+            			/* assign packet number */
+        				queueSendDataPtr->messageCounter = epochesCounter;
             			for ( unsigned int sampleSizeCounter = 0; sampleSizeCounter < SAMPLE_ARRAY_SIZE ; sampleSizeCounter++)
             			{
             				/* copy SAMPLE_SIZE_ARRAY of data into queueSendDataPtr array */
             				queueSendDataPtr->results[sampleSizeCounter] = (double) (fftOutputDataMag[fftOuputDataMagCounter]);
             				fftOuputDataMagCounter++;
-                			/* put queueSendData into sendQueue */
-                    		xQueueSend( sendQueue,
-                    				    &queueSendDataPtr,
-        								( TickType_t ) 0 );
             			}
+            			/* put queueSendData into sendQueue */
+                		xQueueSend( sendQueue,
+                				    &queueSendDataPtr,
+    								( TickType_t ) 0 );
             		}
             		resetBoolArray( receivedPackets );
     			}

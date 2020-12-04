@@ -106,6 +106,8 @@ void udpSendingTask( void *pvParameters )
 				xQueueReceive( sendQueue,
 							   &outputDataPtr,
 							   ( TickType_t ) 0 );
+				/* assign packet number */
+				outputData.messageCounter = outputDataPtr->messageCounter;
 				/* transform pointer struct to struct */
 				// TODO: better conversion without loop?
 				for (unsigned int ii = 0; ii < SAMPLE_ARRAY_SIZE; ii++)
@@ -115,7 +117,7 @@ void udpSendingTask( void *pvParameters )
 				/* send outputData over UDP */
 				FreeRTOS_sendto( xSocket,
 							     &outputData,
-							     sizeof ( double ) * SAMPLE_ARRAY_SIZE,
+							     (sizeof ( double ) * 1 + sizeof ( double ) * SAMPLE_ARRAY_SIZE),
 							     0,
 							     &xDestinationAddress,
 							     sizeof( xDestinationAddress ) );
