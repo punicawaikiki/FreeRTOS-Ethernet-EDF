@@ -11,7 +11,8 @@
 
 
 static samples_struct *receivedStruct;
-static test_struct *outputData;
+static test_struct *outputDataPtr;
+static test_struct outputData;
 
 void udpReceivingTask( void *pvParameters )
 {
@@ -19,6 +20,7 @@ void udpReceivingTask( void *pvParameters )
 	struct freertos_sockaddr xClient, xBindAddress;
 	uint32_t xClientLength = sizeof( xClient );
 	Socket_t xListeningSocket;
+	/* declare receivedQueue */
 	extern QueueHandle_t receivedQueue;
 
    /* Attempt to open the socket. */
@@ -46,7 +48,7 @@ void udpReceivingTask( void *pvParameters )
 	   if( lBytes > 0 )
 	   {
 		   /* Data was received and can be processed here. */
-		   /* Toggle LED for visual signaling */
+		   /* Toggle LED for visualization */
 		   HAL_GPIO_TogglePin(LD_USER1_GPIO_Port, LD_USER1_Pin);
 		   /* Put Received Data into the input_samples Queue */
 		   xQueueSend( receivedQueue,
@@ -69,59 +71,55 @@ void udpReceivingTask( void *pvParameters )
    }
 }
 
+/* Sending data from sendQueue over UDP to Computer */
 void udpSendingTask( void *pvParameters )
 {
 	Socket_t xSocket;
 	struct freertos_sockaddr xDestinationAddress;
-	unsigned int waitingMessages;
+	/* declare sendQueue */
 	extern QueueHandle_t sendQueue;
-	uint8_t *pucBuffer;
-	BaseType_t lReturned;
-   /* Send strings to port 55555 on IP address 192.168.1.1. */
-   xDestinationAddress.sin_addr = FreeRTOS_inet_addr( "192.168.1.1" );
-   xDestinationAddress.sin_port = FreeRTOS_htons( 55555 );
 
-   /* Check the socket was created. */
-   configASSERT( xSocket != FREERTOS_INVALID_SOCKET );
+	/* Send strings to port 55555 on IP address 192.168.1.1. */
+	xDestinationAddress.sin_addr = FreeRTOS_inet_addr( "192.168.1.1" );
+	xDestinationAddress.sin_port = FreeRTOS_htons( 55555 );
 
-   /* NOTE: FreeRTOS_bind() is not called.  This will only work if
-   ipconfigALLOW_SOCKET_SEND_WITHOUT_BIND is set to 1 in FreeRTOSIPConfig.h. */
-   for( ;; )
-   {
+	/* Create the socket. */
+	xSocket = FreeRTOS_socket( FREERTOS_AF_INET,
+							  FREERTOS_SOCK_DGRAM,/*FREERTOS_SOCK_DGRAM for UDP.*/
+							  FREERTOS_IPPROTO_UDP );
+
+	/* Check the socket was created. */
+	configASSERT( xSocket != FREERTOS_INVALID_SOCKET );
+
+	for( ;; )
+	{
+		/* get number of messages in sendQueue */
 		UBaseType_t waitingMessages = uxQueueMessagesWaiting(sendQueue);
 		if (waitingMessages > 0)
 		{
+			/* iterate over sendQueue */
 			for (int i = 0; i < waitingMessages; i++)
 			{
+				/* toggle USER_LED 2 for visualization */
 				HAL_GPIO_TogglePin(LD_USER2_GPIO_Port, LD_USER2_Pin);
-	    		xQueueReceive( sendQueue,
-	        				   &outputData,
+				/* get the next message from sendQueue */
+				xQueueReceive( sendQueue,
+							   &outputDataPtr,
 							   ( TickType_t ) 0 );
-				unsigned int test = (sizeof( double ) * SAMPLE_ARRAY_SIZE * EPOCHES);
-				pucBuffer = FreeRTOS_GetUDPPayloadBuffer( (sizeof( double ) * SAMPLE_ARRAY_SIZE * EPOCHES), portMAX_DELAY );
-
-				/* Check a buffer was obtained. */
-				configASSERT( pucBuffer );
-
-				/* Create the string that is sent. */
-				//			   sprintf( pucBuffer, “%s%lurn”, ucStringToSend, ulCount );
-
-				/* Pass the buffer into the send function.  ulFlags has the
-				FREERTOS_ZERO_COPY bit set so the TCP/IP stack will take control of the
-				buffer rather than copy data out of the buffer. */
-				lReturned = FreeRTOS_sendto( xSocket,
-										   (test_struct *) &outputData,
-										   sizeof( outputData ),
-										   0,
-										   &xDestinationAddress,
-										   sizeof( xDestinationAddress ) );
-//			    FreeRTOS_sendto( xSocket,
-//								 &outputData,
-//								 sizeof( outputData ),
-//								 FREERTOS_ZERO_COPY,
-//								 &xDestinationAddress,
-//								 sizeof( xDestinationAddress ) );
+				/* transform pointer struct to struct */
+				// TODO: better conversion without loop?
+				for (unsigned int ii = 0; ii < SAMPLE_ARRAY_SIZE; ii++)
+				{
+					outputData.results[ii] = outputDataPtr->results[ii];
+				}
+				/* send outputData over UDP */
+				FreeRTOS_sendto( xSocket,
+							     &outputData,
+							     sizeof ( double ) * SAMPLE_ARRAY_SIZE,
+							     0,
+							     &xDestinationAddress,
+							     sizeof( xDestinationAddress ) );
 			}
 		}
-   }
+	}
 }
