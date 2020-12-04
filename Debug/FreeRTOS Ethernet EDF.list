@@ -27,25 +27,25 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   ALLOC
  11 .ARM.attributes 0000002e  00000000  00000000  00040204  2**0
                   CONTENTS, READONLY
- 12 .debug_info   00037d70  00000000  00000000  00040232  2**0
+ 12 .debug_info   00037cec  00000000  00000000  00040232  2**0
                   CONTENTS, READONLY, DEBUGGING
- 13 .debug_abbrev 00006f08  00000000  00000000  00077fa2  2**0
+ 13 .debug_abbrev 00006f08  00000000  00000000  00077f1e  2**0
                   CONTENTS, READONLY, DEBUGGING
- 14 .debug_aranges 00002128  00000000  00000000  0007eeb0  2**3
+ 14 .debug_aranges 00002128  00000000  00000000  0007ee28  2**3
                   CONTENTS, READONLY, DEBUGGING
- 15 .debug_ranges 00001ef8  00000000  00000000  00080fd8  2**3
+ 15 .debug_ranges 00001ef8  00000000  00000000  00080f50  2**3
                   CONTENTS, READONLY, DEBUGGING
- 16 .debug_macro  00037b7f  00000000  00000000  00082ed0  2**0
+ 16 .debug_macro  00037b7f  00000000  00000000  00082e48  2**0
                   CONTENTS, READONLY, DEBUGGING
- 17 .debug_line   00022d46  00000000  00000000  000baa4f  2**0
+ 17 .debug_line   00022d48  00000000  00000000  000ba9c7  2**0
                   CONTENTS, READONLY, DEBUGGING
- 18 .debug_str    00135521  00000000  00000000  000dd795  2**0
+ 18 .debug_str    00135551  00000000  00000000  000dd70f  2**0
                   CONTENTS, READONLY, DEBUGGING
- 19 .comment      000000eb  00000000  00000000  00212cb6  2**0
+ 19 .comment      000000eb  00000000  00000000  00212c60  2**0
                   CONTENTS, READONLY
- 20 .debug_frame  00008fac  00000000  00000000  00212da4  2**2
+ 20 .debug_frame  00008fac  00000000  00000000  00212d4c  2**2
                   CONTENTS, READONLY, DEBUGGING
- 21 .debug_loc    00004600  00000000  00000000  0021bd50  2**0
+ 21 .debug_loc    00004600  00000000  00000000  0021bcf8  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -731,51 +731,53 @@ void HAL_ETH_MspInit(ETH_HandleTypeDef* ethHandle)
  800084c:	40020c00 	.word	0x40020c00
 
 08000850 <calculateFFT>:
-static float32_t fftOutputDataMag[(SAMPLE_ARRAY_SIZE * EPOCHES) / 2];
-static test_struct *data;
 static samples_struct *bufferStruct;
 
+
+/* Task for receiving data from receivedQueue, calculate fft, calculate magnitude and push results to sendQueue */
 void calculateFFT( void *pvParameters )
 {
  8000850:	b580      	push	{r7, lr}
- 8000852:	b094      	sub	sp, #80	; 0x50
+ 8000852:	b090      	sub	sp, #64	; 0x40
  8000854:	af00      	add	r7, sp, #0
  8000856:	6078      	str	r0, [r7, #4]
 	uint32_t messageCounter = 0;
  8000858:	2300      	movs	r3, #0
- 800085a:	64fb      	str	r3, [r7, #76]	; 0x4c
-//	samples_struct receivedStruct;
+ 800085a:	63fb      	str	r3, [r7, #60]	; 0x3c
+	extern QueueHandle_t receivedQueue;
+	extern QueueHandle_t sendQueue;
 	/* Create FFT Instances */
 	arm_rfft_instance_q15 RealFFT_Instance;
-	arm_cfft_radix4_instance_q15 MyComplexFFT_Instance;
 	/* Initialize the FFT Structures	 */
 	arm_rfft_init_q15(&RealFFT_Instance,
- 800085c:	f107 001c 	add.w	r0, r7, #28
+ 800085c:	f107 000c 	add.w	r0, r7, #12
  8000860:	2301      	movs	r3, #1
  8000862:	2200      	movs	r2, #0
  8000864:	f44f 7100 	mov.w	r1, #512	; 0x200
  8000868:	f011 f940 	bl	8011aec <arm_rfft_init_q15>
-//	arm_max_f32(testOutput, fftSize, &maxValue, &testIndex);
-//	status = (testIndex != refIndex) ? ARM_MATH_TEST_FAILURE : ARM_MATH_SUCCESS;
-
+					  0,
+					  1); //Normal Order
     for( ;; )
     {
+    	/* get number of messages in receivedQueue */
     	UBaseType_t waitingMessages = uxQueueMessagesWaiting(receivedQueue);
  800086c:	4b3c      	ldr	r3, [pc, #240]	; (8000960 <calculateFFT+0x110>)
  800086e:	681b      	ldr	r3, [r3, #0]
  8000870:	4618      	mov	r0, r3
  8000872:	f004 fe51 	bl	8005518 <uxQueueMessagesWaiting>
- 8000876:	6378      	str	r0, [r7, #52]	; 0x34
+ 8000876:	6278      	str	r0, [r7, #36]	; 0x24
     	if (waitingMessages > 0)
- 8000878:	6b7b      	ldr	r3, [r7, #52]	; 0x34
+ 8000878:	6a7b      	ldr	r3, [r7, #36]	; 0x24
  800087a:	2b00      	cmp	r3, #0
  800087c:	d0f6      	beq.n	800086c <calculateFFT+0x1c>
     	{
+    		/* iterate over number of messages in receivedQueue */
     		for (int i = 0; i < waitingMessages; i++)
  800087e:	2300      	movs	r3, #0
- 8000880:	64bb      	str	r3, [r7, #72]	; 0x48
+ 8000880:	63bb      	str	r3, [r7, #56]	; 0x38
  8000882:	e067      	b.n	8000954 <calculateFFT+0x104>
     		{
+    			/* get one message from receivedQueue */
         		xQueueReceive( receivedQueue,
  8000884:	4b36      	ldr	r3, [pc, #216]	; (8000960 <calculateFFT+0x110>)
  8000886:	681b      	ldr	r3, [r3, #0]
@@ -785,22 +787,23 @@ void calculateFFT( void *pvParameters )
  800088e:	f004 fc7d 	bl	800518c <xQueueReceive>
         					   &bufferStruct,
 							   ( TickType_t ) 0 );
+        		/* transform message array with SAMPLE_ARRAY_SIZE to array with size of (SAMPLE_ARRAY_SIZE * EPOCHES) */
         		for (int i = 0; i < SAMPLE_ARRAY_SIZE; i++)
  8000892:	2300      	movs	r3, #0
- 8000894:	647b      	str	r3, [r7, #68]	; 0x44
+ 8000894:	637b      	str	r3, [r7, #52]	; 0x34
  8000896:	e015      	b.n	80008c4 <calculateFFT+0x74>
         		{
         			fftInputData[i + messageCounter * SAMPLE_ARRAY_SIZE] = bufferStruct->y[i];
  8000898:	4b32      	ldr	r3, [pc, #200]	; (8000964 <calculateFFT+0x114>)
  800089a:	681a      	ldr	r2, [r3, #0]
- 800089c:	6c7b      	ldr	r3, [r7, #68]	; 0x44
+ 800089c:	6b7b      	ldr	r3, [r7, #52]	; 0x34
  800089e:	3340      	adds	r3, #64	; 0x40
  80008a0:	00db      	lsls	r3, r3, #3
  80008a2:	4413      	add	r3, r2
  80008a4:	ed93 7b00 	vldr	d7, [r3]
- 80008a8:	6cfb      	ldr	r3, [r7, #76]	; 0x4c
+ 80008a8:	6bfb      	ldr	r3, [r7, #60]	; 0x3c
  80008aa:	019a      	lsls	r2, r3, #6
- 80008ac:	6c7b      	ldr	r3, [r7, #68]	; 0x44
+ 80008ac:	6b7b      	ldr	r3, [r7, #52]	; 0x34
  80008ae:	4413      	add	r3, r2
  80008b0:	eef7 7bc7 	vcvt.f32.f64	s15, d7
  80008b4:	4a2c      	ldr	r2, [pc, #176]	; (8000968 <calculateFFT+0x118>)
@@ -808,21 +811,22 @@ void calculateFFT( void *pvParameters )
  80008b8:	4413      	add	r3, r2
  80008ba:	edc3 7a00 	vstr	s15, [r3]
         		for (int i = 0; i < SAMPLE_ARRAY_SIZE; i++)
- 80008be:	6c7b      	ldr	r3, [r7, #68]	; 0x44
+ 80008be:	6b7b      	ldr	r3, [r7, #52]	; 0x34
  80008c0:	3301      	adds	r3, #1
- 80008c2:	647b      	str	r3, [r7, #68]	; 0x44
- 80008c4:	6c7b      	ldr	r3, [r7, #68]	; 0x44
+ 80008c2:	637b      	str	r3, [r7, #52]	; 0x34
+ 80008c4:	6b7b      	ldr	r3, [r7, #52]	; 0x34
  80008c6:	2b3f      	cmp	r3, #63	; 0x3f
  80008c8:	dde6      	ble.n	8000898 <calculateFFT+0x48>
         		}
-            	if (messageCounter == EPOCHES -1 )
- 80008ca:	6cfb      	ldr	r3, [r7, #76]	; 0x4c
+        		/* check for fftInputData is filled with (SAMPLE_ARRAY_SIZE * EPOCHES) of data */
+            	if (messageCounter < EPOCHES )
+ 80008ca:	6bfb      	ldr	r3, [r7, #60]	; 0x3c
  80008cc:	2b0f      	cmp	r3, #15
- 80008ce:	d13b      	bne.n	8000948 <calculateFFT+0xf8>
+ 80008ce:	d83b      	bhi.n	8000948 <calculateFFT+0xf8>
             	{
-            		// TODO: Implement FFT here
+            		/* calculate fft */
             		arm_rfft_q15(&RealFFT_Instance,
- 80008d0:	f107 031c 	add.w	r3, r7, #28
+ 80008d0:	f107 030c 	add.w	r3, r7, #12
  80008d4:	4a25      	ldr	r2, [pc, #148]	; (800096c <calculateFFT+0x11c>)
  80008d6:	4924      	ldr	r1, [pc, #144]	; (8000968 <calculateFFT+0x118>)
  80008d8:	4618      	mov	r0, r3
@@ -838,76 +842,78 @@ void calculateFFT( void *pvParameters )
  80008e6:	f011 f989 	bl	8011bfc <arm_cmplx_mag_q15>
             						  (q15_t *) fftOutputDataMag,
 									  EPOCHES * SAMPLE_ARRAY_SIZE);
-            		unsigned int cnt = 0;
+            		unsigned int fftOuputDataMagCounter = 0;
  80008ea:	2300      	movs	r3, #0
- 80008ec:	643b      	str	r3, [r7, #64]	; 0x40
-            		/* Prepare Data for sending */
-            		for (int ii = 0; ii < (EPOCHES / 2); ii++)
+ 80008ec:	633b      	str	r3, [r7, #48]	; 0x30
+            		/* Split results in pieces of SAMPLE_ARRAY_SIZE and put it into sendQueue */
+            		for ( unsigned int epochesCounter = 0; epochesCounter < (EPOCHES / 2); epochesCounter++)
  80008ee:	2300      	movs	r3, #0
- 80008f0:	63fb      	str	r3, [r7, #60]	; 0x3c
+ 80008f0:	62fb      	str	r3, [r7, #44]	; 0x2c
  80008f2:	e024      	b.n	800093e <calculateFFT+0xee>
             		{
-            			for (int jj = 0; jj < SAMPLE_ARRAY_SIZE ; jj++)
+            			for ( unsigned int sampleSizeCounter = 0; sampleSizeCounter < SAMPLE_ARRAY_SIZE ; sampleSizeCounter++)
  80008f4:	2300      	movs	r3, #0
- 80008f6:	63bb      	str	r3, [r7, #56]	; 0x38
- 80008f8:	e01b      	b.n	8000932 <calculateFFT+0xe2>
+ 80008f6:	62bb      	str	r3, [r7, #40]	; 0x28
+ 80008f8:	e014      	b.n	8000924 <calculateFFT+0xd4>
             			{
-            				data->results[jj] = (double) (fftOutputDataMag[cnt]);
+            				/* copy SAMPLE_SIZE_ARRAY of data into queueSendData array */
+            				queueSendData->results[sampleSizeCounter] = (double) (fftOutputDataMag[fftOuputDataMagCounter]);
  80008fa:	4a1d      	ldr	r2, [pc, #116]	; (8000970 <calculateFFT+0x120>)
- 80008fc:	6c3b      	ldr	r3, [r7, #64]	; 0x40
+ 80008fc:	6b3b      	ldr	r3, [r7, #48]	; 0x30
  80008fe:	009b      	lsls	r3, r3, #2
  8000900:	4413      	add	r3, r2
  8000902:	edd3 7a00 	vldr	s15, [r3]
  8000906:	4b1b      	ldr	r3, [pc, #108]	; (8000974 <calculateFFT+0x124>)
  8000908:	681a      	ldr	r2, [r3, #0]
  800090a:	eeb7 7ae7 	vcvt.f64.f32	d7, s15
- 800090e:	6bbb      	ldr	r3, [r7, #56]	; 0x38
+ 800090e:	6abb      	ldr	r3, [r7, #40]	; 0x28
  8000910:	00db      	lsls	r3, r3, #3
  8000912:	4413      	add	r3, r2
  8000914:	ed83 7b00 	vstr	d7, [r3]
-            				cnt++;
- 8000918:	6c3b      	ldr	r3, [r7, #64]	; 0x40
+            				fftOuputDataMagCounter++;
+ 8000918:	6b3b      	ldr	r3, [r7, #48]	; 0x30
  800091a:	3301      	adds	r3, #1
- 800091c:	643b      	str	r3, [r7, #64]	; 0x40
-                    		xQueueSend( sendQueue,
- 800091e:	4b16      	ldr	r3, [pc, #88]	; (8000978 <calculateFFT+0x128>)
- 8000920:	6818      	ldr	r0, [r3, #0]
- 8000922:	2300      	movs	r3, #0
- 8000924:	2200      	movs	r2, #0
- 8000926:	4913      	ldr	r1, [pc, #76]	; (8000974 <calculateFFT+0x124>)
- 8000928:	f004 fa80 	bl	8004e2c <xQueueGenericSend>
-            			for (int jj = 0; jj < SAMPLE_ARRAY_SIZE ; jj++)
- 800092c:	6bbb      	ldr	r3, [r7, #56]	; 0x38
- 800092e:	3301      	adds	r3, #1
- 8000930:	63bb      	str	r3, [r7, #56]	; 0x38
- 8000932:	6bbb      	ldr	r3, [r7, #56]	; 0x38
- 8000934:	2b3f      	cmp	r3, #63	; 0x3f
- 8000936:	dde0      	ble.n	80008fa <calculateFFT+0xaa>
-            		for (int ii = 0; ii < (EPOCHES / 2); ii++)
- 8000938:	6bfb      	ldr	r3, [r7, #60]	; 0x3c
- 800093a:	3301      	adds	r3, #1
- 800093c:	63fb      	str	r3, [r7, #60]	; 0x3c
- 800093e:	6bfb      	ldr	r3, [r7, #60]	; 0x3c
- 8000940:	2b07      	cmp	r3, #7
- 8000942:	ddd7      	ble.n	80008f4 <calculateFFT+0xa4>
-                    				    &data,
-        								( TickType_t ) 0 );
+ 800091c:	633b      	str	r3, [r7, #48]	; 0x30
+            			for ( unsigned int sampleSizeCounter = 0; sampleSizeCounter < SAMPLE_ARRAY_SIZE ; sampleSizeCounter++)
+ 800091e:	6abb      	ldr	r3, [r7, #40]	; 0x28
+ 8000920:	3301      	adds	r3, #1
+ 8000922:	62bb      	str	r3, [r7, #40]	; 0x28
+ 8000924:	6abb      	ldr	r3, [r7, #40]	; 0x28
+ 8000926:	2b3f      	cmp	r3, #63	; 0x3f
+ 8000928:	d9e7      	bls.n	80008fa <calculateFFT+0xaa>
             			}
+            			/* put queueSendData into sendQueue */
+                		xQueueSend( sendQueue,
+ 800092a:	4b13      	ldr	r3, [pc, #76]	; (8000978 <calculateFFT+0x128>)
+ 800092c:	6818      	ldr	r0, [r3, #0]
+ 800092e:	2300      	movs	r3, #0
+ 8000930:	2200      	movs	r2, #0
+ 8000932:	4910      	ldr	r1, [pc, #64]	; (8000974 <calculateFFT+0x124>)
+ 8000934:	f004 fa7a 	bl	8004e2c <xQueueGenericSend>
+            		for ( unsigned int epochesCounter = 0; epochesCounter < (EPOCHES / 2); epochesCounter++)
+ 8000938:	6afb      	ldr	r3, [r7, #44]	; 0x2c
+ 800093a:	3301      	adds	r3, #1
+ 800093c:	62fb      	str	r3, [r7, #44]	; 0x2c
+ 800093e:	6afb      	ldr	r3, [r7, #44]	; 0x2c
+ 8000940:	2b07      	cmp	r3, #7
+ 8000942:	d9d7      	bls.n	80008f4 <calculateFFT+0xa4>
+                				    &queueSendData,
+    								( TickType_t ) 0 );
             		}
             		messageCounter = 0;
  8000944:	2300      	movs	r3, #0
- 8000946:	64fb      	str	r3, [r7, #76]	; 0x4c
+ 8000946:	63fb      	str	r3, [r7, #60]	; 0x3c
     			}
         		messageCounter++;
- 8000948:	6cfb      	ldr	r3, [r7, #76]	; 0x4c
+ 8000948:	6bfb      	ldr	r3, [r7, #60]	; 0x3c
  800094a:	3301      	adds	r3, #1
- 800094c:	64fb      	str	r3, [r7, #76]	; 0x4c
+ 800094c:	63fb      	str	r3, [r7, #60]	; 0x3c
     		for (int i = 0; i < waitingMessages; i++)
- 800094e:	6cbb      	ldr	r3, [r7, #72]	; 0x48
+ 800094e:	6bbb      	ldr	r3, [r7, #56]	; 0x38
  8000950:	3301      	adds	r3, #1
- 8000952:	64bb      	str	r3, [r7, #72]	; 0x48
- 8000954:	6cbb      	ldr	r3, [r7, #72]	; 0x48
- 8000956:	6b7a      	ldr	r2, [r7, #52]	; 0x34
+ 8000952:	63bb      	str	r3, [r7, #56]	; 0x38
+ 8000954:	6bbb      	ldr	r3, [r7, #56]	; 0x38
+ 8000956:	6a7a      	ldr	r2, [r7, #36]	; 0x24
  8000958:	429a      	cmp	r2, r3
  800095a:	d893      	bhi.n	8000884 <calculateFFT+0x34>
     {

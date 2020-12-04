@@ -11098,7 +11098,8 @@ LOAD c:/st/stm32cubeide_1.4.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.exte
                 0x000000002000123c      0x800 Core/Src/fft.o
  .bss.fftOutputDataMag
                 0x0000000020001a3c      0x800 Core/Src/fft.o
- .bss.data      0x000000002000223c        0x4 Core/Src/fft.o
+ .bss.queueSendData
+                0x000000002000223c        0x4 Core/Src/fft.o
  .bss.bufferStruct
                 0x0000000020002240        0x4 Core/Src/fft.o
  .bss.xInitialised.9770
@@ -11505,60 +11506,60 @@ LOAD c:/st/stm32cubeide_1.4.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.exte
                 0x000000000000122e       0x20 c:/st/stm32cubeide_1.4.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.7-2018-q2-update.win32_1.5.0.202011040924/tools/bin/../lib/gcc/arm-none-eabi/7.3.1/thumb/v7e-m/fpv5/hard/crtn.o
 OUTPUT(FreeRTOS Ethernet EDF.elf elf32-littlearm)
 
-.debug_info     0x0000000000000000    0x37d70
+.debug_info     0x0000000000000000    0x37cec
  .debug_info    0x0000000000000000      0xeff Core/Src/eth.o
- .debug_info    0x0000000000000eff      0xd6a Core/Src/fft.o
- .debug_info    0x0000000000001c69      0x527 Core/Src/gpio.o
- .debug_info    0x0000000000002190      0xc2c Core/Src/helper_functions.o
- .debug_info    0x0000000000002dbc      0xb0f Core/Src/hooks.o
- .debug_info    0x00000000000038cb     0x2024 Core/Src/main.o
- .debug_info    0x00000000000058ef      0x7b5 Core/Src/rng.o
- .debug_info    0x00000000000060a4      0x389 Core/Src/stm32f7xx_hal_msp.o
- .debug_info    0x000000000000642d      0xc49 Core/Src/stm32f7xx_hal_timebase_tim.o
- .debug_info    0x0000000000007076     0x10b3 Core/Src/stm32f7xx_it.o
- .debug_info    0x0000000000008129      0x985 Core/Src/sysmem.o
- .debug_info    0x0000000000008aae      0x73d Core/Src/system_stm32f7xx.o
- .debug_info    0x00000000000091eb      0xca3 Core/Src/udp_communication.o
- .debug_info    0x0000000000009e8e      0xa64 Core/Src/usart.o
- .debug_info    0x000000000000a8f2       0x22 Core/Startup/startup_stm32f769nihx.o
- .debug_info    0x000000000000a914      0xa4c Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal.o
- .debug_info    0x000000000000b360     0x1092 Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_cortex.o
- .debug_info    0x000000000000c3f2      0x7e9 Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_gpio.o
- .debug_info    0x000000000000cbdb      0x96b Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_pwr_ex.o
- .debug_info    0x000000000000d546      0x996 Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rcc.o
- .debug_info    0x000000000000dedc      0x7d1 Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rcc_ex.o
- .debug_info    0x000000000000e6ad      0x552 Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rng.o
- .debug_info    0x000000000000ebff     0x25bc Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_tim.o
- .debug_info    0x00000000000111bb     0x1307 Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_tim_ex.o
- .debug_info    0x00000000000124c2     0x16f7 Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_uart.o
- .debug_info    0x0000000000013bb9     0x140e Drivers/STM32F7xx_HAL_Driver/Src/stm32fxx_hal_eth.o
- .debug_info    0x0000000000014fc7     0x10d6 Middlewares/FreeRTOS/Src/event_groups.o
- .debug_info    0x000000000001609d      0xba4 Middlewares/FreeRTOS/Src/list.o
- .debug_info    0x0000000000016c41     0x1c69 Middlewares/FreeRTOS/Src/queue.o
- .debug_info    0x00000000000188aa     0x2421 Middlewares/FreeRTOS/Src/tasks.o
- .debug_info    0x000000000001accb     0x14b6 Middlewares/FreeRTOS/Src/timers.o
- .debug_info    0x000000000001c181      0xcdd Middlewares/FreeRTOS/Src/portable/MemMang/heap_4.o
- .debug_info    0x000000000001ce5e      0xc93 Middlewares/FreeRTOS/Src/portable/port/port.o
- .debug_info    0x000000000001daf1     0x1413 Middlewares/FreeRTOS-TCP/Src/FreeRTOS_ARP.o
- .debug_info    0x000000000001ef04     0x24ee Middlewares/FreeRTOS-TCP/Src/FreeRTOS_DNS.o
- .debug_info    0x00000000000213f2     0x2dee Middlewares/FreeRTOS-TCP/Src/FreeRTOS_IP.o
- .debug_info    0x00000000000241e0     0x350f Middlewares/FreeRTOS-TCP/Src/FreeRTOS_Sockets.o
- .debug_info    0x00000000000276ef      0xf7f Middlewares/FreeRTOS-TCP/Src/FreeRTOS_Stream_Buffer.o
- .debug_info    0x000000000002866e     0x317c Middlewares/FreeRTOS-TCP/Src/FreeRTOS_TCP_IP.o
- .debug_info    0x000000000002b7ea     0x1b60 Middlewares/FreeRTOS-TCP/Src/FreeRTOS_TCP_WIN.o
- .debug_info    0x000000000002d34a     0x1884 Middlewares/FreeRTOS-TCP/Src/FreeRTOS_UDP_IP.o
- .debug_info    0x000000000002ebce     0x224c Middlewares/FreeRTOS-TCP/Src/NetworkInterface.o
- .debug_info    0x0000000000030e1a     0x103f Middlewares/FreeRTOS-TCP/Src/phyHandling.o
- .debug_info    0x0000000000031e59      0xea3 Middlewares/FreeRTOS-TCP/Src/portable/BufferManagement/BufferAllocation_2.o
- .debug_info    0x0000000000032cfc      0xa97 ../Middlewares/CMSIS-DSP/libs\libarm_cortexM7lfdp_math.a(arm_rfft_q15.o)
- .debug_info    0x0000000000033793      0x356 ../Middlewares/CMSIS-DSP/libs\libarm_cortexM7lfdp_math.a(arm_rfft_init_q15.o)
- .debug_info    0x0000000000033ae9      0x3e9 ../Middlewares/CMSIS-DSP/libs\libarm_cortexM7lfdp_math.a(arm_cmplx_mag_q15.o)
- .debug_info    0x0000000000033ed2      0x1f6 ../Middlewares/CMSIS-DSP/libs\libarm_cortexM7lfdp_math.a(arm_sqrt_q15.o)
- .debug_info    0x00000000000340c8      0x9f5 ../Middlewares/CMSIS-DSP/libs\libarm_cortexM7lfdp_math.a(arm_const_structs.o)
- .debug_info    0x0000000000034abd      0x99d ../Middlewares/CMSIS-DSP/libs\libarm_cortexM7lfdp_math.a(arm_common_tables.o)
- .debug_info    0x000000000003545a      0xa25 ../Middlewares/CMSIS-DSP/libs\libarm_cortexM7lfdp_math.a(arm_cfft_q15.o)
- .debug_info    0x0000000000035e7f       0x85 ../Middlewares/CMSIS-DSP/libs\libarm_cortexM7lfdp_math.a(arm_bitreversal2.o)
- .debug_info    0x0000000000035f04     0x1e6c ../Middlewares/CMSIS-DSP/libs\libarm_cortexM7lfdp_math.a(arm_cfft_radix4_q15.o)
+ .debug_info    0x0000000000000eff      0xce6 Core/Src/fft.o
+ .debug_info    0x0000000000001be5      0x527 Core/Src/gpio.o
+ .debug_info    0x000000000000210c      0xc2c Core/Src/helper_functions.o
+ .debug_info    0x0000000000002d38      0xb0f Core/Src/hooks.o
+ .debug_info    0x0000000000003847     0x2024 Core/Src/main.o
+ .debug_info    0x000000000000586b      0x7b5 Core/Src/rng.o
+ .debug_info    0x0000000000006020      0x389 Core/Src/stm32f7xx_hal_msp.o
+ .debug_info    0x00000000000063a9      0xc49 Core/Src/stm32f7xx_hal_timebase_tim.o
+ .debug_info    0x0000000000006ff2     0x10b3 Core/Src/stm32f7xx_it.o
+ .debug_info    0x00000000000080a5      0x985 Core/Src/sysmem.o
+ .debug_info    0x0000000000008a2a      0x73d Core/Src/system_stm32f7xx.o
+ .debug_info    0x0000000000009167      0xca3 Core/Src/udp_communication.o
+ .debug_info    0x0000000000009e0a      0xa64 Core/Src/usart.o
+ .debug_info    0x000000000000a86e       0x22 Core/Startup/startup_stm32f769nihx.o
+ .debug_info    0x000000000000a890      0xa4c Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal.o
+ .debug_info    0x000000000000b2dc     0x1092 Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_cortex.o
+ .debug_info    0x000000000000c36e      0x7e9 Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_gpio.o
+ .debug_info    0x000000000000cb57      0x96b Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_pwr_ex.o
+ .debug_info    0x000000000000d4c2      0x996 Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rcc.o
+ .debug_info    0x000000000000de58      0x7d1 Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rcc_ex.o
+ .debug_info    0x000000000000e629      0x552 Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rng.o
+ .debug_info    0x000000000000eb7b     0x25bc Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_tim.o
+ .debug_info    0x0000000000011137     0x1307 Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_tim_ex.o
+ .debug_info    0x000000000001243e     0x16f7 Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_uart.o
+ .debug_info    0x0000000000013b35     0x140e Drivers/STM32F7xx_HAL_Driver/Src/stm32fxx_hal_eth.o
+ .debug_info    0x0000000000014f43     0x10d6 Middlewares/FreeRTOS/Src/event_groups.o
+ .debug_info    0x0000000000016019      0xba4 Middlewares/FreeRTOS/Src/list.o
+ .debug_info    0x0000000000016bbd     0x1c69 Middlewares/FreeRTOS/Src/queue.o
+ .debug_info    0x0000000000018826     0x2421 Middlewares/FreeRTOS/Src/tasks.o
+ .debug_info    0x000000000001ac47     0x14b6 Middlewares/FreeRTOS/Src/timers.o
+ .debug_info    0x000000000001c0fd      0xcdd Middlewares/FreeRTOS/Src/portable/MemMang/heap_4.o
+ .debug_info    0x000000000001cdda      0xc93 Middlewares/FreeRTOS/Src/portable/port/port.o
+ .debug_info    0x000000000001da6d     0x1413 Middlewares/FreeRTOS-TCP/Src/FreeRTOS_ARP.o
+ .debug_info    0x000000000001ee80     0x24ee Middlewares/FreeRTOS-TCP/Src/FreeRTOS_DNS.o
+ .debug_info    0x000000000002136e     0x2dee Middlewares/FreeRTOS-TCP/Src/FreeRTOS_IP.o
+ .debug_info    0x000000000002415c     0x350f Middlewares/FreeRTOS-TCP/Src/FreeRTOS_Sockets.o
+ .debug_info    0x000000000002766b      0xf7f Middlewares/FreeRTOS-TCP/Src/FreeRTOS_Stream_Buffer.o
+ .debug_info    0x00000000000285ea     0x317c Middlewares/FreeRTOS-TCP/Src/FreeRTOS_TCP_IP.o
+ .debug_info    0x000000000002b766     0x1b60 Middlewares/FreeRTOS-TCP/Src/FreeRTOS_TCP_WIN.o
+ .debug_info    0x000000000002d2c6     0x1884 Middlewares/FreeRTOS-TCP/Src/FreeRTOS_UDP_IP.o
+ .debug_info    0x000000000002eb4a     0x224c Middlewares/FreeRTOS-TCP/Src/NetworkInterface.o
+ .debug_info    0x0000000000030d96     0x103f Middlewares/FreeRTOS-TCP/Src/phyHandling.o
+ .debug_info    0x0000000000031dd5      0xea3 Middlewares/FreeRTOS-TCP/Src/portable/BufferManagement/BufferAllocation_2.o
+ .debug_info    0x0000000000032c78      0xa97 ../Middlewares/CMSIS-DSP/libs\libarm_cortexM7lfdp_math.a(arm_rfft_q15.o)
+ .debug_info    0x000000000003370f      0x356 ../Middlewares/CMSIS-DSP/libs\libarm_cortexM7lfdp_math.a(arm_rfft_init_q15.o)
+ .debug_info    0x0000000000033a65      0x3e9 ../Middlewares/CMSIS-DSP/libs\libarm_cortexM7lfdp_math.a(arm_cmplx_mag_q15.o)
+ .debug_info    0x0000000000033e4e      0x1f6 ../Middlewares/CMSIS-DSP/libs\libarm_cortexM7lfdp_math.a(arm_sqrt_q15.o)
+ .debug_info    0x0000000000034044      0x9f5 ../Middlewares/CMSIS-DSP/libs\libarm_cortexM7lfdp_math.a(arm_const_structs.o)
+ .debug_info    0x0000000000034a39      0x99d ../Middlewares/CMSIS-DSP/libs\libarm_cortexM7lfdp_math.a(arm_common_tables.o)
+ .debug_info    0x00000000000353d6      0xa25 ../Middlewares/CMSIS-DSP/libs\libarm_cortexM7lfdp_math.a(arm_cfft_q15.o)
+ .debug_info    0x0000000000035dfb       0x85 ../Middlewares/CMSIS-DSP/libs\libarm_cortexM7lfdp_math.a(arm_bitreversal2.o)
+ .debug_info    0x0000000000035e80     0x1e6c ../Middlewares/CMSIS-DSP/libs\libarm_cortexM7lfdp_math.a(arm_cfft_radix4_q15.o)
 
 .debug_abbrev   0x0000000000000000     0x6f08
  .debug_abbrev  0x0000000000000000      0x1b2 Core/Src/eth.o
@@ -11946,165 +11947,165 @@ OUTPUT(FreeRTOS Ethernet EDF.elf elf32-littlearm)
  .debug_macro   0x0000000000037129      0x5b2 Middlewares/FreeRTOS-TCP/Src/phyHandling.o
  .debug_macro   0x00000000000376db      0x4a4 Middlewares/FreeRTOS-TCP/Src/portable/BufferManagement/BufferAllocation_2.o
 
-.debug_line     0x0000000000000000    0x22d46
+.debug_line     0x0000000000000000    0x22d48
  .debug_line    0x0000000000000000      0x785 Core/Src/eth.o
- .debug_line    0x0000000000000785      0xa11 Core/Src/fft.o
- .debug_line    0x0000000000001196      0x73d Core/Src/gpio.o
- .debug_line    0x00000000000018d3      0x98d Core/Src/helper_functions.o
- .debug_line    0x0000000000002260      0xa6c Core/Src/hooks.o
- .debug_line    0x0000000000002ccc      0xc63 Core/Src/main.o
- .debug_line    0x000000000000392f      0x752 Core/Src/rng.o
- .debug_line    0x0000000000004081      0x730 Core/Src/stm32f7xx_hal_msp.o
- .debug_line    0x00000000000047b1      0x764 Core/Src/stm32f7xx_hal_timebase_tim.o
- .debug_line    0x0000000000004f15      0x9a7 Core/Src/stm32f7xx_it.o
- .debug_line    0x00000000000058bc      0x4c7 Core/Src/sysmem.o
- .debug_line    0x0000000000005d83      0x749 Core/Src/system_stm32f7xx.o
- .debug_line    0x00000000000064cc      0xb64 Core/Src/udp_communication.o
- .debug_line    0x0000000000007030      0x76e Core/Src/usart.o
- .debug_line    0x000000000000779e       0x85 Core/Startup/startup_stm32f769nihx.o
- .debug_line    0x0000000000007823      0x97c Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal.o
- .debug_line    0x000000000000819f      0xa59 Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_cortex.o
- .debug_line    0x0000000000008bf8      0x93d Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_gpio.o
- .debug_line    0x0000000000009535      0x879 Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_pwr_ex.o
- .debug_line    0x0000000000009dae      0x9e2 Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rcc.o
- .debug_line    0x000000000000a790      0x959 Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rcc_ex.o
- .debug_line    0x000000000000b0e9      0x8aa Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rng.o
- .debug_line    0x000000000000b993     0x1a75 Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_tim.o
- .debug_line    0x000000000000d408      0xe2f Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_tim_ex.o
- .debug_line    0x000000000000e237     0x12fc Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_uart.o
- .debug_line    0x000000000000f533      0xcd7 Drivers/STM32F7xx_HAL_Driver/Src/stm32fxx_hal_eth.o
- .debug_line    0x000000000001020a      0xb8b Middlewares/FreeRTOS/Src/event_groups.o
- .debug_line    0x0000000000010d95      0x9b2 Middlewares/FreeRTOS/Src/list.o
- .debug_line    0x0000000000011747     0x11fd Middlewares/FreeRTOS/Src/queue.o
- .debug_line    0x0000000000012944     0x15c6 Middlewares/FreeRTOS/Src/tasks.o
- .debug_line    0x0000000000013f0a      0xcc5 Middlewares/FreeRTOS/Src/timers.o
- .debug_line    0x0000000000014bcf      0xa87 Middlewares/FreeRTOS/Src/portable/MemMang/heap_4.o
- .debug_line    0x0000000000015656      0xabf Middlewares/FreeRTOS/Src/portable/port/port.o
- .debug_line    0x0000000000016115      0xe72 Middlewares/FreeRTOS-TCP/Src/FreeRTOS_ARP.o
- .debug_line    0x0000000000016f87     0x10a8 Middlewares/FreeRTOS-TCP/Src/FreeRTOS_DNS.o
- .debug_line    0x000000000001802f     0x144e Middlewares/FreeRTOS-TCP/Src/FreeRTOS_IP.o
- .debug_line    0x000000000001947d     0x187e Middlewares/FreeRTOS-TCP/Src/FreeRTOS_Sockets.o
- .debug_line    0x000000000001acfb      0xc0e Middlewares/FreeRTOS-TCP/Src/FreeRTOS_Stream_Buffer.o
- .debug_line    0x000000000001b909     0x1754 Middlewares/FreeRTOS-TCP/Src/FreeRTOS_TCP_IP.o
- .debug_line    0x000000000001d05d     0x108d Middlewares/FreeRTOS-TCP/Src/FreeRTOS_TCP_WIN.o
- .debug_line    0x000000000001e0ea      0xcec Middlewares/FreeRTOS-TCP/Src/FreeRTOS_UDP_IP.o
- .debug_line    0x000000000001edd6      0xf41 Middlewares/FreeRTOS-TCP/Src/NetworkInterface.o
- .debug_line    0x000000000001fd17      0xdf5 Middlewares/FreeRTOS-TCP/Src/phyHandling.o
- .debug_line    0x0000000000020b0c      0xc82 Middlewares/FreeRTOS-TCP/Src/portable/BufferManagement/BufferAllocation_2.o
- .debug_line    0x000000000002178e      0x2c3 ../Middlewares/CMSIS-DSP/libs\libarm_cortexM7lfdp_math.a(arm_rfft_q15.o)
- .debug_line    0x0000000000021a51      0x1f7 ../Middlewares/CMSIS-DSP/libs\libarm_cortexM7lfdp_math.a(arm_rfft_init_q15.o)
- .debug_line    0x0000000000021c48      0x1b2 ../Middlewares/CMSIS-DSP/libs\libarm_cortexM7lfdp_math.a(arm_cmplx_mag_q15.o)
- .debug_line    0x0000000000021dfa      0x182 ../Middlewares/CMSIS-DSP/libs\libarm_cortexM7lfdp_math.a(arm_sqrt_q15.o)
- .debug_line    0x0000000000021f7c      0x145 ../Middlewares/CMSIS-DSP/libs\libarm_cortexM7lfdp_math.a(arm_const_structs.o)
- .debug_line    0x00000000000220c1      0x12e ../Middlewares/CMSIS-DSP/libs\libarm_cortexM7lfdp_math.a(arm_common_tables.o)
- .debug_line    0x00000000000221ef      0x339 ../Middlewares/CMSIS-DSP/libs\libarm_cortexM7lfdp_math.a(arm_cfft_q15.o)
- .debug_line    0x0000000000022528       0x98 ../Middlewares/CMSIS-DSP/libs\libarm_cortexM7lfdp_math.a(arm_bitreversal2.o)
- .debug_line    0x00000000000225c0      0x786 ../Middlewares/CMSIS-DSP/libs\libarm_cortexM7lfdp_math.a(arm_cfft_radix4_q15.o)
+ .debug_line    0x0000000000000785      0xa13 Core/Src/fft.o
+ .debug_line    0x0000000000001198      0x73d Core/Src/gpio.o
+ .debug_line    0x00000000000018d5      0x98d Core/Src/helper_functions.o
+ .debug_line    0x0000000000002262      0xa6c Core/Src/hooks.o
+ .debug_line    0x0000000000002cce      0xc63 Core/Src/main.o
+ .debug_line    0x0000000000003931      0x752 Core/Src/rng.o
+ .debug_line    0x0000000000004083      0x730 Core/Src/stm32f7xx_hal_msp.o
+ .debug_line    0x00000000000047b3      0x764 Core/Src/stm32f7xx_hal_timebase_tim.o
+ .debug_line    0x0000000000004f17      0x9a7 Core/Src/stm32f7xx_it.o
+ .debug_line    0x00000000000058be      0x4c7 Core/Src/sysmem.o
+ .debug_line    0x0000000000005d85      0x749 Core/Src/system_stm32f7xx.o
+ .debug_line    0x00000000000064ce      0xb64 Core/Src/udp_communication.o
+ .debug_line    0x0000000000007032      0x76e Core/Src/usart.o
+ .debug_line    0x00000000000077a0       0x85 Core/Startup/startup_stm32f769nihx.o
+ .debug_line    0x0000000000007825      0x97c Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal.o
+ .debug_line    0x00000000000081a1      0xa59 Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_cortex.o
+ .debug_line    0x0000000000008bfa      0x93d Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_gpio.o
+ .debug_line    0x0000000000009537      0x879 Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_pwr_ex.o
+ .debug_line    0x0000000000009db0      0x9e2 Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rcc.o
+ .debug_line    0x000000000000a792      0x959 Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rcc_ex.o
+ .debug_line    0x000000000000b0eb      0x8aa Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rng.o
+ .debug_line    0x000000000000b995     0x1a75 Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_tim.o
+ .debug_line    0x000000000000d40a      0xe2f Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_tim_ex.o
+ .debug_line    0x000000000000e239     0x12fc Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_uart.o
+ .debug_line    0x000000000000f535      0xcd7 Drivers/STM32F7xx_HAL_Driver/Src/stm32fxx_hal_eth.o
+ .debug_line    0x000000000001020c      0xb8b Middlewares/FreeRTOS/Src/event_groups.o
+ .debug_line    0x0000000000010d97      0x9b2 Middlewares/FreeRTOS/Src/list.o
+ .debug_line    0x0000000000011749     0x11fd Middlewares/FreeRTOS/Src/queue.o
+ .debug_line    0x0000000000012946     0x15c6 Middlewares/FreeRTOS/Src/tasks.o
+ .debug_line    0x0000000000013f0c      0xcc5 Middlewares/FreeRTOS/Src/timers.o
+ .debug_line    0x0000000000014bd1      0xa87 Middlewares/FreeRTOS/Src/portable/MemMang/heap_4.o
+ .debug_line    0x0000000000015658      0xabf Middlewares/FreeRTOS/Src/portable/port/port.o
+ .debug_line    0x0000000000016117      0xe72 Middlewares/FreeRTOS-TCP/Src/FreeRTOS_ARP.o
+ .debug_line    0x0000000000016f89     0x10a8 Middlewares/FreeRTOS-TCP/Src/FreeRTOS_DNS.o
+ .debug_line    0x0000000000018031     0x144e Middlewares/FreeRTOS-TCP/Src/FreeRTOS_IP.o
+ .debug_line    0x000000000001947f     0x187e Middlewares/FreeRTOS-TCP/Src/FreeRTOS_Sockets.o
+ .debug_line    0x000000000001acfd      0xc0e Middlewares/FreeRTOS-TCP/Src/FreeRTOS_Stream_Buffer.o
+ .debug_line    0x000000000001b90b     0x1754 Middlewares/FreeRTOS-TCP/Src/FreeRTOS_TCP_IP.o
+ .debug_line    0x000000000001d05f     0x108d Middlewares/FreeRTOS-TCP/Src/FreeRTOS_TCP_WIN.o
+ .debug_line    0x000000000001e0ec      0xcec Middlewares/FreeRTOS-TCP/Src/FreeRTOS_UDP_IP.o
+ .debug_line    0x000000000001edd8      0xf41 Middlewares/FreeRTOS-TCP/Src/NetworkInterface.o
+ .debug_line    0x000000000001fd19      0xdf5 Middlewares/FreeRTOS-TCP/Src/phyHandling.o
+ .debug_line    0x0000000000020b0e      0xc82 Middlewares/FreeRTOS-TCP/Src/portable/BufferManagement/BufferAllocation_2.o
+ .debug_line    0x0000000000021790      0x2c3 ../Middlewares/CMSIS-DSP/libs\libarm_cortexM7lfdp_math.a(arm_rfft_q15.o)
+ .debug_line    0x0000000000021a53      0x1f7 ../Middlewares/CMSIS-DSP/libs\libarm_cortexM7lfdp_math.a(arm_rfft_init_q15.o)
+ .debug_line    0x0000000000021c4a      0x1b2 ../Middlewares/CMSIS-DSP/libs\libarm_cortexM7lfdp_math.a(arm_cmplx_mag_q15.o)
+ .debug_line    0x0000000000021dfc      0x182 ../Middlewares/CMSIS-DSP/libs\libarm_cortexM7lfdp_math.a(arm_sqrt_q15.o)
+ .debug_line    0x0000000000021f7e      0x145 ../Middlewares/CMSIS-DSP/libs\libarm_cortexM7lfdp_math.a(arm_const_structs.o)
+ .debug_line    0x00000000000220c3      0x12e ../Middlewares/CMSIS-DSP/libs\libarm_cortexM7lfdp_math.a(arm_common_tables.o)
+ .debug_line    0x00000000000221f1      0x339 ../Middlewares/CMSIS-DSP/libs\libarm_cortexM7lfdp_math.a(arm_cfft_q15.o)
+ .debug_line    0x000000000002252a       0x98 ../Middlewares/CMSIS-DSP/libs\libarm_cortexM7lfdp_math.a(arm_bitreversal2.o)
+ .debug_line    0x00000000000225c2      0x786 ../Middlewares/CMSIS-DSP/libs\libarm_cortexM7lfdp_math.a(arm_cfft_radix4_q15.o)
 
-.debug_str      0x0000000000000000   0x135521
+.debug_str      0x0000000000000000   0x135551
  .debug_str     0x0000000000000000   0x118eb5 Core/Src/eth.o
                                      0x119641 (size before relaxing)
- .debug_str     0x0000000000118eb5     0x93f1 Core/Src/fft.o
-                                     0x121ce0 (size before relaxing)
- .debug_str     0x00000000001222a6       0x48 Core/Src/gpio.o
+ .debug_str     0x0000000000118eb5     0x93ce Core/Src/fft.o
+                                     0x121cb8 (size before relaxing)
+ .debug_str     0x0000000000122283       0x48 Core/Src/gpio.o
                                      0x118b37 (size before relaxing)
- .debug_str     0x00000000001222ee      0x1eb Core/Src/helper_functions.o
+ .debug_str     0x00000000001222cb      0x1eb Core/Src/helper_functions.o
                                      0x11f3b1 (size before relaxing)
- .debug_str     0x00000000001224d9     0x1e1d Core/Src/hooks.o
+ .debug_str     0x00000000001224b6     0x1e1d Core/Src/hooks.o
                                      0x12107e (size before relaxing)
- .debug_str     0x00000000001242f6     0x2aed Core/Src/main.o
+ .debug_str     0x00000000001242d3     0x2aed Core/Src/main.o
                                      0x126bd3 (size before relaxing)
- .debug_str     0x0000000000126de3       0x4a Core/Src/rng.o
+ .debug_str     0x0000000000126dc0       0x4a Core/Src/rng.o
                                      0x119221 (size before relaxing)
- .debug_str     0x0000000000126e2d       0x2c Core/Src/stm32f7xx_hal_msp.o
+ .debug_str     0x0000000000126e0a       0x2c Core/Src/stm32f7xx_hal_msp.o
                                      0x118a9a (size before relaxing)
- .debug_str     0x0000000000126e59       0xaa Core/Src/stm32f7xx_hal_timebase_tim.o
+ .debug_str     0x0000000000126e36       0xaa Core/Src/stm32f7xx_hal_timebase_tim.o
                                      0x11959e (size before relaxing)
- .debug_str     0x0000000000126f03       0xa6 Core/Src/stm32f7xx_it.o
+ .debug_str     0x0000000000126ee0       0xa6 Core/Src/stm32f7xx_it.o
                                      0x11de27 (size before relaxing)
- .debug_str     0x0000000000126fa9      0x369 Core/Src/sysmem.o
+ .debug_str     0x0000000000126f86      0x369 Core/Src/sysmem.o
                                        0x5faf (size before relaxing)
- .debug_str     0x0000000000127312      0x179 Core/Src/system_stm32f7xx.o
+ .debug_str     0x00000000001272ef      0x179 Core/Src/system_stm32f7xx.o
                                      0x118b55 (size before relaxing)
- .debug_str     0x000000000012748b       0xd5 Core/Src/udp_communication.o
+ .debug_str     0x0000000000127468       0xd5 Core/Src/udp_communication.o
                                      0x124850 (size before relaxing)
- .debug_str     0x0000000000127560       0x57 Core/Src/usart.o
+ .debug_str     0x000000000012753d       0x57 Core/Src/usart.o
                                      0x118fa3 (size before relaxing)
- .debug_str     0x00000000001275b7       0x36 Core/Startup/startup_stm32f769nihx.o
+ .debug_str     0x0000000000127594       0x36 Core/Startup/startup_stm32f769nihx.o
                                          0x7e (size before relaxing)
- .debug_str     0x00000000001275ed      0x37c Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal.o
+ .debug_str     0x00000000001275ca      0x37c Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal.o
                                      0x1194e7 (size before relaxing)
- .debug_str     0x0000000000127969      0x37d Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_cortex.o
+ .debug_str     0x0000000000127946      0x37d Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_cortex.o
                                      0x119553 (size before relaxing)
- .debug_str     0x0000000000127ce6      0x244 Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_gpio.o
+ .debug_str     0x0000000000127cc3      0x244 Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_gpio.o
                                      0x118d2b (size before relaxing)
- .debug_str     0x0000000000127f2a      0x1d1 Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_pwr_ex.o
+ .debug_str     0x0000000000127f07      0x1d1 Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_pwr_ex.o
                                      0x118dcf (size before relaxing)
- .debug_str     0x00000000001280fb      0x275 Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rcc.o
+ .debug_str     0x00000000001280d8      0x275 Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rcc.o
                                      0x118e89 (size before relaxing)
- .debug_str     0x0000000000128370      0x161 Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rcc_ex.o
+ .debug_str     0x000000000012834d      0x161 Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rcc_ex.o
                                      0x118e3e (size before relaxing)
- .debug_str     0x00000000001284d1      0x175 Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rng.o
+ .debug_str     0x00000000001284ae      0x175 Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_rng.o
                                      0x118b85 (size before relaxing)
- .debug_str     0x0000000000128646      0xd7f Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_tim.o
+ .debug_str     0x0000000000128623      0xd7f Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_tim.o
                                      0x119be1 (size before relaxing)
- .debug_str     0x00000000001293c5      0x601 Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_tim_ex.o
+ .debug_str     0x00000000001293a2      0x601 Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_tim_ex.o
                                      0x1194f4 (size before relaxing)
- .debug_str     0x00000000001299c6      0x7f4 Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_uart.o
+ .debug_str     0x00000000001299a3      0x7f4 Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_uart.o
                                      0x1196ce (size before relaxing)
- .debug_str     0x000000000012a1ba      0x7c3 Drivers/STM32F7xx_HAL_Driver/Src/stm32fxx_hal_eth.o
+ .debug_str     0x000000000012a197      0x7c3 Drivers/STM32F7xx_HAL_Driver/Src/stm32fxx_hal_eth.o
                                      0x1196ef (size before relaxing)
- .debug_str     0x000000000012a97d      0x4e1 Middlewares/FreeRTOS/Src/event_groups.o
+ .debug_str     0x000000000012a95a      0x4e1 Middlewares/FreeRTOS/Src/event_groups.o
                                      0x121338 (size before relaxing)
- .debug_str     0x000000000012ae5e       0xb0 Middlewares/FreeRTOS/Src/list.o
+ .debug_str     0x000000000012ae3b       0xb0 Middlewares/FreeRTOS/Src/list.o
                                      0x11f53f (size before relaxing)
- .debug_str     0x000000000012af0e      0x8f8 Middlewares/FreeRTOS/Src/queue.o
+ .debug_str     0x000000000012aeeb      0x8f8 Middlewares/FreeRTOS/Src/queue.o
                                      0x1218da (size before relaxing)
- .debug_str     0x000000000012b806     0x143a Middlewares/FreeRTOS/Src/tasks.o
+ .debug_str     0x000000000012b7e3     0x143a Middlewares/FreeRTOS/Src/tasks.o
                                      0x123718 (size before relaxing)
- .debug_str     0x000000000012cc40      0x5c3 Middlewares/FreeRTOS/Src/timers.o
+ .debug_str     0x000000000012cc1d      0x5c3 Middlewares/FreeRTOS/Src/timers.o
                                      0x121c70 (size before relaxing)
- .debug_str     0x000000000012d203      0x31c Middlewares/FreeRTOS/Src/portable/MemMang/heap_4.o
+ .debug_str     0x000000000012d1e0      0x31c Middlewares/FreeRTOS/Src/portable/MemMang/heap_4.o
                                      0x120988 (size before relaxing)
- .debug_str     0x000000000012d51f      0x760 Middlewares/FreeRTOS/Src/portable/port/port.o
+ .debug_str     0x000000000012d4fc      0x760 Middlewares/FreeRTOS/Src/portable/port/port.o
                                      0x11f978 (size before relaxing)
- .debug_str     0x000000000012dc7f     0x19fa Middlewares/FreeRTOS-TCP/Src/FreeRTOS_ARP.o
+ .debug_str     0x000000000012dc5c     0x19fa Middlewares/FreeRTOS-TCP/Src/FreeRTOS_ARP.o
                                      0x1265a3 (size before relaxing)
- .debug_str     0x000000000012f679      0xf10 Middlewares/FreeRTOS-TCP/Src/FreeRTOS_DNS.o
+ .debug_str     0x000000000012f656      0xf10 Middlewares/FreeRTOS-TCP/Src/FreeRTOS_DNS.o
                                      0x1270b4 (size before relaxing)
- .debug_str     0x0000000000130589      0xfd7 Middlewares/FreeRTOS-TCP/Src/FreeRTOS_IP.o
+ .debug_str     0x0000000000130566      0xfd7 Middlewares/FreeRTOS-TCP/Src/FreeRTOS_IP.o
                                      0x127c55 (size before relaxing)
- .debug_str     0x0000000000131560      0xdc3 Middlewares/FreeRTOS-TCP/Src/FreeRTOS_Sockets.o
+ .debug_str     0x000000000013153d      0xdc3 Middlewares/FreeRTOS-TCP/Src/FreeRTOS_Sockets.o
                                      0x127773 (size before relaxing)
- .debug_str     0x0000000000132323       0xa8 Middlewares/FreeRTOS-TCP/Src/FreeRTOS_Stream_Buffer.o
+ .debug_str     0x0000000000132300       0xa8 Middlewares/FreeRTOS-TCP/Src/FreeRTOS_Stream_Buffer.o
                                      0x124cec (size before relaxing)
- .debug_str     0x00000000001323cb      0xb8b Middlewares/FreeRTOS-TCP/Src/FreeRTOS_TCP_IP.o
+ .debug_str     0x00000000001323a8      0xb8b Middlewares/FreeRTOS-TCP/Src/FreeRTOS_TCP_IP.o
                                      0x127719 (size before relaxing)
- .debug_str     0x0000000000132f56      0x5c0 Middlewares/FreeRTOS-TCP/Src/FreeRTOS_TCP_WIN.o
+ .debug_str     0x0000000000132f33      0x5c0 Middlewares/FreeRTOS-TCP/Src/FreeRTOS_TCP_WIN.o
                                      0x1254aa (size before relaxing)
- .debug_str     0x0000000000133516       0xa0 Middlewares/FreeRTOS-TCP/Src/FreeRTOS_UDP_IP.o
+ .debug_str     0x00000000001334f3       0xa0 Middlewares/FreeRTOS-TCP/Src/FreeRTOS_UDP_IP.o
                                      0x12695a (size before relaxing)
- .debug_str     0x00000000001335b6      0x98d Middlewares/FreeRTOS-TCP/Src/NetworkInterface.o
+ .debug_str     0x0000000000133593      0x98d Middlewares/FreeRTOS-TCP/Src/NetworkInterface.o
                                      0x12762c (size before relaxing)
- .debug_str     0x0000000000133f43      0x5ec Middlewares/FreeRTOS-TCP/Src/phyHandling.o
+ .debug_str     0x0000000000133f20      0x5ec Middlewares/FreeRTOS-TCP/Src/phyHandling.o
                                      0x125aff (size before relaxing)
- .debug_str     0x000000000013452f      0x2ae Middlewares/FreeRTOS-TCP/Src/portable/BufferManagement/BufferAllocation_2.o
+ .debug_str     0x000000000013450c      0x2ae Middlewares/FreeRTOS-TCP/Src/portable/BufferManagement/BufferAllocation_2.o
                                      0x124eff (size before relaxing)
- .debug_str     0x00000000001347dd      0x21f ../Middlewares/CMSIS-DSP/libs\libarm_cortexM7lfdp_math.a(arm_rfft_q15.o)
+ .debug_str     0x00000000001347ba      0x21f ../Middlewares/CMSIS-DSP/libs\libarm_cortexM7lfdp_math.a(arm_rfft_q15.o)
                                         0x3db (size before relaxing)
- .debug_str     0x00000000001349fc      0x1be ../Middlewares/CMSIS-DSP/libs\libarm_cortexM7lfdp_math.a(arm_rfft_init_q15.o)
+ .debug_str     0x00000000001349d9      0x1cd ../Middlewares/CMSIS-DSP/libs\libarm_cortexM7lfdp_math.a(arm_rfft_init_q15.o)
                                         0x48e (size before relaxing)
- .debug_str     0x0000000000134bba       0x79 ../Middlewares/CMSIS-DSP/libs\libarm_cortexM7lfdp_math.a(arm_cmplx_mag_q15.o)
+ .debug_str     0x0000000000134ba6       0x79 ../Middlewares/CMSIS-DSP/libs\libarm_cortexM7lfdp_math.a(arm_cmplx_mag_q15.o)
                                         0x320 (size before relaxing)
- .debug_str     0x0000000000134c33       0x74 ../Middlewares/CMSIS-DSP/libs\libarm_cortexM7lfdp_math.a(arm_sqrt_q15.o)
+ .debug_str     0x0000000000134c1f       0x74 ../Middlewares/CMSIS-DSP/libs\libarm_cortexM7lfdp_math.a(arm_sqrt_q15.o)
                                         0x313 (size before relaxing)
- .debug_str     0x0000000000134ca7      0x5c3 ../Middlewares/CMSIS-DSP/libs\libarm_cortexM7lfdp_math.a(arm_const_structs.o)
+ .debug_str     0x0000000000134c93      0x5c3 ../Middlewares/CMSIS-DSP/libs\libarm_cortexM7lfdp_math.a(arm_const_structs.o)
                                         0x8d9 (size before relaxing)
- .debug_str     0x000000000013526a      0x125 ../Middlewares/CMSIS-DSP/libs\libarm_cortexM7lfdp_math.a(arm_common_tables.o)
+ .debug_str     0x0000000000135256      0x125 ../Middlewares/CMSIS-DSP/libs\libarm_cortexM7lfdp_math.a(arm_common_tables.o)
                                         0x701 (size before relaxing)
- .debug_str     0x000000000013538f       0xd1 ../Middlewares/CMSIS-DSP/libs\libarm_cortexM7lfdp_math.a(arm_cfft_q15.o)
+ .debug_str     0x000000000013537b       0xda ../Middlewares/CMSIS-DSP/libs\libarm_cortexM7lfdp_math.a(arm_cfft_q15.o)
                                         0x387 (size before relaxing)
- .debug_str     0x0000000000135460       0xc1 ../Middlewares/CMSIS-DSP/libs\libarm_cortexM7lfdp_math.a(arm_cfft_radix4_q15.o)
+ .debug_str     0x0000000000135455       0xfc ../Middlewares/CMSIS-DSP/libs\libarm_cortexM7lfdp_math.a(arm_cfft_radix4_q15.o)
                                         0x3d9 (size before relaxing)
 
 .comment        0x0000000000000000       0xeb

@@ -10,56 +10,46 @@
 static float32_t fftInputData[SAMPLE_ARRAY_SIZE * EPOCHES];
 static float32_t fftOutputData[(SAMPLE_ARRAY_SIZE * EPOCHES) / 2];
 static float32_t fftOutputDataMag[(SAMPLE_ARRAY_SIZE * EPOCHES) / 2];
-static test_struct *data;
+static test_struct *queueSendData;
 static samples_struct *bufferStruct;
 
+
+/* Task for receiving data from receivedQueue, calculate fft, calculate magnitude and push results to sendQueue */
 void calculateFFT( void *pvParameters )
 {
 	uint32_t messageCounter = 0;
+	/* declare Queue`s */
 	extern QueueHandle_t receivedQueue;
 	extern QueueHandle_t sendQueue;
-//	samples_struct receivedStruct;
 	/* Create FFT Instances */
 	arm_rfft_instance_q15 RealFFT_Instance;
-	arm_cfft_radix4_instance_q15 MyComplexFFT_Instance;
 	/* Initialize the FFT Structures	 */
 	arm_rfft_init_q15(&RealFFT_Instance,
 			FFT_SIZE,
 					  0,
 					  1); //Normal Order
-//	samples_struct* samples_array;
-//	 = (samples_struct*) pvPortMalloc(epoches * sizeof(samples_struct));
-
-//	arm_status status;
-//	float32_t maxValue;
-//	status = ARM_MATH_SUCCESS;
-//	status=arm_cfft_init_f32(&varInstCfftF32,fftSize);
-//	/* Process the data through the CFFT/CIFFT module */
-//	arm_cfft_f32(&varInstCfftF32, testInput_f32_10khz, ifftFlag, doBitReverse);
-//	/* Process the data through the Complex Magnitude Module for
-//	calculating the magnitude at each bin */
-//	arm_cmplx_mag_f32(testInput_f32_10khz, testOutput, fftSize);
-//	/* Calculates maxValue and returns corresponding BIN value */
-//	arm_max_f32(testOutput, fftSize, &maxValue, &testIndex);
-//	status = (testIndex != refIndex) ? ARM_MATH_TEST_FAILURE : ARM_MATH_SUCCESS;
-
     for( ;; )
     {
+    	/* get number of messages in receivedQueue */
     	UBaseType_t waitingMessages = uxQueueMessagesWaiting(receivedQueue);
     	if (waitingMessages > 0)
     	{
+    		/* iterate over number of messages in receivedQueue */
     		for (int i = 0; i < waitingMessages; i++)
     		{
+    			/* get one message from receivedQueue */
         		xQueueReceive( receivedQueue,
         					   &bufferStruct,
 							   ( TickType_t ) 0 );
+        		/* transform message array with SAMPLE_ARRAY_SIZE to array with size of (SAMPLE_ARRAY_SIZE * EPOCHES) */
         		for (int i = 0; i < SAMPLE_ARRAY_SIZE; i++)
         		{
         			fftInputData[i + messageCounter * SAMPLE_ARRAY_SIZE] = bufferStruct->y[i];
         		}
-            	if (messageCounter == EPOCHES -1 )
+        		/* check for fftInputData is filled with (SAMPLE_ARRAY_SIZE * EPOCHES) of data */
+            	if (messageCounter < EPOCHES )
             	{
-            		// TODO: Implement FFT here
+            		/* calculate fft */
             		arm_rfft_q15(&RealFFT_Instance,
             				     (q15_t *) fftInputData,
     							 (q15_t *) fftOutputData);
@@ -68,18 +58,20 @@ void calculateFFT( void *pvParameters )
             		arm_cmplx_mag_q15((q15_t *) fftOutputData,
             						  (q15_t *) fftOutputDataMag,
 									  EPOCHES * SAMPLE_ARRAY_SIZE);
-            		unsigned int cnt = 0;
-            		/* Prepare Data for sending */
-            		for (int ii = 0; ii < (EPOCHES / 2); ii++)
+            		unsigned int fftOuputDataMagCounter = 0;
+            		/* Split results in pieces of SAMPLE_ARRAY_SIZE and put it into sendQueue */
+            		for ( unsigned int epochesCounter = 0; epochesCounter < (EPOCHES / 2); epochesCounter++)
             		{
-            			for (int jj = 0; jj < SAMPLE_ARRAY_SIZE ; jj++)
+            			for ( unsigned int sampleSizeCounter = 0; sampleSizeCounter < SAMPLE_ARRAY_SIZE ; sampleSizeCounter++)
             			{
-            				data->results[jj] = (double) (fftOutputDataMag[cnt]);
-            				cnt++;
-                    		xQueueSend( sendQueue,
-                    				    &data,
-        								( TickType_t ) 0 );
+            				/* copy SAMPLE_SIZE_ARRAY of data into queueSendData array */
+            				queueSendData->results[sampleSizeCounter] = (double) (fftOutputDataMag[fftOuputDataMagCounter]);
+            				fftOuputDataMagCounter++;
             			}
+            			/* put queueSendData into sendQueue */
+                		xQueueSend( sendQueue,
+                				    &queueSendData,
+    								( TickType_t ) 0 );
             		}
             		messageCounter = 0;
     			}
@@ -89,45 +81,3 @@ void calculateFFT( void *pvParameters )
 
     }
 }
-
-
-//void calculateFFT( void *pvParameters )
-//{
-//	int epoches = 100;
-//	const TickType_t x1000ms = 1000UL / portTICK_PERIOD_MS;
-//	extern QueueHandle_t receivedQueue;
-//	samples_struct receivedStruct;
-//	samples_struct samples_array[epoches];
-//	uint32_t messageCounter = 0;
-//
-////	arm_status status;
-////	float32_t maxValue;
-////	status = ARM_MATH_SUCCESS;
-////	status=arm_cfft_init_f32(&varInstCfftF32,fftSize);
-////	/* Process the data through the CFFT/CIFFT module */
-////	arm_cfft_f32(&varInstCfftF32, testInput_f32_10khz, ifftFlag, doBitReverse);
-////	/* Process the data through the Complex Magnitude Module for
-////	calculating the magnitude at each bin */
-////	arm_cmplx_mag_f32(testInput_f32_10khz, testOutput, fftSize);
-////	/* Calculates maxValue and returns corresponding BIN value */
-////	arm_max_f32(testOutput, fftSize, &maxValue, &testIndex);
-////	status = (testIndex != refIndex) ? ARM_MATH_TEST_FAILURE : ARM_MATH_SUCCESS;
-//
-//    for( ;; )
-//    {
-////    	UBaseType_t waitingMessages = uxQueueMessagesWaiting(receivedQueue);
-////    	if (waitingMessages > 0)
-//    	if (1)
-//    	{
-//        	xQueueReceive( receivedQueue, &receivedStruct, ( TickType_t ) 0);
-////        	samples_array[messageCounter] = &receivedStruct;
-//        	messageCounter++;
-//
-//    	}
-//    	if ( epoches == messageCounter - 1)
-//    	{
-//    		int i = 0;
-//    	}
-//    	vTaskDelay(x1000ms);
-//    }
-//}
