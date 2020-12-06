@@ -33,9 +33,10 @@
 #include "FreeRTOS_Sockets.h"
 #include <stdlib.h>
 #include <stdio.h>
-#include <user_variables.h>
+#include "user_variables.h"
 #include "hooks.h"
 #include "helper_functions.h"
+#include "arm_math.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -115,8 +116,8 @@ int main(void)
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
 
-  receivedQueue= xQueueCreate( 128, sizeof(samples_input_struct * ));
-  sendQueue= xQueueCreate( 128, sizeof(samples_input_struct * ));
+  receivedQueue= xQueueCreate( 8, sizeof(fft_input_samples * ));
+  sendQueue= xQueueCreate( 8, sizeof(fft_input_samples * ));
   FreeRTOS_IPInit( ucIPAddress,
                    ucNetMask,
                    ucGatewayAddress,

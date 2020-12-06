@@ -11,8 +11,39 @@
 
 
 static samples_input_struct *receivedStructPtr;
-static samples_output_struct *outputDataPtr;
-static samples_output_struct outputData;
+static fft_input_samples* combinedSamplesStructPtr;
+static fft_output_samples* resultsToSendStruct;
+static samples_output_struct outputDataPtr;
+//static samples_output_struct outputData;
+
+unsigned char checkBoolArrayTrue ( unsigned char* receivedPackets )
+{
+	unsigned int count = 0;
+	for (int entry = 0; entry < EPOCHES; entry++)
+	{
+		if (receivedPackets[entry])
+		{
+			count++;
+		}
+	}
+	if (count == EPOCHES)
+	{
+		return 1;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+void resetBoolArray ( unsigned char* receivedPackets )
+{
+	for (int entry = 0; entry < EPOCHES; entry++)
+	{
+		receivedPackets[entry] = 0;
+	}
+}
+
 
 void udpReceivingTask( void *pvParameters )
 {
@@ -20,6 +51,7 @@ void udpReceivingTask( void *pvParameters )
 	struct freertos_sockaddr xClient, xBindAddress;
 	uint32_t xClientLength = sizeof( xClient );
 	Socket_t xListeningSocket;
+	unsigned char receivedPackets[EPOCHES] = {0};
 	/* declare receivedQueue */
 	extern QueueHandle_t receivedQueue;
 
@@ -47,13 +79,32 @@ void udpReceivingTask( void *pvParameters )
 
 	   if( lBytes > 0 )
 	   {
-		   /* Data was received and can be processed here. */
-		   /* Toggle LED for visualization */
-		   HAL_GPIO_TogglePin(LD_USER1_GPIO_Port, LD_USER1_Pin);
-		   /* Put Received Data into the input_samples Queue */
-		   xQueueSend( receivedQueue,
-				       &receivedStructPtr,
-					    ( TickType_t ) 0 );
+			/* Data was received and can be processed here. */
+			/* Toggle LED for visualization */
+			HAL_GPIO_TogglePin(LD_USER1_GPIO_Port, LD_USER1_Pin);
+			/* transform message array with SAMPLE_ARRAY_SIZE to array with size of (SAMPLE_ARRAY_SIZE * EPOCHES) */
+			for (unsigned int sampleCounter = 0; sampleCounter < SAMPLE_ARRAY_SIZE; sampleCounter++ )
+			{
+				if (receivedPackets[receivedStructPtr->messageCounter] == 0)
+				{
+					combinedSamplesStructPtr->y[sampleCounter + receivedStructPtr->messageCounter * SAMPLE_ARRAY_SIZE] = receivedStructPtr->y[sampleCounter];
+				}
+				else
+				{
+					break;
+				}
+			}
+			receivedPackets[receivedStructPtr->messageCounter] = 1;
+			/* check for fftInputData is filled with (SAMPLE_ARRAY_SIZE * EPOCHES) of data */
+			if ( checkBoolArrayTrue( receivedPackets) )
+			{
+				/* Put Received Data into the input_samples Queue */
+				xQueueSend( receivedQueue,
+						    ( void * ) &combinedSamplesStructPtr,
+							( TickType_t ) 0 );
+				/* reset bool array */
+				resetBoolArray( receivedPackets );
+			}
 	   }
        if( lBytes >= 0 )
        {
@@ -104,23 +155,24 @@ void udpSendingTask( void *pvParameters )
 				HAL_GPIO_TogglePin(LD_USER2_GPIO_Port, LD_USER2_Pin);
 				/* get the next message from sendQueue */
 				xQueueReceive( sendQueue,
-							   &outputDataPtr,
+							   &resultsToSendStruct,
 							   ( TickType_t ) 0 );
 				/* assign packet number */
-				outputData.messageCounter = outputDataPtr->messageCounter;
-				/* transform pointer struct to struct */
-				// TODO: better conversion without loop?
-				for (unsigned int ii = 0; ii < SAMPLE_ARRAY_SIZE; ii++)
+				for (unsigned int packetCounter = 0; packetCounter < (FFT_SIZE / SAMPLE_ARRAY_SIZE); packetCounter++)
 				{
-					outputData.results[ii] = outputDataPtr->results[ii];
+					outputDataPtr.messageCounter = packetCounter;
+					for(unsigned int sampleCounter = 0; sampleCounter < SAMPLE_ARRAY_SIZE; sampleCounter++)
+					{
+						outputDataPtr.results[sampleCounter] = resultsToSendStruct->y[sampleCounter + packetCounter * SAMPLE_ARRAY_SIZE];
+					}
+					/* send outputData over UDP */
+					FreeRTOS_sendto( xSocket,
+									 &outputDataPtr,
+									 sizeof ( samples_output_struct ),
+									 0,
+									 &xDestinationAddress,
+									 sizeof( xDestinationAddress ) );
 				}
-				/* send outputData over UDP */
-				FreeRTOS_sendto( xSocket,
-							     &outputData,
-							     (sizeof ( double ) * 1 + sizeof ( double ) * SAMPLE_ARRAY_SIZE),
-							     0,
-							     &xDestinationAddress,
-							     sizeof( xDestinationAddress ) );
 			}
 		}
 	}

@@ -8,45 +8,14 @@
 
 
 /* define globals */
-static float32_t fftInputData[SAMPLE_ARRAY_SIZE * EPOCHES];
-static float32_t fftOutputData[(SAMPLE_ARRAY_SIZE * EPOCHES) / 2];
-static float32_t fftOutputDataMag[(SAMPLE_ARRAY_SIZE * EPOCHES) / 2];
-static samples_output_struct *queueSendDataPtr;
-static samples_input_struct *bufferStructPtr;
-
-unsigned char checkBoolArrayTrue ( unsigned char* receivedPackets )
-{
-	unsigned int count = 0;
-	for (int entry = 0; entry < EPOCHES; entry++)
-	{
-		if (receivedPackets[entry])
-		{
-			count++;
-		}
-	}
-	if (count == EPOCHES)
-	{
-		return 1;
-	}
-	else
-	{
-		return 0;
-	}
-}
-
-void resetBoolArray ( unsigned char* receivedPackets )
-{
-	for (int entry = 0; entry < EPOCHES; entry++)
-	{
-		receivedPackets[entry] = 0;
-	}
-}
+static fft_input_samples* fftInputStructPtr;
+static fft_output_samples* resultsStructPtr;
+static float32_t fftOutputData[FFT_SIZE];
 
 
 /* Task for receiving data from receivedQueue, calculate fft, calculate magnitude and push results to sendQueue */
 void calculateFFT( void *pvParameters )
 {
-	unsigned char receivedPackets[EPOCHES] = {0};
 	/* declare Queue`s */
 	extern QueueHandle_t receivedQueue;
 	extern QueueHandle_t sendQueue;
@@ -54,7 +23,7 @@ void calculateFFT( void *pvParameters )
 	arm_rfft_instance_q15 RealFFT_Instance;
 	/* Initialize the FFT Structures	 */
 	arm_rfft_init_q15(&RealFFT_Instance,
-			FFT_SIZE,
+					  FFT_SIZE,
 					  0,
 					  1); //Normal Order
     for( ;; )
@@ -68,52 +37,21 @@ void calculateFFT( void *pvParameters )
     		{
     			/* get one message from receivedQueue */
         		xQueueReceive( receivedQueue,
-        					   &bufferStructPtr,
+        					   &fftInputStructPtr,
 							   ( TickType_t ) 0 );
-        		/* transform message array with SAMPLE_ARRAY_SIZE to array with size of (SAMPLE_ARRAY_SIZE * EPOCHES) */
-        		for (unsigned int sampleCounter = 0; sampleCounter < SAMPLE_ARRAY_SIZE; sampleCounter++ )
-        		{
-        			if (receivedPackets[bufferStructPtr->messageCounter] == 0)
-        			{
-            			fftInputData[sampleCounter + bufferStructPtr->messageCounter * SAMPLE_ARRAY_SIZE] = bufferStructPtr->y[sampleCounter];
-        			}
-        			else
-        			{
-        				break;
-        			}
-        		}
-        		receivedPackets[bufferStructPtr->messageCounter] = 1;
-        		/* check for fftInputData is filled with (SAMPLE_ARRAY_SIZE * EPOCHES) of data */
-            	if ( checkBoolArrayTrue(receivedPackets) )
-            	{
-            		/* calculate fft */
-            		arm_rfft_q15(&RealFFT_Instance,
-            				     (q15_t *) fftInputData,
-    							 (q15_t *) fftOutputData);
-            		/* Process the data through the Complex Magnitude Module for
-            		  calculating the magnitude at each bin */
-            		arm_cmplx_mag_q15((q15_t *) fftOutputData,
-            						  (q15_t *) fftOutputDataMag,
-									  EPOCHES * SAMPLE_ARRAY_SIZE);
-            		unsigned int fftOuputDataMagCounter = 0;
-            		/* Split results in pieces of SAMPLE_ARRAY_SIZE and put it into sendQueue */
-            		for ( unsigned int epochesCounter = 0; epochesCounter < (EPOCHES / 2); epochesCounter++)
-            		{
-            			/* assign packet number */
-        				queueSendDataPtr->messageCounter = epochesCounter;
-            			for ( unsigned int sampleSizeCounter = 0; sampleSizeCounter < SAMPLE_ARRAY_SIZE ; sampleSizeCounter++)
-            			{
-            				/* copy SAMPLE_SIZE_ARRAY of data into queueSendDataPtr array */
-            				queueSendDataPtr->results[sampleSizeCounter] = (double) (fftOutputDataMag[fftOuputDataMagCounter]);
-            				fftOuputDataMagCounter++;
-            			}
-            			/* put queueSendData into sendQueue */
-                		xQueueSend( sendQueue,
-                				    &queueSendDataPtr,
-    								( TickType_t ) 0 );
-            		}
-            		resetBoolArray( receivedPackets );
-    			}
+				/* calculate fft */
+				arm_rfft_q15(&RealFFT_Instance,
+							 (q15_t *) fftInputStructPtr->y,
+							 (q15_t *) fftOutputData);
+				/* Process the data through the Complex Magnitude Module for
+				  calculating the magnitude at each bin */
+				arm_cmplx_mag_q15((q15_t *) fftOutputData,
+								  (q15_t *) &resultsStructPtr->y,
+								  TOTAL_SAMPLE_SIZE);
+				/* put queueSendData into sendQueue */
+				xQueueSend( sendQueue,
+							(void * ) &resultsStructPtr,
+							( TickType_t ) 0 );
     		}
     	}
 

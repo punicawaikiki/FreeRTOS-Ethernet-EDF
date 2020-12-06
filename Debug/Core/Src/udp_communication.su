@@ -1,2 +1,4 @@
-udp_communication.c:17:6:udpReceivingTask	56	static
-udp_communication.c:75:6:udpSendingTask	56	static
+udp_communication.c:19:15:checkBoolArrayTrue	24	static
+udp_communication.c:39:6:resetBoolArray	24	static
+udp_communication.c:48:6:udpReceivingTask	80	static
+udp_communication.c:126:6:udpSendingTask	64	static
