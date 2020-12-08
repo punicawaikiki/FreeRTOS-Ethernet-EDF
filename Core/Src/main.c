@@ -117,7 +117,11 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
   receivedQueue= xQueueCreate( 8, sizeof(fft_input_samples * ));
-  sendQueue= xQueueCreate( 8, sizeof(fft_input_samples * ));
+  sendQueue= xQueueCreate( 8, sizeof(fft_output_samples * ));
+  if ( ( receivedQueue == NULL ) || ( sendQueue == NULL) )
+  {
+	  HAL_GPIO_WritePin(LD_USER3_GPIO_Port, LD_USER3_Pin, 1);
+  }
   FreeRTOS_IPInit( ucIPAddress,
                    ucNetMask,
                    ucGatewayAddress,

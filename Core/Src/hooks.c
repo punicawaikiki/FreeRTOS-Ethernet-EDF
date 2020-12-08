@@ -44,9 +44,9 @@ static BaseType_t xTasksAlreadyCreated = pdFALSE;
     /* Both eNetworkUp and eNetworkDown events can be processed here. */
     if( eNetworkEvent == eNetworkUp )
     {
-    	xTaskCreate( udpSendingTask, "UDPSend", configMINIMAL_STACK_SIZE, NULL, standardTASK_PRIORITY, NULL );
-    	xTaskCreate( udpReceivingTask, "UDPReceive", configMINIMAL_STACK_SIZE, NULL, standardTASK_PRIORITY, NULL );
-    	xTaskCreate( calculateFFT, "UDPReceive", configMINIMAL_STACK_SIZE, NULL, standardTASK_PRIORITY, NULL );
+    	xTaskCreate( udpSendingTask, "UDPSend", ( unsigned short ) 800 , NULL, standardTASK_PRIORITY, NULL );
+    	xTaskCreate( udpReceivingTask, "UDPReceive", ( unsigned short ) 800 , NULL, standardTASK_PRIORITY, NULL );
+    	xTaskCreate( calculateFFT, "FFT", ( unsigned short ) 800 , NULL, standardTASK_PRIORITY, NULL );
         /* Create the tasks that use the TCP/IP stack if they have not already
         been created. */
         if( xTasksAlreadyCreated == pdFALSE )

@@ -13,7 +13,7 @@
 static samples_input_struct *receivedStructPtr;
 static fft_input_samples* combinedSamplesStructPtr;
 static fft_output_samples* resultsToSendStruct;
-static samples_output_struct outputDataPtr;
+//static samples_output_struct outputDataStructPtr;
 //static samples_output_struct outputData;
 
 unsigned char checkBoolArrayTrue ( unsigned char* receivedPackets )
@@ -145,7 +145,8 @@ void udpSendingTask( void *pvParameters )
 	for( ;; )
 	{
 		/* get number of messages in sendQueue */
-		UBaseType_t waitingMessages = uxQueueMessagesWaiting(sendQueue);
+		int waitingMessages = 5;
+//		UBaseType_t waitingMessages = uxQueueMessagesWaiting(sendQueue);
 		if (waitingMessages > 0)
 		{
 			/* iterate over sendQueue */
@@ -154,24 +155,42 @@ void udpSendingTask( void *pvParameters )
 				/* toggle USER_LED 2 for visualization */
 				HAL_GPIO_TogglePin(LD_USER2_GPIO_Port, LD_USER2_Pin);
 				/* get the next message from sendQueue */
-				xQueueReceive( sendQueue,
-							   &resultsToSendStruct,
-							   ( TickType_t ) 0 );
-				/* assign packet number */
-				for (unsigned int packetCounter = 0; packetCounter < (FFT_SIZE / SAMPLE_ARRAY_SIZE); packetCounter++)
+				if (xQueueReceive( sendQueue,
+					&( resultsToSendStruct ),
+				    ( TickType_t ) 10 ) == pdPASS )
 				{
-					outputDataPtr.messageCounter = packetCounter;
-					for(unsigned int sampleCounter = 0; sampleCounter < SAMPLE_ARRAY_SIZE; sampleCounter++)
+					/* assign packet number */
+					for (unsigned int packetCounter = 0; packetCounter < (FFT_SIZE / SAMPLE_ARRAY_SIZE); packetCounter++)
 					{
-						outputDataPtr.results[sampleCounter] = resultsToSendStruct->y[sampleCounter + packetCounter * SAMPLE_ARRAY_SIZE];
+						samples_output_struct outputDataStructPtr;
+						outputDataStructPtr.messageCounter = (double) packetCounter;
+						for(unsigned int sampleCounter = 0; sampleCounter < SAMPLE_ARRAY_SIZE; sampleCounter++)
+						{
+							outputDataStructPtr.results[sampleCounter] = (double) resultsToSendStruct->y[sampleCounter + packetCounter * SAMPLE_ARRAY_SIZE];
+						}
+//						/* send outputData over UDP */
+//						FreeRTOS_sendto( xSocket,
+//										 &outputDataStructPtr,
+//										 sizeof ( samples_output_struct ),
+//										 0,
+//										 &xDestinationAddress,
+//										 sizeof( xDestinationAddress ) );
+						int test[3] = {1, 2, 3};
+						int* i[3];
+						for (int ii = 0; ii < 3; ii++)
+						{
+							i[ii] = &ii;
+						}
+						unsigned int lala = sizeof(samples_output_struct);
+//						i = {1, 2, 3;
+						/* send outputData over UDP */
+						FreeRTOS_sendto( xSocket,
+										 &outputDataStructPtr,
+										 sizeof ( samples_output_struct ),
+										 0,
+										 &xDestinationAddress,
+										 sizeof( xDestinationAddress ) );
 					}
-					/* send outputData over UDP */
-					FreeRTOS_sendto( xSocket,
-									 &outputDataPtr,
-									 sizeof ( samples_output_struct ),
-									 0,
-									 &xDestinationAddress,
-									 sizeof( xDestinationAddress ) );
 				}
 			}
 		}
