@@ -168,21 +168,6 @@ void udpSendingTask( void *pvParameters )
 						{
 							outputDataStructPtr.results[sampleCounter] = (double) resultsToSendStruct->y[sampleCounter + packetCounter * SAMPLE_ARRAY_SIZE];
 						}
-//						/* send outputData over UDP */
-//						FreeRTOS_sendto( xSocket,
-//										 &outputDataStructPtr,
-//										 sizeof ( samples_output_struct ),
-//										 0,
-//										 &xDestinationAddress,
-//										 sizeof( xDestinationAddress ) );
-						int test[3] = {1, 2, 3};
-						int* i[3];
-						for (int ii = 0; ii < 3; ii++)
-						{
-							i[ii] = &ii;
-						}
-						unsigned int lala = sizeof(samples_output_struct);
-//						i = {1, 2, 3;
 						/* send outputData over UDP */
 						FreeRTOS_sendto( xSocket,
 										 &outputDataStructPtr,

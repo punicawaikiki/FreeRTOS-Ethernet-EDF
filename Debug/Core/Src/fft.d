@@ -42,7 +42,7 @@ Core/Src/fft.o: ../Core/Src/fft.c ../Core/Inc/user_variables.h \
  ../Middlewares/FreeRTOS/Inc/portable/portmacro.h \
  ../Middlewares/FreeRTOS/Inc/mpu_wrappers.h \
  ../Middlewares/FreeRTOS/Inc/queue.h ../Middlewares/FreeRTOS/Inc/task.h \
- ../Middlewares/FreeRTOS/Inc/list.h
+ ../Middlewares/FreeRTOS/Inc/list.h ../Core/Inc/main.h
 
 ../Core/Inc/user_variables.h:
 
@@ -137,3 +137,5 @@ Core/Src/fft.o: ../Core/Src/fft.c ../Core/Inc/user_variables.h \
 ../Middlewares/FreeRTOS/Inc/task.h:
 
 ../Middlewares/FreeRTOS/Inc/list.h:
+
+../Core/Inc/main.h:
