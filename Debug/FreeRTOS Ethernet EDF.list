@@ -27,25 +27,25 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   ALLOC
  11 .ARM.attributes 0000002e  00000000  00000000  00040208  2**0
                   CONTENTS, READONLY
- 12 .debug_info   00035259  00000000  00000000  00040236  2**0
+ 12 .debug_info   00035218  00000000  00000000  00040236  2**0
                   CONTENTS, READONLY, DEBUGGING
- 13 .debug_abbrev 00006b25  00000000  00000000  0007548f  2**0
+ 13 .debug_abbrev 00006b25  00000000  00000000  0007544e  2**0
                   CONTENTS, READONLY, DEBUGGING
- 14 .debug_aranges 000020f0  00000000  00000000  0007bfb8  2**3
+ 14 .debug_aranges 000020f0  00000000  00000000  0007bf78  2**3
                   CONTENTS, READONLY, DEBUGGING
- 15 .debug_ranges 00001ef8  00000000  00000000  0007e0a8  2**3
+ 15 .debug_ranges 00001ef8  00000000  00000000  0007e068  2**3
                   CONTENTS, READONLY, DEBUGGING
- 16 .debug_macro  00037b7a  00000000  00000000  0007ffa0  2**0
+ 16 .debug_macro  00037b7a  00000000  00000000  0007ff60  2**0
                   CONTENTS, READONLY, DEBUGGING
- 17 .debug_line   00022ebf  00000000  00000000  000b7b1a  2**0
+ 17 .debug_line   00022ebf  00000000  00000000  000b7ada  2**0
                   CONTENTS, READONLY, DEBUGGING
- 18 .debug_str    00135194  00000000  00000000  000da9d9  2**0
+ 18 .debug_str    00135180  00000000  00000000  000da999  2**0
                   CONTENTS, READONLY, DEBUGGING
- 19 .comment      000000eb  00000000  00000000  0020fb6d  2**0
+ 19 .comment      000000eb  00000000  00000000  0020fb19  2**0
                   CONTENTS, READONLY
- 20 .debug_frame  00009060  00000000  00000000  0020fc58  2**2
+ 20 .debug_frame  00009060  00000000  00000000  0020fc04  2**2
                   CONTENTS, READONLY, DEBUGGING
- 21 .debug_loc    0000392e  00000000  00000000  00218cb8  2**0
+ 21 .debug_loc    0000392e  00000000  00000000  00218c64  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -2243,9 +2243,9 @@ void SystemInit(void)
  80010a8:	e000ed00 	.word	0xe000ed00
 
 080010ac <checkBoolArrayTrue>:
+static samples_input_struct *receivedStructPtr;
+static fft_input_samples* combinedSamplesStructPtr;
 static float32_t fftResults[FFT_SIZE];
-//static samples_output_struct outputDataStructPtr;
-//static samples_output_struct outputData;
 
 unsigned char checkBoolArrayTrue ( unsigned char* receivedPackets )
 {
@@ -2378,7 +2378,7 @@ void udpReceivingTask( void *pvParameters )
  800114c:	f1b3 3fff 	cmp.w	r3, #4294967295
  8001150:	d103      	bne.n	800115a <udpReceivingTask+0x36>
  8001152:	4939      	ldr	r1, [pc, #228]	; (8001238 <udpReceivingTask+0x114>)
- 8001154:	2041      	movs	r0, #65	; 0x41
+ 8001154:	203e      	movs	r0, #62	; 0x3e
  8001156:	f7ff fcea 	bl	8000b2e <vAssertCalled>
 
    /* Bind to port 55556. */
@@ -2571,7 +2571,7 @@ void udpSendingTask( void *pvParameters )
  800127e:	f1b3 3fff 	cmp.w	r3, #4294967295
  8001282:	d103      	bne.n	800128c <udpSendingTask+0x40>
  8001284:	4939      	ldr	r1, [pc, #228]	; (800136c <udpSendingTask+0x120>)
- 8001286:	2090      	movs	r0, #144	; 0x90
+ 8001286:	208d      	movs	r0, #141	; 0x8d
  8001288:	f7ff fc51 	bl	8000b2e <vAssertCalled>
 
 	for( ;; )

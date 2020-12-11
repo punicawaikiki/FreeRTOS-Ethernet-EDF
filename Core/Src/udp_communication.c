@@ -12,10 +12,7 @@
 
 static samples_input_struct *receivedStructPtr;
 static fft_input_samples* combinedSamplesStructPtr;
-static fft_output_samples resultsToSendStruct;
 static float32_t fftResults[FFT_SIZE];
-//static samples_output_struct outputDataStructPtr;
-//static samples_output_struct outputData;
 
 unsigned char checkBoolArrayTrue ( unsigned char* receivedPackets )
 {
