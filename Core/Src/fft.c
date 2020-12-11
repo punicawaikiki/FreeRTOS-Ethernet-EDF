@@ -13,6 +13,7 @@ static fft_input_samples* fftInputStructPtr;
 static float32_t fftInputData[TOTAL_SAMPLE_SIZE];
 static float32_t fftOutputData[TOTAL_SAMPLE_SIZE];
 static float32_t fftOutputDataMag[FFT_SIZE];
+static fft_output_samples resultsStructPtr;
 
 /* Task for receiving data from receivedQueue, calculate fft, calculate magnitude and push results to sendQueue */
 void calculateFFT( void *pvParameters )
@@ -35,40 +36,27 @@ void calculateFFT( void *pvParameters )
     	UBaseType_t waitingMessages = uxQueueMessagesWaiting(receivedQueue);
     	if (waitingMessages > 0)
     	{
-        	fft_output_samples* resultsStructPtr = NULL;
-        	resultsStructPtr = pvPortMalloc( sizeof( fft_output_samples ) );
-        	if ( resultsStructPtr != NULL)
-        	{
-        		/* iterate over number of messages in receivedQueue */
-        		for (int i = 0; i < waitingMessages; i++)
-        		{
-        			/* get one message from receivedQueue */
-            		if (xQueueReceive( receivedQueue,
-            					   &fftInputStructPtr,
-    							   ( TickType_t ) 10 ) == pdPASS )
-            		{
-        				for (int i = 0; i < TOTAL_SAMPLE_SIZE; i++)
-        				{
-        					fftInputData[i] = fftInputStructPtr->y[i];
-        				}
-        				/* calculate fft */
-        				arm_rfft_fast_f32(&S, fftInputData, fftOutputData, 0);
-//        				/* Process the data through the Complex Magnitude Module for
-//        				  calculating the magnitude at each bin */
-        				arm_cmplx_mag_f32( fftOutputData, fftOutputDataMag, FFT_SIZE);
-        				for (int i = 0; i < FFT_SIZE; i++)
-        				{
-        					resultsStructPtr->y[i] = fftOutputDataMag[i];
-        				}
-
-        				/* put queueSendData into sendQueue */
-        				xQueueSend( sendQueue,
-        							( void * ) &resultsStructPtr,
-        							( TickType_t ) 0 );
-//        				vTaskDelay( 1000UL / portTICK_PERIOD_MS );
-        				vPortFree(resultsStructPtr);
-            		}
-        		}
+			/* iterate over number of messages in receivedQueue */
+			for (int i = 0; i < waitingMessages; i++)
+			{
+				/* get one message from receivedQueue */
+				if (xQueueReceive( receivedQueue,
+							   &fftInputStructPtr,
+							   ( TickType_t ) 10 ) == pdPASS )
+				{
+					for (int i = 0; i < TOTAL_SAMPLE_SIZE; i++)
+					{
+						fftInputData[i] = fftInputStructPtr->y[i];
+					}
+					/* calculate fft */
+					arm_rfft_fast_f32(&S, fftInputData, fftOutputData, 0);
+					/* Process the data through the Complex Magnitude Module for
+					  calculating the magnitude at each bin */
+					arm_cmplx_mag_f32( fftOutputData, fftOutputDataMag, FFT_SIZE);
+					xQueueSend( sendQueue,
+								( void * ) &(fftOutputDataMag),
+								( TickType_t ) 0 );
+				}
         	}
     	}
 

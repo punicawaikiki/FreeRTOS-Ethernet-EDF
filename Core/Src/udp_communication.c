@@ -12,7 +12,8 @@
 
 static samples_input_struct *receivedStructPtr;
 static fft_input_samples* combinedSamplesStructPtr;
-static fft_output_samples* resultsToSendStruct;
+static fft_output_samples resultsToSendStruct;
+static float32_t fftResults[FFT_SIZE];
 //static samples_output_struct outputDataStructPtr;
 //static samples_output_struct outputData;
 
@@ -156,7 +157,7 @@ void udpSendingTask( void *pvParameters )
 				HAL_GPIO_TogglePin(LD_USER2_GPIO_Port, LD_USER2_Pin);
 				/* get the next message from sendQueue */
 				if (xQueueReceive( sendQueue,
-					&( resultsToSendStruct ),
+					&fftResults,
 				    ( TickType_t ) 10 ) == pdPASS )
 				{
 					/* assign packet number */
@@ -166,7 +167,7 @@ void udpSendingTask( void *pvParameters )
 						outputDataStructPtr.messageCounter = (double) packetCounter;
 						for(unsigned int sampleCounter = 0; sampleCounter < SAMPLE_ARRAY_SIZE; sampleCounter++)
 						{
-							outputDataStructPtr.results[sampleCounter] = (double) resultsToSendStruct->y[sampleCounter + packetCounter * SAMPLE_ARRAY_SIZE];
+							outputDataStructPtr.results[sampleCounter] = fftResults[sampleCounter + packetCounter * SAMPLE_ARRAY_SIZE];
 						}
 						/* send outputData over UDP */
 						FreeRTOS_sendto( xSocket,
