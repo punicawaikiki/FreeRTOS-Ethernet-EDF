@@ -88,7 +88,7 @@ void NMI_Handler(void)
 void HardFault_Handler(void)
 {
   /* USER CODE BEGIN HardFault_IRQn 0 */
-	HAL_GPIO_WritePin(LD_USER3_GPIO_Port, LD_USER3_Pin, 1);
+	HAL_GPIO_WritePin(LD_USER1_GPIO_Port, LD_USER1_Pin, 1);
   /* USER CODE END HardFault_IRQn 0 */
   while (1)
   {

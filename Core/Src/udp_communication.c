@@ -78,8 +78,6 @@ void udpReceivingTask( void *pvParameters )
 	   if( lBytes > 0 )
 	   {
 			/* Data was received and can be processed here. */
-			/* Toggle LED for visualization */
-			HAL_GPIO_TogglePin(LD_USER1_GPIO_Port, LD_USER1_Pin);
 			/* transform message array with SAMPLE_ARRAY_SIZE to array with size of (SAMPLE_ARRAY_SIZE * EPOCHES) */
 			for (unsigned int sampleCounter = 0; sampleCounter < SAMPLE_ARRAY_SIZE; sampleCounter++ )
 			{
@@ -96,6 +94,8 @@ void udpReceivingTask( void *pvParameters )
 			/* check for fftInputData is filled with (SAMPLE_ARRAY_SIZE * EPOCHES) of data */
 			if ( checkBoolArrayTrue( receivedPackets) )
 			{
+				/* Toggle LED for visualization */
+				HAL_GPIO_TogglePin(LD_USER3_GPIO_Port, LD_USER3_Pin);
 				/* Put Received Data into the input_samples Queue */
 				xQueueSend( receivedQueue,
 						    ( void * ) &combinedSamplesStructPtr,
@@ -150,13 +150,13 @@ void udpSendingTask( void *pvParameters )
 			/* iterate over sendQueue */
 			for (int i = 0; i < waitingMessages; i++)
 			{
-				/* toggle USER_LED 2 for visualization */
-				HAL_GPIO_TogglePin(LD_USER2_GPIO_Port, LD_USER2_Pin);
 				/* get the next message from sendQueue */
 				if (xQueueReceive( sendQueue,
 					&fftResults,
 				    ( TickType_t ) 10 ) == pdPASS )
 				{
+					/* toggle USER_LED 2 for visualization */
+					HAL_GPIO_TogglePin(LD_USER2_GPIO_Port, LD_USER2_Pin);
 					/* assign packet number */
 					for (unsigned int packetCounter = 0; packetCounter < (FFT_SIZE / SAMPLE_ARRAY_SIZE); packetCounter++)
 					{

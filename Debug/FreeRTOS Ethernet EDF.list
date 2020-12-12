@@ -2002,16 +2002,16 @@ void HardFault_Handler(void)
  8000fb4:	b580      	push	{r7, lr}
  8000fb6:	af00      	add	r7, sp, #0
   /* USER CODE BEGIN HardFault_IRQn 0 */
-	HAL_GPIO_WritePin(LD_USER3_GPIO_Port, LD_USER3_Pin, 1);
+	HAL_GPIO_WritePin(LD_USER1_GPIO_Port, LD_USER1_Pin, 1);
  8000fb8:	2201      	movs	r2, #1
- 8000fba:	f44f 5180 	mov.w	r1, #4096	; 0x1000
+ 8000fba:	f44f 5100 	mov.w	r1, #8192	; 0x2000
  8000fbe:	4802      	ldr	r0, [pc, #8]	; (8000fc8 <HardFault_Handler+0x14>)
  8000fc0:	f000 fd68 	bl	8001a94 <HAL_GPIO_WritePin>
   /* USER CODE END HardFault_IRQn 0 */
   while (1)
  8000fc4:	e7fe      	b.n	8000fc4 <HardFault_Handler+0x10>
  8000fc6:	bf00      	nop
- 8000fc8:	40020000 	.word	0x40020000
+ 8000fc8:	40022400 	.word	0x40022400
 
 08000fcc <MemManage_Handler>:
 
@@ -2417,86 +2417,86 @@ void udpReceivingTask( void *pvParameters )
  800118c:	dd4b      	ble.n	8001226 <udpReceivingTask+0x102>
 	   {
 			/* Data was received and can be processed here. */
-			/* Toggle LED for visualization */
-			HAL_GPIO_TogglePin(LD_USER1_GPIO_Port, LD_USER1_Pin);
- 800118e:	f44f 5100 	mov.w	r1, #8192	; 0x2000
- 8001192:	482b      	ldr	r0, [pc, #172]	; (8001240 <udpReceivingTask+0x11c>)
- 8001194:	f000 fc97 	bl	8001ac6 <HAL_GPIO_TogglePin>
 			/* transform message array with SAMPLE_ARRAY_SIZE to array with size of (SAMPLE_ARRAY_SIZE * EPOCHES) */
 			for (unsigned int sampleCounter = 0; sampleCounter < SAMPLE_ARRAY_SIZE; sampleCounter++ )
- 8001198:	2300      	movs	r3, #0
- 800119a:	637b      	str	r3, [r7, #52]	; 0x34
- 800119c:	e021      	b.n	80011e2 <udpReceivingTask+0xbe>
+ 800118e:	2300      	movs	r3, #0
+ 8001190:	637b      	str	r3, [r7, #52]	; 0x34
+ 8001192:	e021      	b.n	80011d8 <udpReceivingTask+0xb4>
 			{
 				if (receivedPackets[receivedStructPtr->messageCounter] == 0)
- 800119e:	4b27      	ldr	r3, [pc, #156]	; (800123c <udpReceivingTask+0x118>)
- 80011a0:	681b      	ldr	r3, [r3, #0]
- 80011a2:	681b      	ldr	r3, [r3, #0]
- 80011a4:	f107 0238 	add.w	r2, r7, #56	; 0x38
- 80011a8:	4413      	add	r3, r2
- 80011aa:	f813 3c30 	ldrb.w	r3, [r3, #-48]
- 80011ae:	2b00      	cmp	r3, #0
- 80011b0:	d11b      	bne.n	80011ea <udpReceivingTask+0xc6>
+ 8001194:	4b29      	ldr	r3, [pc, #164]	; (800123c <udpReceivingTask+0x118>)
+ 8001196:	681b      	ldr	r3, [r3, #0]
+ 8001198:	681b      	ldr	r3, [r3, #0]
+ 800119a:	f107 0238 	add.w	r2, r7, #56	; 0x38
+ 800119e:	4413      	add	r3, r2
+ 80011a0:	f813 3c30 	ldrb.w	r3, [r3, #-48]
+ 80011a4:	2b00      	cmp	r3, #0
+ 80011a6:	d11b      	bne.n	80011e0 <udpReceivingTask+0xbc>
 				{
 					combinedSamplesStructPtr->y[sampleCounter + receivedStructPtr->messageCounter * SAMPLE_ARRAY_SIZE] = receivedStructPtr->y[sampleCounter];
- 80011b2:	4b22      	ldr	r3, [pc, #136]	; (800123c <udpReceivingTask+0x118>)
- 80011b4:	6818      	ldr	r0, [r3, #0]
- 80011b6:	4b23      	ldr	r3, [pc, #140]	; (8001244 <udpReceivingTask+0x120>)
- 80011b8:	6819      	ldr	r1, [r3, #0]
- 80011ba:	4b20      	ldr	r3, [pc, #128]	; (800123c <udpReceivingTask+0x118>)
- 80011bc:	681b      	ldr	r3, [r3, #0]
- 80011be:	681b      	ldr	r3, [r3, #0]
- 80011c0:	019b      	lsls	r3, r3, #6
- 80011c2:	461a      	mov	r2, r3
- 80011c4:	6b7b      	ldr	r3, [r7, #52]	; 0x34
- 80011c6:	441a      	add	r2, r3
- 80011c8:	6b7b      	ldr	r3, [r7, #52]	; 0x34
- 80011ca:	3341      	adds	r3, #65	; 0x41
- 80011cc:	00db      	lsls	r3, r3, #3
- 80011ce:	4403      	add	r3, r0
- 80011d0:	e9d3 3400 	ldrd	r3, r4, [r3]
- 80011d4:	00d2      	lsls	r2, r2, #3
- 80011d6:	440a      	add	r2, r1
- 80011d8:	e9c2 3400 	strd	r3, r4, [r2]
+ 80011a8:	4b24      	ldr	r3, [pc, #144]	; (800123c <udpReceivingTask+0x118>)
+ 80011aa:	6818      	ldr	r0, [r3, #0]
+ 80011ac:	4b24      	ldr	r3, [pc, #144]	; (8001240 <udpReceivingTask+0x11c>)
+ 80011ae:	6819      	ldr	r1, [r3, #0]
+ 80011b0:	4b22      	ldr	r3, [pc, #136]	; (800123c <udpReceivingTask+0x118>)
+ 80011b2:	681b      	ldr	r3, [r3, #0]
+ 80011b4:	681b      	ldr	r3, [r3, #0]
+ 80011b6:	019b      	lsls	r3, r3, #6
+ 80011b8:	461a      	mov	r2, r3
+ 80011ba:	6b7b      	ldr	r3, [r7, #52]	; 0x34
+ 80011bc:	441a      	add	r2, r3
+ 80011be:	6b7b      	ldr	r3, [r7, #52]	; 0x34
+ 80011c0:	3341      	adds	r3, #65	; 0x41
+ 80011c2:	00db      	lsls	r3, r3, #3
+ 80011c4:	4403      	add	r3, r0
+ 80011c6:	e9d3 3400 	ldrd	r3, r4, [r3]
+ 80011ca:	00d2      	lsls	r2, r2, #3
+ 80011cc:	440a      	add	r2, r1
+ 80011ce:	e9c2 3400 	strd	r3, r4, [r2]
 			for (unsigned int sampleCounter = 0; sampleCounter < SAMPLE_ARRAY_SIZE; sampleCounter++ )
- 80011dc:	6b7b      	ldr	r3, [r7, #52]	; 0x34
- 80011de:	3301      	adds	r3, #1
- 80011e0:	637b      	str	r3, [r7, #52]	; 0x34
- 80011e2:	6b7b      	ldr	r3, [r7, #52]	; 0x34
- 80011e4:	2b3f      	cmp	r3, #63	; 0x3f
- 80011e6:	d9da      	bls.n	800119e <udpReceivingTask+0x7a>
- 80011e8:	e000      	b.n	80011ec <udpReceivingTask+0xc8>
+ 80011d2:	6b7b      	ldr	r3, [r7, #52]	; 0x34
+ 80011d4:	3301      	adds	r3, #1
+ 80011d6:	637b      	str	r3, [r7, #52]	; 0x34
+ 80011d8:	6b7b      	ldr	r3, [r7, #52]	; 0x34
+ 80011da:	2b3f      	cmp	r3, #63	; 0x3f
+ 80011dc:	d9da      	bls.n	8001194 <udpReceivingTask+0x70>
+ 80011de:	e000      	b.n	80011e2 <udpReceivingTask+0xbe>
 				}
 				else
 				{
 					break;
- 80011ea:	bf00      	nop
+ 80011e0:	bf00      	nop
 				}
 			}
 			receivedPackets[receivedStructPtr->messageCounter] = 1;
- 80011ec:	4b13      	ldr	r3, [pc, #76]	; (800123c <udpReceivingTask+0x118>)
- 80011ee:	681b      	ldr	r3, [r3, #0]
- 80011f0:	681b      	ldr	r3, [r3, #0]
- 80011f2:	f107 0238 	add.w	r2, r7, #56	; 0x38
- 80011f6:	4413      	add	r3, r2
- 80011f8:	2201      	movs	r2, #1
- 80011fa:	f803 2c30 	strb.w	r2, [r3, #-48]
+ 80011e2:	4b16      	ldr	r3, [pc, #88]	; (800123c <udpReceivingTask+0x118>)
+ 80011e4:	681b      	ldr	r3, [r3, #0]
+ 80011e6:	681b      	ldr	r3, [r3, #0]
+ 80011e8:	f107 0238 	add.w	r2, r7, #56	; 0x38
+ 80011ec:	4413      	add	r3, r2
+ 80011ee:	2201      	movs	r2, #1
+ 80011f0:	f803 2c30 	strb.w	r2, [r3, #-48]
 			/* check for fftInputData is filled with (SAMPLE_ARRAY_SIZE * EPOCHES) of data */
 			if ( checkBoolArrayTrue( receivedPackets) )
- 80011fe:	f107 0308 	add.w	r3, r7, #8
- 8001202:	4618      	mov	r0, r3
- 8001204:	f7ff ff52 	bl	80010ac <checkBoolArrayTrue>
- 8001208:	4603      	mov	r3, r0
- 800120a:	2b00      	cmp	r3, #0
- 800120c:	d00b      	beq.n	8001226 <udpReceivingTask+0x102>
+ 80011f4:	f107 0308 	add.w	r3, r7, #8
+ 80011f8:	4618      	mov	r0, r3
+ 80011fa:	f7ff ff57 	bl	80010ac <checkBoolArrayTrue>
+ 80011fe:	4603      	mov	r3, r0
+ 8001200:	2b00      	cmp	r3, #0
+ 8001202:	d010      	beq.n	8001226 <udpReceivingTask+0x102>
 			{
+				/* Toggle LED for visualization */
+				HAL_GPIO_TogglePin(LD_USER3_GPIO_Port, LD_USER3_Pin);
+ 8001204:	f44f 5180 	mov.w	r1, #4096	; 0x1000
+ 8001208:	480e      	ldr	r0, [pc, #56]	; (8001244 <udpReceivingTask+0x120>)
+ 800120a:	f000 fc5c 	bl	8001ac6 <HAL_GPIO_TogglePin>
 				/* Put Received Data into the input_samples Queue */
 				xQueueSend( receivedQueue,
  800120e:	4b0e      	ldr	r3, [pc, #56]	; (8001248 <udpReceivingTask+0x124>)
  8001210:	6818      	ldr	r0, [r3, #0]
  8001212:	2300      	movs	r3, #0
  8001214:	2200      	movs	r2, #0
- 8001216:	490b      	ldr	r1, [pc, #44]	; (8001244 <udpReceivingTask+0x120>)
+ 8001216:	490a      	ldr	r1, [pc, #40]	; (8001240 <udpReceivingTask+0x11c>)
  8001218:	f003 feb0 	bl	8004f7c <xQueueGenericSend>
 						    ( void * ) &combinedSamplesStructPtr,
 							( TickType_t ) 0 );
@@ -2525,8 +2525,8 @@ void udpReceivingTask( void *pvParameters )
  8001236:	e79a      	b.n	800116e <udpReceivingTask+0x4a>
  8001238:	08014ec4 	.word	0x08014ec4
  800123c:	20002a54 	.word	0x20002a54
- 8001240:	40022400 	.word	0x40022400
- 8001244:	20002a58 	.word	0x20002a58
+ 8001240:	20002a58 	.word	0x20002a58
+ 8001244:	40020000 	.word	0x40020000
  8001248:	20002a48 	.word	0x20002a48
 
 0800124c <udpSendingTask>:
@@ -2592,25 +2592,25 @@ void udpSendingTask( void *pvParameters )
  800129c:	f8c7 322c 	str.w	r3, [r7, #556]	; 0x22c
  80012a0:	e05a      	b.n	8001358 <udpSendingTask+0x10c>
 			{
-				/* toggle USER_LED 2 for visualization */
-				HAL_GPIO_TogglePin(LD_USER2_GPIO_Port, LD_USER2_Pin);
- 80012a2:	2120      	movs	r1, #32
- 80012a4:	4832      	ldr	r0, [pc, #200]	; (8001370 <udpSendingTask+0x124>)
- 80012a6:	f000 fc0e 	bl	8001ac6 <HAL_GPIO_TogglePin>
 				/* get the next message from sendQueue */
 				if (xQueueReceive( sendQueue,
- 80012aa:	4b32      	ldr	r3, [pc, #200]	; (8001374 <udpSendingTask+0x128>)
- 80012ac:	681b      	ldr	r3, [r3, #0]
- 80012ae:	220a      	movs	r2, #10
- 80012b0:	4931      	ldr	r1, [pc, #196]	; (8001378 <udpSendingTask+0x12c>)
- 80012b2:	4618      	mov	r0, r3
- 80012b4:	f004 f812 	bl	80052dc <xQueueReceive>
- 80012b8:	4603      	mov	r3, r0
- 80012ba:	2b01      	cmp	r3, #1
- 80012bc:	d147      	bne.n	800134e <udpSendingTask+0x102>
+ 80012a2:	4b33      	ldr	r3, [pc, #204]	; (8001370 <udpSendingTask+0x124>)
+ 80012a4:	681b      	ldr	r3, [r3, #0]
+ 80012a6:	220a      	movs	r2, #10
+ 80012a8:	4932      	ldr	r1, [pc, #200]	; (8001374 <udpSendingTask+0x128>)
+ 80012aa:	4618      	mov	r0, r3
+ 80012ac:	f004 f816 	bl	80052dc <xQueueReceive>
+ 80012b0:	4603      	mov	r3, r0
+ 80012b2:	2b01      	cmp	r3, #1
+ 80012b4:	d14b      	bne.n	800134e <udpSendingTask+0x102>
 					&fftResults,
 				    ( TickType_t ) 10 ) == pdPASS )
 				{
+					/* toggle USER_LED 2 for visualization */
+					HAL_GPIO_TogglePin(LD_USER2_GPIO_Port, LD_USER2_Pin);
+ 80012b6:	2120      	movs	r1, #32
+ 80012b8:	482f      	ldr	r0, [pc, #188]	; (8001378 <udpSendingTask+0x12c>)
+ 80012ba:	f000 fc04 	bl	8001ac6 <HAL_GPIO_TogglePin>
 					/* assign packet number */
 					for (unsigned int packetCounter = 0; packetCounter < (FFT_SIZE / SAMPLE_ARRAY_SIZE); packetCounter++)
  80012be:	2300      	movs	r3, #0
@@ -2634,7 +2634,7 @@ void udpSendingTask( void *pvParameters )
  80012e6:	019a      	lsls	r2, r3, #6
  80012e8:	f8d7 3224 	ldr.w	r3, [r7, #548]	; 0x224
  80012ec:	4413      	add	r3, r2
- 80012ee:	4a22      	ldr	r2, [pc, #136]	; (8001378 <udpSendingTask+0x12c>)
+ 80012ee:	4a21      	ldr	r2, [pc, #132]	; (8001374 <udpSendingTask+0x128>)
  80012f0:	009b      	lsls	r3, r3, #2
  80012f2:	4413      	add	r3, r2
  80012f4:	edd3 7a00 	vldr	s15, [r3]
@@ -2684,9 +2684,9 @@ void udpSendingTask( void *pvParameters )
  8001366:	bf00      	nop
  8001368:	08014ee4 	.word	0x08014ee4
  800136c:	08014ec4 	.word	0x08014ec4
- 8001370:	40022400 	.word	0x40022400
- 8001374:	20002a4c 	.word	0x20002a4c
- 8001378:	20002a5c 	.word	0x20002a5c
+ 8001370:	20002a4c 	.word	0x20002a4c
+ 8001374:	20002a5c 	.word	0x20002a5c
+ 8001378:	40022400 	.word	0x40022400
 
 0800137c <MX_USART1_UART_Init>:
 UART_HandleTypeDef huart1;
