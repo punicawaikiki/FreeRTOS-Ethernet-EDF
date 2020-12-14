@@ -22,6 +22,7 @@ Core/Src/helper_functions.o: ../Core/Src/helper_functions.c \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_dma_ex.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_cortex.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_eth.h \
+ ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32fxx_hal_eth.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_flash.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_flash_ex.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_i2c.h \
@@ -38,7 +39,8 @@ Core/Src/helper_functions.o: ../Core/Src/helper_functions.c \
  ../Middlewares/FreeRTOS/Inc/deprecated_definitions.h \
  ../Middlewares/FreeRTOS/Inc/portable/portmacro.h \
  ../Middlewares/FreeRTOS/Inc/mpu_wrappers.h \
- ../Middlewares/FreeRTOS/Inc/task.h ../Middlewares/FreeRTOS/Inc/list.h
+ ../Middlewares/FreeRTOS/Inc/task.h ../Middlewares/FreeRTOS/Inc/list.h \
+ ../Core/Inc/usart.h ../Core/Inc/main.h ../Core/Inc/user_variables.h
 
 ../Core/Inc/helper_functions.h:
 
@@ -88,6 +90,8 @@ Core/Src/helper_functions.o: ../Core/Src/helper_functions.c \
 
 ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_eth.h:
 
+../Drivers/STM32F7xx_HAL_Driver/Inc/stm32fxx_hal_eth.h:
+
 ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_flash.h:
 
 ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_flash_ex.h:
@@ -123,3 +127,9 @@ Core/Src/helper_functions.o: ../Core/Src/helper_functions.c \
 ../Middlewares/FreeRTOS/Inc/task.h:
 
 ../Middlewares/FreeRTOS/Inc/list.h:
+
+../Core/Inc/usart.h:
+
+../Core/Inc/main.h:
+
+../Core/Inc/user_variables.h:

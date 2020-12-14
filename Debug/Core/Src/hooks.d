@@ -22,6 +22,7 @@ Core/Src/hooks.o: ../Core/Src/hooks.c ../Core/Inc/hooks.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_dma_ex.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_cortex.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_eth.h \
+ ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32fxx_hal_eth.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_flash.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_flash_ex.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_i2c.h \
@@ -46,7 +47,8 @@ Core/Src/hooks.o: ../Core/Src/hooks.c ../Core/Inc/hooks.h \
  ../Middlewares/FreeRTOS-TCP/Inc/IPTraceMacroDefaults.h \
  ../Middlewares/FreeRTOS-TCP/Src/portable/GCC/pack_struct_start.h \
  ../Middlewares/FreeRTOS-TCP/Src/portable/GCC/pack_struct_end.h \
- ../Core/Inc/udp_communication.h ../Core/Inc/main.h ../Core/Inc/fft.h
+ ../Core/Inc/udp_communication.h ../Core/Inc/main.h ../Core/Inc/fft.h \
+ ../Core/Inc/helper_functions.h
 
 ../Core/Inc/hooks.h:
 
@@ -95,6 +97,8 @@ Core/Src/hooks.o: ../Core/Src/hooks.c ../Core/Inc/hooks.h \
 ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_cortex.h:
 
 ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_eth.h:
+
+../Drivers/STM32F7xx_HAL_Driver/Inc/stm32fxx_hal_eth.h:
 
 ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_flash.h:
 
@@ -151,3 +155,5 @@ Core/Src/hooks.o: ../Core/Src/hooks.c ../Core/Inc/hooks.h \
 ../Core/Inc/main.h:
 
 ../Core/Inc/fft.h:
+
+../Core/Inc/helper_functions.h:

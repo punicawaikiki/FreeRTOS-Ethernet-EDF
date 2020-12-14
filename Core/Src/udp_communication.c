@@ -8,39 +8,12 @@
 #include "FreeRTOS_IP.h"
 #include "queue.h"
 #include "arm_math.h"
+#include "helper_functions.h"
 
 
 static samples_input_struct *receivedStructPtr;
 static fft_input_samples* combinedSamplesStructPtr;
 static float32_t fftResults[FFT_SIZE];
-
-unsigned char checkBoolArrayTrue ( unsigned char* receivedPackets )
-{
-	unsigned int count = 0;
-	for (int entry = 0; entry < EPOCHES; entry++)
-	{
-		if (receivedPackets[entry])
-		{
-			count++;
-		}
-	}
-	if (count == EPOCHES)
-	{
-		return 1;
-	}
-	else
-	{
-		return 0;
-	}
-}
-
-void resetBoolArray ( unsigned char* receivedPackets )
-{
-	for (int entry = 0; entry < EPOCHES; entry++)
-	{
-		receivedPackets[entry] = 0;
-	}
-}
 
 
 void udpReceivingTask( void *pvParameters )

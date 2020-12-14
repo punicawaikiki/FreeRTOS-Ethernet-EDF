@@ -4,6 +4,7 @@
 #include "udp_communication.h"
 #include "main.h"
 #include "fft.h"
+#include "helper_functions.h"
 
 const char *pcApplicationHostnameHook( void )
 {
@@ -44,6 +45,7 @@ static BaseType_t xTasksAlreadyCreated = pdFALSE;
     /* Both eNetworkUp and eNetworkDown events can be processed here. */
     if( eNetworkEvent == eNetworkUp )
     {
+    	debugPrintln("Network is up, create Tasks");
     	xTaskCreate( udpSendingTask, "UDPSend", ( unsigned short ) 800 , NULL, standardTASK_PRIORITY, NULL );
     	xTaskCreate( udpReceivingTask, "UDPReceive", ( unsigned short ) 800 , NULL, standardTASK_PRIORITY, NULL );
     	xTaskCreate( calculateFFT, "FFT", ( unsigned short ) 800 , NULL, standardTASK_PRIORITY, NULL );
@@ -61,6 +63,7 @@ static BaseType_t xTasksAlreadyCreated = pdFALSE;
     }
     else
     {
+    	debugPrintln("Network is down, waiting ...");
     	if (HAL_GPIO_ReadPin(LD_USER1_GPIO_Port, LD_USER1_Pin) != 1)
     	{
     		HAL_GPIO_WritePin(LD_USER1_GPIO_Port, LD_USER1_Pin, 1);

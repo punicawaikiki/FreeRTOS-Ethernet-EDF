@@ -54,5 +54,28 @@ BaseType_t xApplicationGetRandomNumber(uint32_t* pulNumber);
 // Declaration
 void vAssertCalled( uint32_t ulLine, const char *pcFile );
 
+// Return Type: void
+// Name: debugPrint
+// Parameters: char[]
+// Declaration
+void debugPrint(char _out[]);
+
+// Return Type: void
+// Name: debugPrintln
+// Parameters: char[]
+// Declaration
+void debugPrintln(char _out[]);
+
+// Return Type: unsigned char
+// Name: checkBoolArrayTrue
+// Parameters: unsigned char* receivedPackets
+// Declaration
+unsigned char checkBoolArrayTrue( unsigned char* receivedPackets );
+
+// Return Type: void
+// Name: debugPrintln
+// Parameters: unsigned char* receivedPackets
+// Declaration
+void resetBoolArray ( unsigned char* receivedPackets );
 
 #endif /* __HELPER_FUNCTIONS_H */

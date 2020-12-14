@@ -3,7 +3,9 @@
 
 #include "helper_functions.h"
 #include "task.h"
-
+#include "usart.h"
+#include "string.h"
+#include "user_variables.h"
 
 void prvSRand( UBaseType_t ulSeed )
 {
@@ -80,4 +82,46 @@ volatile unsigned long ul = 0;
 		}
 	}
 	taskEXIT_CRITICAL();
+}
+
+/* print string over usart1 */
+void debugPrint(char _out[]){
+ HAL_UART_Transmit(&huart1, (uint8_t *) _out, strlen(_out), 10);
+}
+
+/* print string over usart1 with \r\n */
+void debugPrintln(char _out[]){
+ HAL_UART_Transmit(&huart1, (uint8_t *) _out, strlen(_out), 10);
+ char newline[2] = "\r\n";
+ HAL_UART_Transmit(&huart1, (uint8_t *) newline, 2, 10);
+}
+
+/* iterate over an array and check if all members are True (1) */
+unsigned char checkBoolArrayTrue ( unsigned char* receivedPackets )
+{
+	unsigned int count = 0;
+	for (int entry = 0; entry < EPOCHES; entry++)
+	{
+		if (receivedPackets[entry])
+		{
+			count++;
+		}
+	}
+	if (count == EPOCHES)
+	{
+		return 1;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+/* set all members of array to False (0) */
+void resetBoolArray ( unsigned char* receivedPackets )
+{
+	for (int entry = 0; entry < EPOCHES; entry++)
+	{
+		receivedPackets[entry] = 0;
+	}
 }

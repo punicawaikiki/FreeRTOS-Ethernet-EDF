@@ -6,6 +6,7 @@
 #include "FreeRTOS.h"
 #include "queue.h"
 #include "main.h"
+#include "helper_functions.h"
 
 
 /* define globals */
@@ -13,7 +14,6 @@ static fft_input_samples* fftInputStructPtr;
 static float32_t fftInputData[TOTAL_SAMPLE_SIZE];
 static float32_t fftOutputData[TOTAL_SAMPLE_SIZE];
 static float32_t fftOutputDataMag[FFT_SIZE];
-static fft_output_samples resultsStructPtr;
 
 /* Task for receiving data from receivedQueue, calculate fft, calculate magnitude and push results to sendQueue */
 void calculateFFT( void *pvParameters )

@@ -84,11 +84,6 @@ void SystemClock_Config(void);
 /* USER CODE BEGIN 0 */
 QueueHandle_t receivedQueue = NULL;
 QueueHandle_t sendQueue = NULL;
-
-void printmsg(char *msg);
-
-
-char usr_msg[250];
 /* USER CODE END 0 */
 
 /**
@@ -122,8 +117,7 @@ int main(void)
   MX_RNG_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
-  sprintf(usr_msg, "This is hello world");
-  printmsg(usr_msg);
+  debugPrintln("Main Hardware Init finished");
 
   receivedQueue= xQueueCreate( 8, sizeof(fft_input_samples * ));
   sendQueue= xQueueCreate( 8, (sizeof( float32_t ) * FFT_SIZE));
@@ -136,6 +130,7 @@ int main(void)
                    ucGatewayAddress,
                    ucDNSServerAddress,
                    ucMACAddress );
+  debugPrintln("Start Scheduler");
   vTaskStartScheduler();
   /* USER CODE END 2 */
 
@@ -246,12 +241,6 @@ void Error_Handler(void)
   }
   /* USER CODE END Error_Handler_Debug */
 }
-
-void printmsg(char *msg)
-{
-	HAL_UART_Transmit(&huart1, (uint8_t *) msg, sizeof(msg), 1);
-}
-
 
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
