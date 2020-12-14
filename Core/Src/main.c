@@ -129,7 +129,7 @@ int main(void)
   sendQueue= xQueueCreate( 8, (sizeof( float32_t ) * FFT_SIZE));
   if ( ( receivedQueue == NULL ) || ( sendQueue == NULL) )
   {
-	  HAL_GPIO_WritePin(LD_USER3_GPIO_Port, LD_USER3_Pin, 1);
+	  HAL_GPIO_WritePin(LD_USER1_GPIO_Port, LD_USER1_Pin, 1);
   }
   FreeRTOS_IPInit( ucIPAddress,
                    ucNetMask,

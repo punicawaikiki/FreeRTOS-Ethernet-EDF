@@ -60,8 +60,6 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define LD_USER1_Pin GPIO_PIN_13
 #define LD_USER1_GPIO_Port GPIOJ
-#define LD_USER3_Pin GPIO_PIN_12
-#define LD_USER3_GPIO_Port GPIOA
 #define LD_USER2_Pin GPIO_PIN_5
 #define LD_USER2_GPIO_Port GPIOJ
 /* USER CODE BEGIN Private defines */

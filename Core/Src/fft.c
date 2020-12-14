@@ -28,7 +28,7 @@ void calculateFFT( void *pvParameters )
 	status = arm_rfft_fast_init_f32(&S, TOTAL_SAMPLE_SIZE);
 	if ( status != ARM_MATH_SUCCESS )
 	{
-		HAL_GPIO_WritePin(LD_USER3_GPIO_Port, LD_USER3_Pin, 1);
+		HAL_GPIO_WritePin(LD_USER1_GPIO_Port, LD_USER1_Pin, 1);
 	}
     for( ;; )
     {

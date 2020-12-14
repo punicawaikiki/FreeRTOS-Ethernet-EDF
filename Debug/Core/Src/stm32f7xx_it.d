@@ -20,7 +20,6 @@ Core/Src/stm32f7xx_it.o: ../Core/Src/stm32f7xx_it.c ../Core/Inc/main.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_dma_ex.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_cortex.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_eth.h \
- ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32fxx_hal_eth.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_flash.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_flash_ex.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_i2c.h \
@@ -32,13 +31,7 @@ Core/Src/stm32f7xx_it.o: ../Core/Src/stm32f7xx_it.c ../Core/Inc/main.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_tim_ex.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_uart.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_uart_ex.h \
- ../Core/Inc/stm32f7xx_it.h ../Middlewares/FreeRTOS/Inc/FreeRTOS.h \
- ../Middlewares/FreeRTOS/Inc/FreeRTOSConfig.h \
- ../Middlewares/FreeRTOS/Inc/projdefs.h \
- ../Middlewares/FreeRTOS/Inc/portable.h \
- ../Middlewares/FreeRTOS/Inc/deprecated_definitions.h \
- ../Middlewares/FreeRTOS/Inc/portable/portmacro.h \
- ../Middlewares/FreeRTOS/Inc/mpu_wrappers.h
+ ../Core/Inc/stm32f7xx_it.h
 
 ../Core/Inc/main.h:
 
@@ -84,8 +77,6 @@ Core/Src/stm32f7xx_it.o: ../Core/Src/stm32f7xx_it.c ../Core/Inc/main.h \
 
 ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_eth.h:
 
-../Drivers/STM32F7xx_HAL_Driver/Inc/stm32fxx_hal_eth.h:
-
 ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_flash.h:
 
 ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_flash_ex.h:
@@ -109,17 +100,3 @@ Core/Src/stm32f7xx_it.o: ../Core/Src/stm32f7xx_it.c ../Core/Inc/main.h \
 ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_uart_ex.h:
 
 ../Core/Inc/stm32f7xx_it.h:
-
-../Middlewares/FreeRTOS/Inc/FreeRTOS.h:
-
-../Middlewares/FreeRTOS/Inc/FreeRTOSConfig.h:
-
-../Middlewares/FreeRTOS/Inc/projdefs.h:
-
-../Middlewares/FreeRTOS/Inc/portable.h:
-
-../Middlewares/FreeRTOS/Inc/deprecated_definitions.h:
-
-../Middlewares/FreeRTOS/Inc/portable/portmacro.h:
-
-../Middlewares/FreeRTOS/Inc/mpu_wrappers.h:

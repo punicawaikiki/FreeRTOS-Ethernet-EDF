@@ -95,7 +95,7 @@ void udpReceivingTask( void *pvParameters )
 			if ( checkBoolArrayTrue( receivedPackets) )
 			{
 				/* Toggle LED for visualization */
-				HAL_GPIO_TogglePin(LD_USER3_GPIO_Port, LD_USER3_Pin);
+				HAL_GPIO_TogglePin(LD_USER1_GPIO_Port, LD_USER1_Pin);
 				/* Put Received Data into the input_samples Queue */
 				xQueueSend( receivedQueue,
 						    ( void * ) &combinedSamplesStructPtr,
