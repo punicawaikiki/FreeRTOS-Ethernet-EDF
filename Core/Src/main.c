@@ -23,6 +23,8 @@
 #include "rng.h"
 #include "usart.h"
 #include "gpio.h"
+#include "stdio.h"
+#include "stdint.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -82,6 +84,11 @@ void SystemClock_Config(void);
 /* USER CODE BEGIN 0 */
 QueueHandle_t receivedQueue = NULL;
 QueueHandle_t sendQueue = NULL;
+
+void printmsg(char *msg);
+
+
+char usr_msg[250];
 /* USER CODE END 0 */
 
 /**
@@ -115,6 +122,8 @@ int main(void)
   MX_RNG_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
+  sprintf(usr_msg, "This is hello world");
+  printmsg(usr_msg);
 
   receivedQueue= xQueueCreate( 8, sizeof(fft_input_samples * ));
   sendQueue= xQueueCreate( 8, (sizeof( float32_t ) * FFT_SIZE));
@@ -237,5 +246,12 @@ void Error_Handler(void)
   }
   /* USER CODE END Error_Handler_Debug */
 }
+
+void printmsg(char *msg)
+{
+	HAL_UART_Transmit(&huart1, (uint8_t *) msg, sizeof(msg), 1);
+}
+
+
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

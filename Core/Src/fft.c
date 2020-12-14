@@ -59,59 +59,5 @@ void calculateFFT( void *pvParameters )
 				}
         	}
     	}
-
-//    	/* get number of messages in receivedQueue */
-//    	UBaseType_t waitingMessages = uxQueueMessagesWaiting(receivedQueue);
-//    	if (waitingMessages > 0)
-//    	{
-//        	fft_output_samples* resultsStructPtr = NULL;
-//        	resultsStructPtr = pvPortMalloc( sizeof( fft_output_samples ) );
-//        	int test = sizeof( fft_output_samples);
-//        	if ( resultsStructPtr != NULL)
-//        	{
-//        		/* iterate over number of messages in receivedQueue */
-//        		for (int i = 0; i < waitingMessages; i++)
-//        		{
-//        			/* get one message from receivedQueue */
-//            		if (xQueueReceive( receivedQueue,
-//            					   &fftInputStructPtr,
-//    							   ( TickType_t ) 10 ) == pdPASS )
-//            		{
-//        				for (int i = 0; i < TOTAL_SAMPLE_SIZE; i++)
-//        				{
-//        					fftInputData[i] = fftInputStructPtr->y[i];
-//        				}
-//        				/* calculate fft */
-//        				arm_rfft_fast_f32(&S, fftInputData, fftOutputData, 0);
-//        				arm_cmplx_mag_f32(fftOutputData, fftOutputDataMag, TOTAL_SAMPLE_SIZE);
-//        //				arm_shift_q15( (q15_t *) fftOutputData,
-//        //							   8,
-//        //							   (q15_t *) fftShiftOutputData,
-//        //							   FFT_SIZE
-//        //							   );
-//        				/* Process the data through the Complex Magnitude Module for
-//        				  calculating the magnitude at each bin */
-////        				arm_cmplx_mag_q15((q15_t *) fftOutputData,
-////        								  (q15_t *) fftOutputDataMag,
-////        								  TOTAL_SAMPLE_SIZE);
-//        				for (int i = 0; i < FFT_SIZE; i++)
-//        				{
-//        					resultsStructPtr->y[i] = fftOutputDataMag[i];
-//        				}
-//
-//        				/* put queueSendData into sendQueue */
-//        				xQueueSend( sendQueue,
-//        							( void * ) &resultsStructPtr,
-//        							( TickType_t ) 0 );
-//        				vPortFree(resultsStructPtr);
-//            		}
-//        		}
-//        	}
-//        	else
-//        	{
-//        		int i = 0;
-//        	}
-//    	}
-
     }
 }
