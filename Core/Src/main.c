@@ -82,6 +82,7 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+/* Declaration of Queue Pointers */
 QueueHandle_t receivedQueue = NULL;
 QueueHandle_t sendQueue = NULL;
 /* USER CODE END 0 */

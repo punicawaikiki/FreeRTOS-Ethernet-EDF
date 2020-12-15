@@ -6,6 +6,11 @@
 #include "fft.h"
 #include "helper_functions.h"
 
+/* Declaration of tasks pointers */
+TaskHandle_t* UDPReceiveTaskHandle = NULL;
+TaskHandle_t* UDPSendTaskHandle = NULL;
+TaskHandle_t* FFTTaskHandle = NULL;
+
 const char *pcApplicationHostnameHook( void )
 {
 	/* Assign the name "rtosdemo" to this network node.  This function will be
@@ -46,9 +51,9 @@ static BaseType_t xTasksAlreadyCreated = pdFALSE;
     if( eNetworkEvent == eNetworkUp )
     {
     	debugPrintln("Network is up, create Tasks");
-    	xTaskCreate( udpSendingTask, "UDPSend", ( unsigned short ) 800 , NULL, standardTASK_PRIORITY, NULL );
-    	xTaskCreate( udpReceivingTask, "UDPReceive", ( unsigned short ) 800 , NULL, standardTASK_PRIORITY, NULL );
-    	xTaskCreate( calculateFFT, "FFT", ( unsigned short ) 800 , NULL, standardTASK_PRIORITY, NULL );
+    	xTaskCreate( udpSendingTask, "UDPSend", ( unsigned short ) 800 , NULL, standardTASK_PRIORITY, UDPSendTaskHandle );
+    	xTaskCreate( udpReceivingTask, "UDPReceive", ( unsigned short ) 800 , NULL, standardTASK_PRIORITY, UDPReceiveTaskHandle );
+    	xTaskCreate( calculateFFT, "FFT", ( unsigned short ) 800 , NULL, standardTASK_PRIORITY, FFTTaskHandle );
         /* Create the tasks that use the TCP/IP stack if they have not already
         been created. */
         if( xTasksAlreadyCreated == pdFALSE )
