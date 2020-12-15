@@ -119,11 +119,13 @@ int main(void)
   /* USER CODE BEGIN 2 */
   debugPrintln("Main Hardware Init finished");
 
-  receivedQueue= xQueueCreate( 8, sizeof(fft_input_samples * ));
+  receivedQueue= xQueueCreate( 8, sizeof( samples_input_struct * ));
   sendQueue= xQueueCreate( 8, (sizeof( float32_t ) * FFT_SIZE));
   if ( ( receivedQueue == NULL ) || ( sendQueue == NULL) )
   {
-	  HAL_GPIO_WritePin(LD_USER1_GPIO_Port, LD_USER1_Pin, 1);
+	  debugPrintln( "--------------------------------");
+	  debugPrintln( " ONE QUEUE IS NULL !!!! ");
+	  debugPrintln( "--------------------------------");
   }
   FreeRTOS_IPInit( ucIPAddress,
                    ucNetMask,

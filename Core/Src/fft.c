@@ -46,7 +46,7 @@ void calculateFFT( void *pvParameters )
 				{
 					for (int i = 0; i < TOTAL_SAMPLE_SIZE; i++)
 					{
-						fftInputData[i] = fftInputStructPtr->y[i];
+						fftInputData[i] = fftInputStructPtr->samples[i];
 					}
 					/* calculate fft */
 					arm_rfft_fast_f32(&S, fftInputData, fftOutputData, 0);

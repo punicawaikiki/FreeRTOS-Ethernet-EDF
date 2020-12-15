@@ -40,7 +40,9 @@ Core/Src/helper_functions.o: ../Core/Src/helper_functions.c \
  ../Middlewares/FreeRTOS/Inc/portable/portmacro.h \
  ../Middlewares/FreeRTOS/Inc/mpu_wrappers.h \
  ../Middlewares/FreeRTOS/Inc/task.h ../Middlewares/FreeRTOS/Inc/list.h \
- ../Core/Inc/usart.h ../Core/Inc/main.h ../Core/Inc/user_variables.h
+ ../Core/Inc/usart.h ../Core/Inc/main.h ../Core/Inc/user_variables.h \
+ ../Middlewares/CMSIS-DSP/Inc/arm_math.h \
+ ../Middlewares/CMSIS-DSP/Inc/core_cm7.h
 
 ../Core/Inc/helper_functions.h:
 
@@ -133,3 +135,7 @@ Core/Src/helper_functions.o: ../Core/Src/helper_functions.c \
 ../Core/Inc/main.h:
 
 ../Core/Inc/user_variables.h:
+
+../Middlewares/CMSIS-DSP/Inc/arm_math.h:
+
+../Middlewares/CMSIS-DSP/Inc/core_cm7.h:

@@ -56,7 +56,7 @@ void udpReceivingTask( void *pvParameters )
 			{
 				if (receivedPackets[receivedStructPtr->messageCounter] == 0)
 				{
-					combinedSamplesStructPtr->y[sampleCounter + receivedStructPtr->messageCounter * SAMPLE_ARRAY_SIZE] = receivedStructPtr->y[sampleCounter];
+					combinedSamplesStructPtr->samples[sampleCounter + receivedStructPtr->messageCounter * SAMPLE_ARRAY_SIZE] = receivedStructPtr->samples[sampleCounter];
 				}
 				else
 				{

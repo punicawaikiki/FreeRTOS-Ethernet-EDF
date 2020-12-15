@@ -1,16 +1,18 @@
 Core/Src/udp_communication.o: ../Core/Src/udp_communication.c \
- ../Core/Inc/user_variables.h ../Core/Inc/udp_communication.h \
- ../Core/Inc/main.h ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal.h \
+ ../Core/Inc/user_variables.h ../Middlewares/CMSIS-DSP/Inc/arm_math.h \
+ ../Middlewares/CMSIS-DSP/Inc/core_cm7.h \
+ ../Middlewares/CMSIS-DSP/Inc/core_cmInstr.h \
+ ../Drivers/CMSIS/Include/cmsis_gcc.h \
+ ../Middlewares/CMSIS-DSP/Inc/core_cmFunc.h \
+ ../Middlewares/CMSIS-DSP/Inc/core_cmSimd.h \
+ ../Core/Inc/udp_communication.h ../Core/Inc/main.h \
+ ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal.h \
  ../Core/Inc/stm32f7xx_hal_conf.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_rcc.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_def.h \
  ../Drivers/CMSIS/Device/ST/STM32F7xx/Include/stm32f7xx.h \
  ../Drivers/CMSIS/Device/ST/STM32F7xx/Include/stm32f769xx.h \
- ../Drivers/CMSIS/Include/core_cm7.h \
- ../Drivers/CMSIS/Include/cmsis_version.h \
- ../Drivers/CMSIS/Include/cmsis_compiler.h \
- ../Drivers/CMSIS/Include/cmsis_gcc.h \
- ../Drivers/CMSIS/Include/mpu_armv7.h \
+ ../Drivers/CMSIS/Include/core_cm7.h ../Drivers/CMSIS/Include/mpu_armv7.h \
  ../Drivers/CMSIS/Device/ST/STM32F7xx/Include/system_stm32f7xx.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_rcc_ex.h \
@@ -52,11 +54,21 @@ Core/Src/udp_communication.o: ../Core/Src/udp_communication.c \
  ../Middlewares/FreeRTOS-TCP/Inc/IPTraceMacroDefaults.h \
  ../Middlewares/FreeRTOS-TCP/Src/portable/GCC/pack_struct_start.h \
  ../Middlewares/FreeRTOS-TCP/Src/portable/GCC/pack_struct_end.h \
- ../Middlewares/FreeRTOS/Inc/queue.h \
- ../Middlewares/CMSIS-DSP/Inc/arm_math.h \
- ../Middlewares/CMSIS-DSP/Inc/core_cm7.h ../Core/Inc/helper_functions.h
+ ../Middlewares/FreeRTOS/Inc/queue.h ../Core/Inc/helper_functions.h
 
 ../Core/Inc/user_variables.h:
+
+../Middlewares/CMSIS-DSP/Inc/arm_math.h:
+
+../Middlewares/CMSIS-DSP/Inc/core_cm7.h:
+
+../Middlewares/CMSIS-DSP/Inc/core_cmInstr.h:
+
+../Drivers/CMSIS/Include/cmsis_gcc.h:
+
+../Middlewares/CMSIS-DSP/Inc/core_cmFunc.h:
+
+../Middlewares/CMSIS-DSP/Inc/core_cmSimd.h:
 
 ../Core/Inc/udp_communication.h:
 
@@ -75,12 +87,6 @@ Core/Src/udp_communication.o: ../Core/Src/udp_communication.c \
 ../Drivers/CMSIS/Device/ST/STM32F7xx/Include/stm32f769xx.h:
 
 ../Drivers/CMSIS/Include/core_cm7.h:
-
-../Drivers/CMSIS/Include/cmsis_version.h:
-
-../Drivers/CMSIS/Include/cmsis_compiler.h:
-
-../Drivers/CMSIS/Include/cmsis_gcc.h:
 
 ../Drivers/CMSIS/Include/mpu_armv7.h:
 
@@ -169,9 +175,5 @@ Core/Src/udp_communication.o: ../Core/Src/udp_communication.c \
 ../Middlewares/FreeRTOS-TCP/Src/portable/GCC/pack_struct_end.h:
 
 ../Middlewares/FreeRTOS/Inc/queue.h:
-
-../Middlewares/CMSIS-DSP/Inc/arm_math.h:
-
-../Middlewares/CMSIS-DSP/Inc/core_cm7.h:
 
 ../Core/Inc/helper_functions.h:
