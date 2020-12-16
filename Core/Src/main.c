@@ -92,7 +92,6 @@ QueueHandle_t sendQueue = NULL;
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-//  HAL_NVIC_SetPriorityGrouping( NVIC_PRIORITYGROUP_4 );
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -111,25 +110,30 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-//  MX_ETH_Init();
   MX_RNG_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
   debugPrintln("Main Hardware Init finished");
 
+  /* create queue for sending data between receiving UDP task and fft task */
   receivedQueue= xQueueCreate( 8, sizeof( samples_input_struct * ));
+  /* create queue for sending data between fft task and sending UDP task */
   sendQueue= xQueueCreate( 8, (sizeof( float32_t ) * FFT_SIZE));
+  /* check if queue pointers are NULL */
   if ( ( receivedQueue == NULL ) || ( sendQueue == NULL) )
   {
 	  debugPrintln( "--------------------------------");
 	  debugPrintln( " ONE QUEUE IS NULL !!!! ");
 	  debugPrintln( "--------------------------------");
   }
+  /* init Freertos + TCP module */
+  debugPrintln("IP Init");
   FreeRTOS_IPInit( ucIPAddress,
                    ucNetMask,
                    ucGatewayAddress,
                    ucDNSServerAddress,
                    ucMACAddress );
+  /* start the freertos scheduler */
   debugPrintln("Start Scheduler");
   vTaskStartScheduler();
   /* USER CODE END 2 */

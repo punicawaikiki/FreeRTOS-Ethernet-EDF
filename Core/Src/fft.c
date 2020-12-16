@@ -44,6 +44,7 @@ void calculateFFT( void *pvParameters )
 							   &fftInputStructPtr,
 							   ( TickType_t ) 10 ) == pdPASS )
 				{
+					/* copy struct into array */
 					for (int i = 0; i < TOTAL_SAMPLE_SIZE; i++)
 					{
 						fftInputData[i] = fftInputStructPtr->samples[i];
@@ -53,6 +54,7 @@ void calculateFFT( void *pvParameters )
 					/* Process the data through the Complex Magnitude Module for
 					  calculating the magnitude at each bin */
 					arm_cmplx_mag_f32( fftOutputData, fftOutputDataMag, FFT_SIZE);
+					/* send fft results to queue for sending data back to the computer */
 					xQueueSend( sendQueue,
 								( void * ) &(fftOutputDataMag),
 								( TickType_t ) 0 );
