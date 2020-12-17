@@ -1403,36 +1403,39 @@ static BaseType_t xTasksAlreadyCreated = pdFALSE;
     	debugPrintln("Network is up, create Tasks");
  8000c14:	4821      	ldr	r0, [pc, #132]	; (8000c9c <vApplicationIPNetworkEventHook+0x98>)
  8000c16:	f7ff ff6d 	bl	8000af4 <debugPrintln>
-    	xTaskCreate( udpSendingTask, "UDPSend", ( unsigned short ) 800 , NULL, standardTASK_PRIORITY, UDPSendTaskHandle );
+//    	xTaskCreate( udpSendingTask, "UDPSend", ( unsigned short ) 500 , NULL, standardTASK_PRIORITY, UDPSendTaskHandle );
+//    	xTaskCreate( udpReceivingTask, "UDPReceive", ( unsigned short ) 500 , NULL, standardTASK_PRIORITY, UDPReceiveTaskHandle );
+//    	xTaskCreate( calculateFFT, "FFT", ( unsigned short ) 500 , NULL, standardTASK_PRIORITY, FFTTaskHandle );
+    	xTaskCreate( udpSendingTask, "UDPSend", ( unsigned short ) 500 , NULL, 3, UDPSendTaskHandle );
  8000c1a:	4b21      	ldr	r3, [pc, #132]	; (8000ca0 <vApplicationIPNetworkEventHook+0x9c>)
  8000c1c:	681b      	ldr	r3, [r3, #0]
  8000c1e:	9301      	str	r3, [sp, #4]
- 8000c20:	2300      	movs	r3, #0
+ 8000c20:	2303      	movs	r3, #3
  8000c22:	9300      	str	r3, [sp, #0]
  8000c24:	2300      	movs	r3, #0
- 8000c26:	f44f 7248 	mov.w	r2, #800	; 0x320
+ 8000c26:	f44f 72fa 	mov.w	r2, #500	; 0x1f4
  8000c2a:	491e      	ldr	r1, [pc, #120]	; (8000ca4 <vApplicationIPNetworkEventHook+0xa0>)
  8000c2c:	481e      	ldr	r0, [pc, #120]	; (8000ca8 <vApplicationIPNetworkEventHook+0xa4>)
  8000c2e:	f004 ffdf 	bl	8005bf0 <xTaskCreate>
-    	xTaskCreate( udpReceivingTask, "UDPReceive", ( unsigned short ) 800 , NULL, standardTASK_PRIORITY, UDPReceiveTaskHandle );
+    	xTaskCreate( udpReceivingTask, "UDPReceive", ( unsigned short ) 500 , NULL, 2, UDPReceiveTaskHandle );
  8000c32:	4b1e      	ldr	r3, [pc, #120]	; (8000cac <vApplicationIPNetworkEventHook+0xa8>)
  8000c34:	681b      	ldr	r3, [r3, #0]
  8000c36:	9301      	str	r3, [sp, #4]
- 8000c38:	2300      	movs	r3, #0
+ 8000c38:	2302      	movs	r3, #2
  8000c3a:	9300      	str	r3, [sp, #0]
  8000c3c:	2300      	movs	r3, #0
- 8000c3e:	f44f 7248 	mov.w	r2, #800	; 0x320
+ 8000c3e:	f44f 72fa 	mov.w	r2, #500	; 0x1f4
  8000c42:	491b      	ldr	r1, [pc, #108]	; (8000cb0 <vApplicationIPNetworkEventHook+0xac>)
  8000c44:	481b      	ldr	r0, [pc, #108]	; (8000cb4 <vApplicationIPNetworkEventHook+0xb0>)
  8000c46:	f004 ffd3 	bl	8005bf0 <xTaskCreate>
-    	xTaskCreate( calculateFFT, "FFT", ( unsigned short ) 800 , NULL, standardTASK_PRIORITY, FFTTaskHandle );
+    	xTaskCreate( calculateFFT, "FFT", ( unsigned short ) 500 , NULL, 1, FFTTaskHandle );
  8000c4a:	4b1b      	ldr	r3, [pc, #108]	; (8000cb8 <vApplicationIPNetworkEventHook+0xb4>)
  8000c4c:	681b      	ldr	r3, [r3, #0]
  8000c4e:	9301      	str	r3, [sp, #4]
- 8000c50:	2300      	movs	r3, #0
+ 8000c50:	2301      	movs	r3, #1
  8000c52:	9300      	str	r3, [sp, #0]
  8000c54:	2300      	movs	r3, #0
- 8000c56:	f44f 7248 	mov.w	r2, #800	; 0x320
+ 8000c56:	f44f 72fa 	mov.w	r2, #500	; 0x1f4
  8000c5a:	4918      	ldr	r1, [pc, #96]	; (8000cbc <vApplicationIPNetworkEventHook+0xb8>)
  8000c5c:	4818      	ldr	r0, [pc, #96]	; (8000cc0 <vApplicationIPNetworkEventHook+0xbc>)
  8000c5e:	f004 ffc7 	bl	8005bf0 <xTaskCreate>

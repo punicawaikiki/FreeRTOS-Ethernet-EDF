@@ -51,9 +51,12 @@ static BaseType_t xTasksAlreadyCreated = pdFALSE;
     if( eNetworkEvent == eNetworkUp )
     {
     	debugPrintln("Network is up, create Tasks");
-    	xTaskCreate( udpSendingTask, "UDPSend", ( unsigned short ) 800 , NULL, standardTASK_PRIORITY, UDPSendTaskHandle );
-    	xTaskCreate( udpReceivingTask, "UDPReceive", ( unsigned short ) 800 , NULL, standardTASK_PRIORITY, UDPReceiveTaskHandle );
-    	xTaskCreate( calculateFFT, "FFT", ( unsigned short ) 800 , NULL, standardTASK_PRIORITY, FFTTaskHandle );
+//    	xTaskCreate( udpSendingTask, "UDPSend", ( unsigned short ) 500 , NULL, standardTASK_PRIORITY, UDPSendTaskHandle );
+//    	xTaskCreate( udpReceivingTask, "UDPReceive", ( unsigned short ) 500 , NULL, standardTASK_PRIORITY, UDPReceiveTaskHandle );
+//    	xTaskCreate( calculateFFT, "FFT", ( unsigned short ) 500 , NULL, standardTASK_PRIORITY, FFTTaskHandle );
+    	xTaskCreate( udpSendingTask, "UDPSend", ( unsigned short ) 500 , NULL, 3, UDPSendTaskHandle );
+    	xTaskCreate( udpReceivingTask, "UDPReceive", ( unsigned short ) 500 , NULL, 2, UDPReceiveTaskHandle );
+    	xTaskCreate( calculateFFT, "FFT", ( unsigned short ) 500 , NULL, 1, FFTTaskHandle );
         /* Create the tasks that use the TCP/IP stack if they have not already
         been created. */
         if( xTasksAlreadyCreated == pdFALSE )
