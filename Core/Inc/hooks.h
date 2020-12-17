@@ -32,5 +32,11 @@ BaseType_t xApplicationDNSQueryHook( const char *pcName );
 // Declaration
 void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent );
 
+// Return Type: void
+// Name: vApplicationMallocFailedHook
+// Parameters: void
+// Declaration
+void vApplicationMallocFailedHook( void );
+
 
 #endif /* __HOOKS_H */

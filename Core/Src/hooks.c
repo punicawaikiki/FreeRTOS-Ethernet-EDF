@@ -78,3 +78,9 @@ static BaseType_t xTasksAlreadyCreated = pdFALSE;
     	}
     }
 }
+
+
+void vApplicationMallocFailedHook(void)
+{
+	debugPrintln("Malloc Failed Hook called!!!");
+}

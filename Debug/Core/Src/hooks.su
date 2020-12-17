@@ -1,3 +1,4 @@
 hooks.c:14:13:pcApplicationHostnameHook	4	static
 hooks.c:23:12:xApplicationDNSQueryHook	24	static
 hooks.c:47:6:vApplicationIPNetworkEventHook	24	static
+hooks.c:83:6:vApplicationMallocFailedHook	8	static
