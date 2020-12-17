@@ -12,7 +12,7 @@
 
 
 static samples_input_struct *receivedStructPtr;
-static fft_input_samples* combinedSamplesStructPtr;
+static float32_t fftInputData[TOTAL_SAMPLE_SIZE];
 static float32_t fftResults[FFT_SIZE];
 
 
@@ -56,7 +56,7 @@ void udpReceivingTask( void *pvParameters )
 			{
 				if (receivedPackets[receivedStructPtr->messageCounter] == 0)
 				{
-					combinedSamplesStructPtr->samples[sampleCounter + receivedStructPtr->messageCounter * SAMPLE_ARRAY_SIZE] = receivedStructPtr->samples[sampleCounter];
+					fftInputData[sampleCounter + receivedStructPtr->messageCounter * SAMPLE_ARRAY_SIZE] = receivedStructPtr->samples[sampleCounter];
 				}
 				else
 				{
@@ -71,7 +71,7 @@ void udpReceivingTask( void *pvParameters )
 				HAL_GPIO_TogglePin(LD_USER1_GPIO_Port, LD_USER1_Pin);
 				/* Put Received Data into the input_samples Queue */
 				xQueueSend( receivedQueue,
-						    ( void * ) &combinedSamplesStructPtr,
+						    ( void * ) &fftInputData,
 							( TickType_t ) 0 );
 				/* reset bool array */
 				resetBoolArray( receivedPackets );

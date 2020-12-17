@@ -10,7 +10,6 @@
 
 
 /* define globals */
-static fft_input_samples* fftInputStructPtr;
 static float32_t fftInputData[TOTAL_SAMPLE_SIZE];
 static float32_t fftOutputData[TOTAL_SAMPLE_SIZE];
 static float32_t fftOutputDataMag[FFT_SIZE];
@@ -41,14 +40,9 @@ void calculateFFT( void *pvParameters )
 			{
 				/* get one message from receivedQueue */
 				if (xQueueReceive( receivedQueue,
-							   &fftInputStructPtr,
+							   &fftInputData,
 							   ( TickType_t ) 10 ) == pdPASS )
 				{
-					/* copy struct into array */
-					for (int i = 0; i < TOTAL_SAMPLE_SIZE; i++)
-					{
-						fftInputData[i] = fftInputStructPtr->samples[i];
-					}
 					/* calculate fft */
 					arm_rfft_fast_f32(&S, fftInputData, fftOutputData, 0);
 					/* Process the data through the Complex Magnitude Module for
