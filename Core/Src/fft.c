@@ -41,7 +41,7 @@ void calculateFFT( void *pvParameters )
 				/* get one message from receivedQueue */
 				if (xQueueReceive( receivedQueue,
 							   &fftInputData,
-							   ( TickType_t ) 10 ) == pdPASS )
+							   portMAX_DELAY) == pdPASS )
 				{
 					/* calculate fft */
 					arm_rfft_fast_f32(&S, fftInputData, fftOutputData, 0);
@@ -51,7 +51,7 @@ void calculateFFT( void *pvParameters )
 					/* send fft results to queue for sending data back to the computer */
 					xQueueSend( sendQueue,
 								( void * ) &(fftOutputDataMag),
-								( TickType_t ) 0 );
+								portMAX_DELAY);
 				}
         	}
     	}

@@ -72,7 +72,7 @@ void udpReceivingTask( void *pvParameters )
 				/* Put Received Data into the input_samples Queue */
 				xQueueSend( receivedQueue,
 						    ( void * ) &fftInputData,
-							( TickType_t ) 0 );
+							portMAX_DELAY );
 				/* reset bool array */
 				resetBoolArray( receivedPackets );
 			}
@@ -126,7 +126,7 @@ void udpSendingTask( void *pvParameters )
 				/* get the next message from sendQueue */
 				if (xQueueReceive( sendQueue,
 					&fftResults,
-				    ( TickType_t ) 10 ) == pdPASS )
+					portMAX_DELAY ) == pdPASS )
 				{
 					/* toggle USER_LED 2 for visualization */
 					HAL_GPIO_TogglePin(LD_USER2_GPIO_Port, LD_USER2_Pin);
