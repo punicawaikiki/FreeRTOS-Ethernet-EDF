@@ -116,7 +116,7 @@ void udpSendingTask( void *pvParameters )
 	for( ;; )
 	{
 		/* get number of messages in sendQueue */
-		int waitingMessages = 5;
+		int waitingMessages = uxQueueMessagesWaiting(sendQueue);
 //		UBaseType_t waitingMessages = uxQueueMessagesWaiting(sendQueue);
 		if (waitingMessages > 0)
 		{
