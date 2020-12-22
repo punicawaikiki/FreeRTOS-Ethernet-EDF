@@ -54,9 +54,9 @@ static BaseType_t xTasksAlreadyCreated = pdFALSE;
 //    	xTaskCreate( udpSendingTask, "UDPSend", ( unsigned short ) 500 , NULL, standardTASK_PRIORITY, UDPSendTaskHandle );
 //    	xTaskCreate( udpReceivingTask, "UDPReceive", ( unsigned short ) 500 , NULL, standardTASK_PRIORITY, UDPReceiveTaskHandle );
 //    	xTaskCreate( calculateFFT, "FFT", ( unsigned short ) 500 , NULL, standardTASK_PRIORITY, FFTTaskHandle );
-    	xTaskCreate( udpSendingTask, "UDPSend", ( unsigned short ) 500 , NULL, 2, UDPSendTaskHandle );
-    	xTaskCreate( udpReceivingTask, "UDPReceive", ( unsigned short ) 500 , NULL, 2, UDPReceiveTaskHandle );
+    	xTaskCreate( udpReceivingTask, "UDPReceive", ( unsigned short ) 500 , NULL, 3, UDPReceiveTaskHandle );
     	xTaskCreate( calculateFFT, "FFT", ( unsigned short ) 500 , NULL, 2, FFTTaskHandle );
+    	xTaskCreate( udpSendingTask, "UDPSend", ( unsigned short ) 500 , NULL, 1, UDPSendTaskHandle );
         /* Create the tasks that use the TCP/IP stack if they have not already
         been created. */
         if( xTasksAlreadyCreated == pdFALSE )

@@ -75,6 +75,9 @@ void udpReceivingTask( void *pvParameters )
 							portMAX_DELAY );
 				/* reset bool array */
 				resetBoolArray( receivedPackets );
+				vPortEnterCritical();
+				debugPrintln("Data received");
+				vPortExitCritical();
 			}
 	   }
        if( lBytes >= 0 )
@@ -147,6 +150,9 @@ void udpSendingTask( void *pvParameters )
 										 &xDestinationAddress,
 										 sizeof( xDestinationAddress ) );
 					}
+					vPortEnterCritical();
+					debugPrintln("Data send");
+					vPortExitCritical();
 				}
 			}
 		}
