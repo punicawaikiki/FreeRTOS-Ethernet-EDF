@@ -53,9 +53,7 @@ void calculateFFT( void *pvParameters )
 								( void * ) &(fftOutputDataMag),
 								0);
 					#if DEBUG_MODE == 1
-					vPortEnterCritical();
-					debugPrintln("FFT calculated");
-					vPortExitCritical();
+						debugPrintln("FFT calculated");
 					#endif
 				}
         	}

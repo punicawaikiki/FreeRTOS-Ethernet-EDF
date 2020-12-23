@@ -86,14 +86,22 @@ volatile unsigned long ul = 0;
 
 /* print string over usart1 */
 void debugPrint(char _out[]){
- HAL_UART_Transmit(&huart1, (uint8_t *) _out, strlen(_out), 10);
+	/* disable interrupts */
+	vPortEnterCritical();
+	HAL_UART_Transmit(&huart1, (uint8_t *) _out, strlen(_out), 10);
+	/* enable interrupts */
+	vPortExitCritical();
 }
 
 /* print string over usart1 with \r\n */
 void debugPrintln(char _out[]){
- HAL_UART_Transmit(&huart1, (uint8_t *) _out, strlen(_out), 10);
- char newline[2] = "\r\n";
- HAL_UART_Transmit(&huart1, (uint8_t *) newline, 2, 10);
+	/* disable interrupts */
+	vPortEnterCritical();
+	HAL_UART_Transmit(&huart1, (uint8_t *) _out, strlen(_out), 10);
+	char newline[2] = "\r\n";
+	HAL_UART_Transmit(&huart1, (uint8_t *) newline, 2, 10);
+	/* enable interrupts */
+	vPortExitCritical();
 }
 
 /* iterate over an array and check if all members are True (1) */

@@ -5,6 +5,6 @@ helper_functions.c:50:10:ulApplicationGetNextSequenceNumber	24	static
 helper_functions.c:62:12:xApplicationGetRandomNumber	16	static
 helper_functions.c:68:6:vAssertCalled	24	static,ignoring_inline_asm
 helper_functions.c:88:6:debugPrint	16	static
-helper_functions.c:93:6:debugPrintln	24	static
-helper_functions.c:100:15:checkBoolArrayTrue	24	static
-helper_functions.c:121:6:resetBoolArray	24	static
+helper_functions.c:97:6:debugPrintln	24	static
+helper_functions.c:108:15:checkBoolArrayTrue	24	static
+helper_functions.c:129:6:resetBoolArray	24	static

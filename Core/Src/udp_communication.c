@@ -74,11 +74,7 @@ void udpReceivingTask( void *pvParameters )
 				/* reset bool array */
 				resetBoolArray( receivedPackets );
 				#if DEBUG_MODE == 1
-				/* disable interrupts */
-				vPortEnterCritical();
-				debugPrintln("Data received");
-				/* enable interrupts */
-				vPortExitCritical();
+					debugPrintln("Data received");
 				#endif
 			}
 	   }
@@ -153,9 +149,7 @@ void udpSendingTask( void *pvParameters )
 										 sizeof( xDestinationAddress ) );
 					}
 					#if DEBUG_MODE == 1
-					vPortEnterCritical();
-					debugPrintln("Data send");
-					vPortExitCritical();
+						debugPrintln("Data send");
 					#endif
 				}
 			}

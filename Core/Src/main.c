@@ -114,7 +114,7 @@ int main(void)
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
   #if DEBUG_MODE == 1
-  debugPrintln("Main Hardware Init finished");
+  	  debugPrintln("Main Hardware Init finished");
   #endif
   /* create queue for sending data between receiving UDP task and fft task */
   receivedQueue= xQueueCreate( 1, (sizeof( float32_t * ) * TOTAL_SAMPLE_SIZE));
@@ -124,9 +124,9 @@ int main(void)
   if ( ( receivedQueue == NULL ) || ( sendQueue == NULL) )
   {
 	  #if DEBUG_MODE == 1
-	  debugPrintln( "--------------------------------");
-	  debugPrintln( " ONE QUEUE IS NULL !!!! ");
-	  debugPrintln( "--------------------------------");
+		  debugPrintln( "--------------------------------");
+		  debugPrintln( " ONE QUEUE IS NULL !!!! ");
+		  debugPrintln( "--------------------------------");
 	  #endif
   }
   /* init Freertos + TCP module */
@@ -140,7 +140,7 @@ int main(void)
                    ucMACAddress );
   /* start the freertos scheduler */
   #if DEBUG_MODE == 1
-  debugPrintln("Start Scheduler");
+  	  debugPrintln("Start Scheduler");
   #endif
   vTaskStartScheduler();
   /* USER CODE END 2 */
