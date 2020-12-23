@@ -51,7 +51,7 @@ void calculateFFT( void *pvParameters )
 					/* send fft results to queue for sending data back to the computer */
 					xQueueSend( sendQueue,
 								( void * ) &(fftOutputDataMag),
-								portMAX_DELAY);
+								0);
 					vPortEnterCritical();
 					debugPrintln("FFT calculated");
 					vPortExitCritical();

@@ -10,7 +10,6 @@
 #include "arm_math.h"
 #include "helper_functions.h"
 
-
 static samples_input_struct *receivedStructPtr;
 static float32_t fftInputData[TOTAL_SAMPLE_SIZE];
 static float32_t fftResults[FFT_SIZE];
@@ -72,11 +71,13 @@ void udpReceivingTask( void *pvParameters )
 				/* Put Received Data into the input_samples Queue */
 				xQueueSend( receivedQueue,
 						    ( void * ) &fftInputData,
-							portMAX_DELAY );
+							0 );
 				/* reset bool array */
 				resetBoolArray( receivedPackets );
+				/* disable interrupts */
 				vPortEnterCritical();
 				debugPrintln("Data received");
+				/* enable interrupts */
 				vPortExitCritical();
 			}
 	   }
@@ -129,7 +130,7 @@ void udpSendingTask( void *pvParameters )
 				/* get the next message from sendQueue */
 				if (xQueueReceive( sendQueue,
 					&fftResults,
-					portMAX_DELAY ) == pdPASS )
+					0 ) == pdPASS )
 				{
 					/* toggle USER_LED 2 for visualization */
 					HAL_GPIO_TogglePin(LD_USER2_GPIO_Port, LD_USER2_Pin);
