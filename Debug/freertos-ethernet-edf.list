@@ -35,17 +35,17 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING
  15 .debug_ranges 00001f20  00000000  00000000  000946c8  2**3
                   CONTENTS, READONLY, DEBUGGING
- 16 .debug_macro  00037b80  00000000  00000000  000965e8  2**0
+ 16 .debug_macro  0000b1be  00000000  00000000  000965e8  2**0
                   CONTENTS, READONLY, DEBUGGING
- 17 .debug_line   00022e5d  00000000  00000000  000ce168  2**0
+ 17 .debug_line   00022e5d  00000000  00000000  000a17a6  2**0
                   CONTENTS, READONLY, DEBUGGING
- 18 .debug_str    00135362  00000000  00000000  000f0fc5  2**0
+ 18 .debug_str    00135371  00000000  00000000  000c4603  2**0
                   CONTENTS, READONLY, DEBUGGING
- 19 .comment      000000eb  00000000  00000000  00226327  2**0
+ 19 .comment      000000eb  00000000  00000000  001f9974  2**0
                   CONTENTS, READONLY
- 20 .debug_frame  000090fc  00000000  00000000  00226414  2**2
+ 20 .debug_frame  000090fc  00000000  00000000  001f9a60  2**2
                   CONTENTS, READONLY, DEBUGGING
- 21 .debug_loc    0000392e  00000000  00000000  0022f510  2**0
+ 21 .debug_loc    0000392e  00000000  00000000  00202b5c  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -822,6 +822,7 @@ void calculateFFT( void *pvParameters )
  80008d2:	f004 fc03 	bl	80050dc <xQueueGenericSend>
 								( void * ) &(fftOutputDataMag),
 								0);
+					#if DEBUG_MODE == 1
 					vPortEnterCritical();
  80008d6:	f007 f92f 	bl	8007b38 <vPortEnterCritical>
 					debugPrintln("FFT calculated");
@@ -1410,9 +1411,11 @@ static BaseType_t xTasksAlreadyCreated = pdFALSE;
  8000c24:	2b00      	cmp	r3, #0
  8000c26:	d12e      	bne.n	8000c86 <vApplicationIPNetworkEventHook+0x6e>
     {
+		#if DEBUG_MODE == 1
     	debugPrintln("Network is up, create Tasks");
  8000c28:	4821      	ldr	r0, [pc, #132]	; (8000cb0 <vApplicationIPNetworkEventHook+0x98>)
  8000c2a:	f7ff ff6d 	bl	8000b08 <debugPrintln>
+		#endif
     	xTaskCreate( udpReceivingTask, "UDPReceive", ( unsigned short ) 500 , NULL, 4, UDPReceiveTaskHandle );
  8000c2e:	4b21      	ldr	r3, [pc, #132]	; (8000cb4 <vApplicationIPNetworkEventHook+0x9c>)
  8000c30:	681b      	ldr	r3, [r3, #0]
@@ -1592,10 +1595,11 @@ int main(void)
   MX_USART1_UART_Init();
  8000d1e:	f000 fb69 	bl	80013f4 <MX_USART1_UART_Init>
   /* USER CODE BEGIN 2 */
+  #if DEBUG_MODE == 1
   debugPrintln("Main Hardware Init finished");
  8000d22:	481b      	ldr	r0, [pc, #108]	; (8000d90 <main+0x88>)
  8000d24:	f7ff fef0 	bl	8000b08 <debugPrintln>
-
+  #endif
   /* create queue for sending data between receiving UDP task and fft task */
   receivedQueue= xQueueCreate( 1, (sizeof( float32_t * ) * TOTAL_SAMPLE_SIZE));
  8000d28:	2200      	movs	r2, #0
@@ -1625,6 +1629,7 @@ int main(void)
  8000d58:	2b00      	cmp	r3, #0
  8000d5a:	d108      	bne.n	8000d6e <main+0x66>
   {
+	  #if DEBUG_MODE == 1
 	  debugPrintln( "--------------------------------");
  8000d5c:	480f      	ldr	r0, [pc, #60]	; (8000d9c <main+0x94>)
  8000d5e:	f7ff fed3 	bl	8000b08 <debugPrintln>
@@ -1634,11 +1639,14 @@ int main(void)
 	  debugPrintln( "--------------------------------");
  8000d68:	480c      	ldr	r0, [pc, #48]	; (8000d9c <main+0x94>)
  8000d6a:	f7ff fecd 	bl	8000b08 <debugPrintln>
+	  #endif
   }
   /* init Freertos + TCP module */
+  #if DEBUG_MODE == 1
   debugPrintln("IP Init");
  8000d6e:	480d      	ldr	r0, [pc, #52]	; (8000da4 <main+0x9c>)
  8000d70:	f7ff feca 	bl	8000b08 <debugPrintln>
+	#endif
   FreeRTOS_IPInit( ucIPAddress,
  8000d74:	4b0c      	ldr	r3, [pc, #48]	; (8000da8 <main+0xa0>)
  8000d76:	9300      	str	r3, [sp, #0]
@@ -1647,14 +1655,15 @@ int main(void)
  8000d7c:	490d      	ldr	r1, [pc, #52]	; (8000db4 <main+0xac>)
  8000d7e:	480e      	ldr	r0, [pc, #56]	; (8000db8 <main+0xb0>)
  8000d80:	f008 fe24 	bl	80099cc <FreeRTOS_IPInit>
-                   ucNetMask,
                    ucGatewayAddress,
                    ucDNSServerAddress,
                    ucMACAddress );
   /* start the freertos scheduler */
+  #if DEBUG_MODE == 1
   debugPrintln("Start Scheduler");
  8000d84:	480d      	ldr	r0, [pc, #52]	; (8000dbc <main+0xb4>)
  8000d86:	f7ff febf 	bl	8000b08 <debugPrintln>
+  #endif
   vTaskStartScheduler();
  8000d8a:	f005 f8ed 	bl	8005f68 <vTaskStartScheduler>
   /* USER CODE END 2 */
@@ -2584,6 +2593,7 @@ void udpReceivingTask( void *pvParameters )
  8001268:	f107 030c 	add.w	r3, r7, #12
  800126c:	4618      	mov	r0, r3
  800126e:	f7ff fc8d 	bl	8000b8c <resetBoolArray>
+				#if DEBUG_MODE == 1
 				/* disable interrupts */
 				vPortEnterCritical();
  8001272:	f006 fc61 	bl	8007b38 <vPortEnterCritical>
@@ -2593,6 +2603,7 @@ void udpReceivingTask( void *pvParameters )
 				/* enable interrupts */
 				vPortExitCritical();
  800127c:	f006 fc88 	bl	8007b90 <vPortExitCritical>
+				#endif
 			}
 	   }
        if( lBytes >= 0 )
@@ -2661,7 +2672,7 @@ void udpSendingTask( void *pvParameters )
  80012de:	f1b3 3fff 	cmp.w	r3, #4294967295
  80012e2:	d103      	bne.n	80012ec <udpSendingTask+0x40>
  80012e4:	493e      	ldr	r1, [pc, #248]	; (80013e0 <udpSendingTask+0x134>)
- 80012e6:	2075      	movs	r0, #117	; 0x75
+ 80012e6:	2077      	movs	r0, #119	; 0x77
  80012e8:	f7ff fbf9 	bl	8000ade <vAssertCalled>
 
 	for( ;; )
@@ -2766,11 +2777,11 @@ void udpSendingTask( void *pvParameters )
  80013ae:	f8d7 3420 	ldr.w	r3, [r7, #1056]	; 0x420
  80013b2:	2b01      	cmp	r3, #1
  80013b4:	d9bc      	bls.n	8001330 <udpSendingTask+0x84>
-										 sizeof ( samples_output_struct ),
 										 0,
 										 &xDestinationAddress,
 										 sizeof( xDestinationAddress ) );
 					}
+					#if DEBUG_MODE == 1
 					vPortEnterCritical();
  80013b6:	f006 fbbf 	bl	8007b38 <vPortEnterCritical>
 					debugPrintln("Data send");

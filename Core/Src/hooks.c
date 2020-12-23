@@ -50,7 +50,9 @@ static BaseType_t xTasksAlreadyCreated = pdFALSE;
     /* Both eNetworkUp and eNetworkDown events can be processed here. */
     if( eNetworkEvent == eNetworkUp )
     {
+		#if DEBUG_MODE == 1
     	debugPrintln("Network is up, create Tasks");
+		#endif
     	xTaskCreate( udpReceivingTask, "UDPReceive", ( unsigned short ) 500 , NULL, 4, UDPReceiveTaskHandle );
     	xTaskCreate( calculateFFT, "FFT", ( unsigned short ) 500 , NULL, 1, FFTTaskHandle );
     	xTaskCreate( udpSendingTask, "UDPSend", ( unsigned short ) 500 , NULL, 1, UDPSendTaskHandle );
@@ -68,7 +70,9 @@ static BaseType_t xTasksAlreadyCreated = pdFALSE;
     }
     else
     {
+		#if DEBUG_MODE == 1
     	debugPrintln("Network is down, waiting ...");
+		#endif
     	if (HAL_GPIO_ReadPin(LD_USER1_GPIO_Port, LD_USER1_Pin) != 1)
     	{
     		HAL_GPIO_WritePin(LD_USER1_GPIO_Port, LD_USER1_Pin, 1);
