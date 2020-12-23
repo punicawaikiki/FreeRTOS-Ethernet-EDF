@@ -38,5 +38,17 @@ void vApplicationIPNetworkEventHook( eIPCallbackEvent_t eNetworkEvent );
 // Declaration
 void vApplicationMallocFailedHook( void );
 
+// Return Type: void
+// Name: vApplicationStackOverflowHook
+// Parameters: TaskHandle_t xTask, char * pcTaskName
+// Declaration
+void vApplicationStackOverflowHook( TaskHandle_t xTask, char * pcTaskName );
+
+// Return Type: void
+// Name: vApplicationIdleHook
+// Parameters: void
+// Declaration
+void vApplicationIdleHook(void);
+
 
 #endif /* __HOOKS_H */

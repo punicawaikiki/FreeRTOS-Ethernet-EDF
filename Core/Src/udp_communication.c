@@ -46,7 +46,6 @@ void udpReceivingTask( void *pvParameters )
                                    FREERTOS_ZERO_COPY,
                                    &xClient,
                                    &xClientLength );
-
 	   if( lBytes > 0 )
 	   {
 			/* Data was received and can be processed here. */
