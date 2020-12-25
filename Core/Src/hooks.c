@@ -53,7 +53,7 @@ static BaseType_t xTasksAlreadyCreated = pdFALSE;
 		#if DEBUG_MODE == 1
     		debugPrintln("Network is up, create Tasks");
 		#endif
-    	xTaskCreate( udpReceivingTask, "UDPReceive", ( unsigned short ) 500 , NULL, 4, UDPReceiveTaskHandle );
+    	xTaskCreate( udpReceivingTask, "UDPReceive", ( unsigned short ) 500 , NULL, 3, UDPReceiveTaskHandle );
     	xTaskCreate( calculateFFT, "FFT", ( unsigned short ) 500 , NULL, 1, FFTTaskHandle );
     	xTaskCreate( udpSendingTask, "UDPSend", ( unsigned short ) 500 , NULL, 1, UDPSendTaskHandle );
         /* Create the tasks that use the TCP/IP stack if they have not already

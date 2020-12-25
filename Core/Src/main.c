@@ -75,7 +75,17 @@ static const uint8_t ucDNSServerAddress[ 4 ] = { configDNS_SERVER_ADDR0, configD
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
-
+TaskHandle_t* tickTestHandle = NULL;
+static void printTick( void )
+{
+	char buffer[1024];
+    for( ;; )
+    {
+    	snprintf(buffer, sizeof(buffer), "Tick: %lu", xTaskGetTickCount());
+    	debugPrintln(buffer);
+    	vTaskDelay( 10000 / portTICK_PERIOD_MS );
+    }
+}
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -142,6 +152,7 @@ int main(void)
   #if DEBUG_MODE == 1
   	  debugPrintln("Start Scheduler");
   #endif
+  xTaskCreate( printTick, "printTick", ( unsigned short ) 500 , NULL, 5, tickTestHandle );
   vTaskStartScheduler();
   /* USER CODE END 2 */
 
