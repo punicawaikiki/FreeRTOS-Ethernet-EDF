@@ -10,7 +10,8 @@
 #define EPOCHES 4
 #define FFT_SIZE (SAMPLE_ARRAY_SIZE * EPOCHES) / 2
 #define TOTAL_SAMPLE_SIZE SAMPLE_ARRAY_SIZE * EPOCHES
-
+#define SIZE_OF_EDF_TASKS_ARRAY 3
+#define EDF_DISABLED_PRIORITY 1
 
 // define structs
 typedef struct{

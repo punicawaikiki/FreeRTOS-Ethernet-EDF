@@ -40,7 +40,9 @@ Core/Src/edf_tasks.o: ../Core/Src/edf_tasks.c \
  ../Middlewares/FreeRTOS/Inc/portable.h \
  ../Middlewares/FreeRTOS/Inc/deprecated_definitions.h \
  ../Middlewares/FreeRTOS/Inc/portable/portmacro.h \
- ../Middlewares/FreeRTOS/Inc/mpu_wrappers.h ../Core/Inc/main.h
+ ../Middlewares/FreeRTOS/Inc/mpu_wrappers.h \
+ ../Middlewares/FreeRTOS/Inc/task.h ../Middlewares/FreeRTOS/Inc/list.h \
+ ../Core/Inc/main.h
 
 ../Core/Inc/user_variables.h:
 
@@ -129,5 +131,9 @@ Core/Src/edf_tasks.o: ../Core/Src/edf_tasks.c \
 ../Middlewares/FreeRTOS/Inc/portable/portmacro.h:
 
 ../Middlewares/FreeRTOS/Inc/mpu_wrappers.h:
+
+../Middlewares/FreeRTOS/Inc/task.h:
+
+../Middlewares/FreeRTOS/Inc/list.h:
 
 ../Core/Inc/main.h:

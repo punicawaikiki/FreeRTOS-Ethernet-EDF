@@ -1,1 +1,2 @@
-edf_tasks.c:12:12:createEDFTask	24	static
+edf_tasks.c:37:6:initEDFTasksStruct	24	static
+edf_tasks.c:47:12:createEDFTask	40	static

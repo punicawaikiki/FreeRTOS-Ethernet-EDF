@@ -9,7 +9,7 @@
 #include "helper_functions.h"
 
 
-/* define globals */
+/* define module globals */
 static float32_t fftInputData[TOTAL_SAMPLE_SIZE];
 static float32_t fftOutputData[TOTAL_SAMPLE_SIZE];
 static float32_t fftOutputDataMag[FFT_SIZE];
