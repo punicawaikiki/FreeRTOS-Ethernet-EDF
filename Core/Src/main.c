@@ -37,6 +37,7 @@
 #include "hooks.h"
 #include "helper_functions.h"
 #include "arm_math.h"
+#include "edf_tasks.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -76,7 +77,7 @@ static const uint8_t ucDNSServerAddress[ 4 ] = { configDNS_SERVER_ADDR0, configD
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
 TaskHandle_t* tickTestHandle = NULL;
-static void printTick( void )
+void printTick( void* pvParameters )
 {
 	char buffer[1024];
     for( ;; )
@@ -123,7 +124,7 @@ int main(void)
   MX_RNG_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
-  #if DEBUG_MODE == 1
+  #if DEBUG_MODE
   	  debugPrintln("Main Hardware Init finished");
   #endif
   /* create queue for sending data between receiving UDP task and fft task */
@@ -143,16 +144,19 @@ int main(void)
   #if DEBUG_MODE == 1
   debugPrintln("IP Init");
 	#endif
-  FreeRTOS_IPInit( ucIPAddress,
-                   ucNetMask,
-                   ucGatewayAddress,
-                   ucDNSServerAddress,
-                   ucMACAddress );
+  /* init freertos IP Stack */
+//  FreeRTOS_IPInit( ucIPAddress,
+//                   ucNetMask,
+//                   ucGatewayAddress,
+//                   ucDNSServerAddress,
+//                   ucMACAddress );
   /* start the freertos scheduler */
-  #if DEBUG_MODE == 1
+  initEDFTasksStruct();
+  createEDFTask(printTick, "printTick", (unsigned short ) 300, NULL, 5, 50);
+  #if DEBUG_MODE
   	  debugPrintln("Start Scheduler");
   #endif
-  xTaskCreate( printTick, "printTick", ( unsigned short ) 500 , NULL, 5, tickTestHandle );
+//  xTaskCreate( printTick, "printTick", ( unsigned short ) 500 , NULL, 5, tickTestHandle );
   vTaskStartScheduler();
   /* USER CODE END 2 */
 

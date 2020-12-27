@@ -50,7 +50,7 @@ static BaseType_t xTasksAlreadyCreated = pdFALSE;
     /* Both eNetworkUp and eNetworkDown events can be processed here. */
     if( eNetworkEvent == eNetworkUp )
     {
-		#if DEBUG_MODE == 1
+		#if DEBUG_MODE
     		debugPrintln("Network is up, create Tasks");
 		#endif
     	xTaskCreate( udpReceivingTask, "UDPReceive", ( unsigned short ) 500 , NULL, 3, UDPReceiveTaskHandle );

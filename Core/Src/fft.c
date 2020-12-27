@@ -52,7 +52,7 @@ void calculateFFT( void *pvParameters )
 					xQueueSend( sendQueue,
 								( void * ) &(fftOutputDataMag),
 								0);
-					#if DEBUG_MODE == 1
+					#if DEBUG_MODE
 						debugPrintln("FFT calculated");
 					#endif
 				}
