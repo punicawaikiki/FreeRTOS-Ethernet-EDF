@@ -38,6 +38,7 @@
 #include "helper_functions.h"
 #include "arm_math.h"
 #include "edf_tasks.h"
+#include "stdio.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -79,14 +80,36 @@ void SystemClock_Config(void);
 TaskHandle_t* tickTestHandle = NULL;
 void printTick( void* pvParameters )
 {
-	char buffer[1024];
+	char buffer[100];
     for( ;; )
     {
     	snprintf(buffer, sizeof(buffer), "Tick: %lu", xTaskGetTickCount());
     	debugPrintln(buffer);
-    	vTaskDelay( 10000 / portTICK_PERIOD_MS );
     }
 }
+
+// test task 1
+void task1( void* pvParameters )
+{
+    for( ;; )
+    {
+		debugPrintln("Task 1");
+		vTaskDelay(500 / portTICK_PERIOD_MS);
+		rescheduleEDF();
+    }
+}
+
+// test task 2
+void task2( void* pvParameters )
+{
+    for( ;; )
+    {
+		debugPrintln("Task 2");
+		vTaskDelay(1000 / portTICK_PERIOD_MS);
+		rescheduleEDF();
+    }
+}
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -125,7 +148,7 @@ int main(void)
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
   #if DEBUG_MODE
-  	  debugPrintln("Main Hardware Init finished");
+  	  debugPrintln("Main Hardware init finished");
   #endif
   /* create queue for sending data between receiving UDP task and fft task */
   receivedQueue= xQueueCreate( 1, (sizeof( float32_t * ) * TOTAL_SAMPLE_SIZE));
@@ -150,9 +173,11 @@ int main(void)
 //                   ucGatewayAddress,
 //                   ucDNSServerAddress,
 //                   ucMACAddress );
-  /* start the freertos scheduler */
+  createEDFTask(task1, "task1", (unsigned short ) 300, NULL, 5, 30, 20);
+  createEDFTask(task2, "task2", (unsigned short ) 300, NULL, 10, 50, 40);
+//  createEDFTask(printTick, "printTick", (unsigned short ) 300, NULL, 5, 50, 40);
   initEDFTasksStruct();
-  createEDFTask(printTick, "printTick", (unsigned short ) 300, NULL, 5, 50, 40);
+  /* start the freertos scheduler */
   #if DEBUG_MODE
   	  debugPrintln("Start Scheduler");
   #endif
