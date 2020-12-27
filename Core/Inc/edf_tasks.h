@@ -31,6 +31,7 @@ void createEDFTask( TaskFunction_t taskCode,				// Pointer to the task entry fun
 				    configSTACK_DEPTH_TYPE stackDepth,		// The number of words (not bytes!) to allocate for use as the task`s stack
 				    void* pvParameters,						// A value that will passed into the created task as the task`s parameter
 				    TickType_t capacity,					// Capacity or worst-case computation time
-				    TickType_t period);						// Period of Task);
+				    TickType_t period,						// Period of Task);
+					TickType_t deadline);					// deadline of Task
 
 #endif /* __EDF_TASK_H */

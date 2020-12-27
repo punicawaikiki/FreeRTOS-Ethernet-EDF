@@ -152,7 +152,7 @@ int main(void)
 //                   ucMACAddress );
   /* start the freertos scheduler */
   initEDFTasksStruct();
-  createEDFTask(printTick, "printTick", (unsigned short ) 300, NULL, 5, 50);
+  createEDFTask(printTick, "printTick", (unsigned short ) 300, NULL, 5, 50, 40);
   #if DEBUG_MODE
   	  debugPrintln("Start Scheduler");
   #endif

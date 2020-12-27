@@ -14,8 +14,8 @@ struct edfTaskStruct_s
 	const char* taskName;
 	TickType_t capacity;				// capacity or worst-case computation time
 	TickType_t period;					// The priority at which the created task will execute
-	TickType_t relativeDeadline;		// task relative deadline, i.e. the maximum acceptable delay for its processing
-	TickType_t absoluteDeadline;		// task absolute deadline
+	TickType_t latestStartTime;			// task relative deadline, i.e. the maximum acceptable delay for its processing
+	TickType_t deadline;				// task absolute deadline
 	TickType_t lastRunningTime;			// last time running
 	TickType_t startTime;				// time when starts the task
 	TickType_t stopTime;				// time when task has finished
@@ -29,8 +29,9 @@ typedef struct edfTaskStruct_s edfTaskStruct;
 struct edfTasksStruct
 {
 	edfTaskStruct tasksArray[SIZE_OF_EDF_TASKS_ARRAY];
+	unsigned long lastExecutionTime;
 	unsigned int numberOfEDFTasks;
-}edfTasks = {NULL, 0};
+}edfTasks = {NULL, 0, 0};
 
 
 /* initialisation of edfTasksStruct */
@@ -42,19 +43,26 @@ void initEDFTasksStruct( void )
 	}
 }
 
-
-
 BaseType_t createEDFTask( TaskFunction_t taskCode,					// Pointer to the task entry function
 						  const char* taskName,						// A descriptive name for the task
 						  configSTACK_DEPTH_TYPE stackDepth,		// The number of words (not bytes!) to allocate for use as the task`s stack
 						  void* pvParameters,						// A value that will passed into the created task as the task`s parameter
 						  TickType_t capacity,						// Capacity or worst-case computation time
-						  TickType_t period)						// Period of Task
+						  TickType_t period,						// Period of Task
+						  TickType_t deadline)						// Deadline of Task
 {
+	uint32_t currentTick = xTaskGetTickCount();
 	unsigned int edfTaskNumber = edfTasks.numberOfEDFTasks;
+//	if ( strcmp( edfTasks.tasksArray[edfTaskNumber].taskName, "default") == 0)
+//	{
+//		edfTasks.tasksArray[edfTaskNumber].relativeDeadline =
+//	}
+	edfTasks.tasksArray[edfTaskNumber].deadline = currentTick + deadline;
+	edfTasks.tasksArray[edfTaskNumber].latestStartTime = currentTick + deadline - capacity;
 	BaseType_t xReturned = xTaskCreate( taskCode, taskName, stackDepth , NULL, EDF_DISABLED_PRIORITY, edfTasks.tasksArray[edfTaskNumber].taskHandle );
 	edfTasks.tasksArray[edfTaskNumber].taskName = taskName;
 	edfTasks.tasksArray[edfTaskNumber].capacity = capacity;
 	edfTasks.tasksArray[edfTaskNumber].period = period;
+	edfTasks.lastExecutionTime = xTaskGetTickCount();
 	return xReturned;
 }
