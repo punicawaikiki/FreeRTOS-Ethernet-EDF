@@ -106,13 +106,12 @@ void rescheduleEDF( void )
 	edfTasks.tasksArray[shortestDeadlineTask].callCounter++;
 	// set task numer in edf struct
 	edfTasks.activeTask = shortestDeadlineTask;
-
 	vTaskPrioritySet( edfTasks.tasksArray[executedTask].taskHandle, EDF_DISABLED_PRIORITY);
 	vTaskPrioritySet( edfTasks.tasksArray[shortestDeadlineTask].taskHandle, EDF_ENABLED_PRIOTIRY);
 	#if DEBUG_MODE
 		char buffer[100];
-		unsigned long t1 = uxTaskPriorityGet( edfTasks.tasksArray[executedTask].taskHandle );
-		unsigned long t2 = uxTaskPriorityGet( edfTasks.tasksArray[shortestDeadlineTask].taskHandle );
+		unsigned long t1 = uxTaskPriorityGet( edfTasks.tasksArray[0].taskHandle );
+		unsigned long t2 = uxTaskPriorityGet( edfTasks.tasksArray[1].taskHandle );
 		snprintf(buffer, sizeof(buffer), "Prio of Task1: %lu, Task2: %lu", t1, t2 );
 		debugPrintln(buffer);
 	#endif
