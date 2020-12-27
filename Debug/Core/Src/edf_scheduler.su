@@ -1,5 +1,0 @@
-edf_scheduler.c:49:13:swapLists	24	static
-edf_scheduler.c:63:13:edfUpdateTaskPriorites	16	static
-edf_scheduler.c:81:13:edfSchedulerTask	4	static
-edf_scheduler.c:87:13:edfSchedulerInit	8	static
-edf_scheduler.c:93:13:edfSchedulerStart	24	static

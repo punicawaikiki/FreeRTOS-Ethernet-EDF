@@ -1,2 +1,0 @@
-udp_communication.c:18:6:udpReceivingTask	64	static
-udp_communication.c:98:6:udpSendingTask	1080	static

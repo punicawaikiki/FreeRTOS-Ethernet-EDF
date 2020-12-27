@@ -1,7 +1,0 @@
-edf_tasks.c:40:14:shortestDeadline	24	static
-edf_tasks.c:71:12:calcLastRunningTime	4	static
-edf_tasks.c:76:12:calcLatestStartTime	4	static
-edf_tasks.c:81:12:calcNextDeadline	16	static
-edf_tasks.c:87:6:rescheduleEDF	144	static
-edf_tasks.c:126:6:initEDFTasksStruct	1040	static
-edf_tasks.c:146:12:createEDFTask	48	static
