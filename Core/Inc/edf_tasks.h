@@ -7,14 +7,6 @@
 #include "task.h"
 
 
-// Return Type: void
-// Name: initEDFTasksStruct
-// Parameters: void
-// Declaration
-void initEDFTasksStruct( void );
-
-
-
 /* Return Type: BaseType_t
  * Name: createEDFTask
  * Parameters:
@@ -40,6 +32,7 @@ void createEDFTask( TaskFunction_t taskCode,				// Pointer to the task entry fun
 // Parameters: void
 // Declaration
 TickType_t calcShortestDeadline( void );
+
 
 // Return Type: void
 // Name: rescheduleEDF

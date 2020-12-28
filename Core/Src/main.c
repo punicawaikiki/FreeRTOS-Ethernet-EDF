@@ -93,9 +93,9 @@ void task1( void* pvParameters )
 {
     for( ;; )
     {
-		debugPrintln("Task 1");
+//		debugPrintln("Task 1");
 		TickType_t currentTick = xTaskGetTickCount();
-		while( (xTaskGetTickCount() - currentTick) < 3)
+		while( (xTaskGetTickCount() - currentTick) < 5)
 		{
 		    unsigned int test = 0;
 		}
@@ -109,9 +109,9 @@ void task2( void* pvParameters )
 {
     for( ;; )
     {
-		debugPrintln("Task 2");
+//		debugPrintln("Task 2");
 		TickType_t currentTick = xTaskGetTickCount();
-		while( (xTaskGetTickCount() - currentTick) < 3)
+		while( (xTaskGetTickCount() - currentTick) < 5)
 		{
 		    unsigned int test = 0;
 		}
@@ -178,17 +178,16 @@ HAL_Init();
   debugPrintln("IP Init");
 	#endif
   /* init freertos IP Stack */
-//  FreeRTOS_IPInit( ucIPAddress,
-//                   ucNetMask,
-//                   ucGatewayAddress,
-//                   ucDNSServerAddress,
-//                   ucMACAddress );
+  FreeRTOS_IPInit( ucIPAddress,
+                   ucNetMask,
+                   ucGatewayAddress,
+                   ucDNSServerAddress,
+                   ucMACAddress );
 //  createEDFTask(task1, "task1", (unsigned short ) 300, NULL, 5, 20, 10);
 //  createEDFTask(task2, "task2", (unsigned short ) 300, NULL, 5, 50, 40);
   createEDFTask(task1, "task1", (unsigned short ) 300, NULL, 5, 40, 20);
   createEDFTask(task2, "task2", (unsigned short ) 300, NULL, 5, 20, 10);
 //  createEDFTask(printTick, "printTick", (unsigned short ) 300, NULL, 5, 50, 40);
-  initEDFTasksStruct();
   /* start the freertos scheduler */
   #if DEBUG_MODE
   	  debugPrintln("Start Scheduler");
