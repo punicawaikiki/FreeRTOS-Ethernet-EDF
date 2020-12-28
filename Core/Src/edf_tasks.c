@@ -120,27 +120,22 @@ void rescheduleEDF( void )
 	// find shortest deadline task number
 	unsigned int shortestDeadlineTask = calcShortestDeadline();
 	// set startTime of task
-//	edfTasks.tasksArray[shortestDeadlineTask].startTime = xTaskGetTickCount();
+	// edfTasks.tasksArray[shortestDeadlineTask].startTime = xTaskGetTickCount();
 	edfTasks.tasksArray[shortestDeadlineTask].startTime = currentTick;
 	// increase task call counter
 	edfTasks.tasksArray[shortestDeadlineTask].callCounter++;
 	// set task numer in edf struct
 	edfTasks.activeTask = shortestDeadlineTask;
-	vTaskPrioritySet( edfTasks.tasksArray[executedTask].taskHandle, EDF_DISABLED_PRIORITY);
-	vTaskPrioritySet( edfTasks.tasksArray[shortestDeadlineTask].taskHandle, EDF_ENABLED_PRIOTIRY);
-	#if DEBUG_MODE
-		char buffer[100];
-		unsigned long t1 = uxTaskPriorityGet( edfTasks.tasksArray[0].taskHandle );
-		unsigned long t2 = uxTaskPriorityGet( edfTasks.tasksArray[1].taskHandle );
-		snprintf(buffer, sizeof(buffer), "Prio of Task1: %lu, Task2: %lu", t1, t2 );
-		debugPrintln(buffer);
-	#endif
-//	// resume selected task
-//	vTaskResume( edfTasks.tasksArray[shortestDeadlineTask].taskHandle );
-//	// suspend current task
-//	vTaskSuspend( NULL );
-	/* force context switch */
-	taskYIELD();
+	// set current task to lower priority if the next shortest deadline is the same task
+	if ( executedTask != shortestDeadlineTask )
+	{
+		// set the priority of last task one prio lower than the task which need to be executed next
+		vTaskPrioritySet( edfTasks.tasksArray[executedTask].taskHandle, EDF_DISABLED_PRIORITY);
+		// set the priority of the next task one higher to get running
+		vTaskPrioritySet( edfTasks.tasksArray[shortestDeadlineTask].taskHandle, EDF_ENABLED_PRIOTIRY);
+		// force context switch (why should we wait for sysTick)
+		taskYIELD();
+	}
 }
 
 
