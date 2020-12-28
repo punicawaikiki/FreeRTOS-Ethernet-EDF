@@ -37,32 +37,51 @@ struct edfTasksStruct
 	unsigned int activeTask;							// display active task number
 }edfTasks;
 
-unsigned int shortestDeadline( void )
+TickType_t calcShortestDeadline( void )
 {
-	// init function variable with high value, 100000 means something went wrong
-	int shortestDeadline = 1000000;
+
+	// init shortest latestStartTime buffer variable
+	TickType_t shortestDeadline;
 	// save task number with negative value, -1 means something went wrong
-	int shortestDeadlineTask = -1;
+	unsigned int shortestDeadlineTask = -1;
 	// iterate over all EDF tasks
-	for (int taskCounter = 0u; taskCounter < SIZE_OF_EDF_TASKS_ARRAY; taskCounter ++)
+	for (unsigned int taskCounter = 0u; taskCounter < SIZE_OF_EDF_TASKS_ARRAY; taskCounter ++)
 	{
-		if ( edfTasks.tasksArray[taskCounter].absoluteDeadline < shortestDeadline )
+		// if first task copy latestStartTime from first task as initialization
+		if ( taskCounter == 0 )
 		{
-			shortestDeadline = edfTasks.tasksArray[taskCounter].absoluteDeadline;
+			shortestDeadline = edfTasks.tasksArray[taskCounter].latestStartTime;
 			shortestDeadlineTask = taskCounter;
 		}
+		// compare current task so far to the shortest latestStartTime
+		else if ( edfTasks.tasksArray[taskCounter].latestStartTime < shortestDeadline )
+		{
+			shortestDeadline = edfTasks.tasksArray[taskCounter].latestStartTime;
+			shortestDeadlineTask = taskCounter;
+		}
+		// should two tasks have the same latestStartTime, the task with lower callCounter would get the higher priority
+		else if ( edfTasks.tasksArray[taskCounter].latestStartTime == shortestDeadline )
+		{
+			if ( edfTasks.tasksArray[taskCounter].callCounter < edfTasks.tasksArray[shortestDeadlineTask].callCounter)
+			{
+				shortestDeadline = edfTasks.tasksArray[taskCounter].latestStartTime;
+				shortestDeadlineTask = taskCounter;
+			}
+		}
 	}
-	if ( (shortestDeadlineTask == -1 ) )
+	// should never send this error message
+	if ( (shortestDeadlineTask < 0) || ( shortestDeadlineTask > (SIZE_OF_EDF_TASKS_ARRAY -1)) )
 	{
-		#if DEBUG_MODE
-			debugPrintln("shortestDeadline error");
-		#endif
-		// something went wrong
-		return -9999;
+		while(1)
+		{
+			char buffer[100];
+			snprintf(buffer, sizeof(buffer), "ERROR in calcShortestDeadline @%lu", xTaskGetTickCount() );
+			debugPrintln("ERROR in calcShortestDeadline");
+		}
 	}
 	else
 	{
-		// return shortest deadline task
+		// return task number which has the next shortest deadline
 		return shortestDeadlineTask;
 	}
 }
@@ -73,9 +92,9 @@ TickType_t calcLastRunningTime( void )
 	return edfTasks.tasksArray[edfTasks.activeTask].stopTime - edfTasks.tasksArray[edfTasks.activeTask].startTime;
 }
 
-TickType_t calcLatestStartTime( void )
+TickType_t calcLatestStartTime( TickType_t currentTick )
 {
-	return edfTasks.tasksArray[edfTasks.activeTask].absoluteDeadline + edfTasks.tasksArray[edfTasks.activeTask].absoluteDeadline - edfTasks.tasksArray[edfTasks.activeTask].capacity;
+	return currentTick + edfTasks.tasksArray[edfTasks.activeTask].relativeDeadline - edfTasks.tasksArray[edfTasks.activeTask].capacity;
 }
 
 TickType_t calcNextDeadline( TickType_t currentTick )
@@ -89,19 +108,20 @@ void rescheduleEDF( void )
 	// executed task
 	unsigned int executedTask = edfTasks.activeTask;
 	// get current tick
-	uint32_t currentTick = xTaskGetTickCount();
+	TickType_t currentTick = xTaskGetTickCount();
 	// set stop time
 	edfTasks.tasksArray[edfTasks.activeTask].stopTime = currentTick;
 	// calculate running time
 	edfTasks.tasksArray[edfTasks.activeTask].lastRunningTime = calcLastRunningTime();
 	// calculate next latest start time of task
-	edfTasks.tasksArray[edfTasks.activeTask].latestStartTime = calcLatestStartTime();
+	edfTasks.tasksArray[edfTasks.activeTask].latestStartTime = calcLatestStartTime( currentTick );
 	// calculate next deadline of task
 	edfTasks.tasksArray[edfTasks.activeTask].absoluteDeadline = calcNextDeadline( currentTick );
 	// find shortest deadline task number
-	unsigned int shortestDeadlineTask = shortestDeadline();
+	unsigned int shortestDeadlineTask = calcShortestDeadline();
 	// set startTime of task
-	edfTasks.tasksArray[shortestDeadlineTask].startTime = xTaskGetTickCount();
+//	edfTasks.tasksArray[shortestDeadlineTask].startTime = xTaskGetTickCount();
+	edfTasks.tasksArray[shortestDeadlineTask].startTime = currentTick;
 	// increase task call counter
 	edfTasks.tasksArray[shortestDeadlineTask].callCounter++;
 	// set task numer in edf struct
@@ -115,10 +135,12 @@ void rescheduleEDF( void )
 		snprintf(buffer, sizeof(buffer), "Prio of Task1: %lu, Task2: %lu", t1, t2 );
 		debugPrintln(buffer);
 	#endif
-	// resume selected task
-	vTaskResume( edfTasks.tasksArray[shortestDeadlineTask].taskHandle );
-	// suspend current task
-	vTaskSuspend( NULL );
+//	// resume selected task
+//	vTaskResume( edfTasks.tasksArray[shortestDeadlineTask].taskHandle );
+//	// suspend current task
+//	vTaskSuspend( NULL );
+	/* force context switch */
+	taskYIELD();
 }
 
 
@@ -126,7 +148,7 @@ void rescheduleEDF( void )
 void initEDFTasksStruct( void )
 {
 	// get shortest deadline task number
-	unsigned int shortestDeadlineTask = shortestDeadline();
+	unsigned int shortestDeadlineTask = calcShortestDeadline();
 	// set startTime of task
 	edfTasks.tasksArray[shortestDeadlineTask].startTime = xTaskGetTickCount();
 	// increase task call counter

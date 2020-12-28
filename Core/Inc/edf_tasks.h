@@ -34,4 +34,18 @@ void createEDFTask( TaskFunction_t taskCode,				// Pointer to the task entry fun
 				    TickType_t period,						// Period of Task);
 					TickType_t deadline);					// deadline of Task
 
+
+// Return Type: TickType_t
+// Name: calcShortestDeadline
+// Parameters: void
+// Declaration
+TickType_t calcShortestDeadline( void );
+
+// Return Type: void
+// Name: rescheduleEDF
+// Parameters: void
+// Declaration
+void rescheduleEDF ( void );
+
+
 #endif /* __EDF_TASK_H */

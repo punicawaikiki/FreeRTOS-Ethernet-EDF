@@ -94,7 +94,12 @@ void task1( void* pvParameters )
     for( ;; )
     {
 		debugPrintln("Task 1");
-		vTaskDelay(500 / portTICK_PERIOD_MS);
+		TickType_t currentTick = xTaskGetTickCount();
+		while( (xTaskGetTickCount() - currentTick) < 3)
+		{
+		    unsigned int test = 0;
+		}
+		//		vTaskDelay(5 / portTICK_PERIOD_MS);
 		rescheduleEDF();
     }
 }
@@ -105,7 +110,12 @@ void task2( void* pvParameters )
     for( ;; )
     {
 		debugPrintln("Task 2");
-		vTaskDelay(1000 / portTICK_PERIOD_MS);
+		TickType_t currentTick = xTaskGetTickCount();
+		while( (xTaskGetTickCount() - currentTick) < 3)
+		{
+		    unsigned int test = 0;
+		}
+//		vTaskDelay(5 / portTICK_PERIOD_MS);
 		rescheduleEDF();
     }
 }
@@ -131,7 +141,7 @@ int main(void)
   /* MCU Configuration--------------------------------------------------------*/
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-  HAL_Init();
+HAL_Init();
   /* USER CODE BEGIN Init */
   /* USER CODE END Init */
 
@@ -173,8 +183,10 @@ int main(void)
 //                   ucGatewayAddress,
 //                   ucDNSServerAddress,
 //                   ucMACAddress );
-  createEDFTask(task1, "task1", (unsigned short ) 300, NULL, 5, 30, 20);
-  createEDFTask(task2, "task2", (unsigned short ) 300, NULL, 10, 50, 40);
+//  createEDFTask(task1, "task1", (unsigned short ) 300, NULL, 5, 20, 10);
+//  createEDFTask(task2, "task2", (unsigned short ) 300, NULL, 5, 50, 40);
+  createEDFTask(task1, "task1", (unsigned short ) 300, NULL, 5, 40, 20);
+  createEDFTask(task2, "task2", (unsigned short ) 300, NULL, 5, 20, 10);
 //  createEDFTask(printTick, "printTick", (unsigned short ) 300, NULL, 5, 50, 40);
   initEDFTasksStruct();
   /* start the freertos scheduler */
