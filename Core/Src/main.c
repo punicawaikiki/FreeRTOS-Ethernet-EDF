@@ -93,13 +93,12 @@ void task1( void* pvParameters )
 {
     for( ;; )
     {
-//		debugPrintln("Task 1");
-		TickType_t currentTick = xTaskGetTickCount();
-		while( (xTaskGetTickCount() - currentTick) < 5)
-		{
-		    unsigned int test = 0;
-		}
-		//		vTaskDelay(5 / portTICK_PERIOD_MS);
+////		debugPrintln("Task 1");
+//		TickType_t currentTick = xTaskGetTickCount();
+//		while( (xTaskGetTickCount() - currentTick) < 5)
+//		{
+//		    unsigned int test = 0;
+//		}
 		rescheduleEDF();
     }
 }
@@ -109,13 +108,12 @@ void task2( void* pvParameters )
 {
     for( ;; )
     {
-//		debugPrintln("Task 2");
-		TickType_t currentTick = xTaskGetTickCount();
-		while( (xTaskGetTickCount() - currentTick) < 5)
-		{
-		    unsigned int test = 0;
-		}
-//		vTaskDelay(5 / portTICK_PERIOD_MS);
+////		debugPrintln("Task 2");
+//		TickType_t currentTick = xTaskGetTickCount();
+//		while( (xTaskGetTickCount() - currentTick) < 5)
+//		{
+//		    unsigned int test = 0;
+//		}
 		rescheduleEDF();
     }
 }

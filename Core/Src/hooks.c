@@ -55,9 +55,9 @@ static BaseType_t xTasksAlreadyCreated = pdFALSE;
 		#if DEBUG_MODE
     		debugPrintln("Network is up, create Tasks");
 		#endif
-		createEDFTask(udpReceivingTask, "UDPReceive", (unsigned short ) 500, NULL, 2, 20, 20);
-		createEDFTask(calculateFFT, "FFT", (unsigned short ) 500, NULL, 3, 20, 20);
-		createEDFTask(udpSendingTask, "UDPSend", (unsigned short ) 500, NULL, 2, 20, 20);
+		createEDFTask(udpReceivingTask, "UDPReceive", (unsigned short ) 500, NULL, 2, 20, 15);
+		createEDFTask(calculateFFT, "FFT", (unsigned short ) 500, NULL, 3, 20, 15);
+		createEDFTask(udpSendingTask, "UDPSend", (unsigned short ) 500, NULL, 2, 20, 15);
 //    	xTaskCreate( udpReceivingTask, "UDPReceive", ( unsigned short ) 500 , NULL, 3, UDPReceiveTaskHandle );
 //    	xTaskCreate( calculateFFT, "FFT", ( unsigned short ) 500 , NULL, 1, FFTTaskHandle );
 //    	xTaskCreate( udpSendingTask, "UDPSend", ( unsigned short ) 500 , NULL, 1, UDPSendTaskHandle );
