@@ -14,6 +14,7 @@
 static samples_input_struct *receivedStructPtr;
 static float32_t fftInputData[TOTAL_SAMPLE_SIZE];
 static float32_t fftResults[FFT_SIZE];
+extern edfTasks_s edfTasks;
 
 /*
  * Maximum execution time: 2 Ticks
@@ -106,6 +107,9 @@ void udpReceivingTask( void *pvParameters )
  * */
 void udpSendingTask( void *pvParameters )
 {
+	#if DEBUG_MODE
+		edfTasks.tasksArray[2].startTime = xTaskGetTickCount();
+	#endif
 	Socket_t xSocket;
 	struct freertos_sockaddr xDestinationAddress;
 	/* declare sendQueue */
@@ -156,12 +160,14 @@ void udpSendingTask( void *pvParameters )
 										 &xDestinationAddress,
 										 sizeof( xDestinationAddress ) );
 					}
-//					#if DEBUG_MODE
-//						debugPrintln("Data send");
-//					#endif
 				}
 			}
 		}
+		#if DEBUG_MODE
+			edfTasks.tasksArray[2].stopTime = xTaskGetTickCount();
+			edfTasks.tasksArray[2].lastRunningTime = edfTasks.tasksArray[2].stopTime - edfTasks.tasksArray[2].startTime;
+//			if ( edfTasks.tasksArray[taskCounter].)
+		#endif
 	    // edf task rescheduling
 	    rescheduleEDF();
 	}
