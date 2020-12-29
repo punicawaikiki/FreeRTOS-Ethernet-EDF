@@ -44,11 +44,4 @@ void vApplicationMallocFailedHook( void );
 // Declaration
 void vApplicationStackOverflowHook( TaskHandle_t xTask, char * pcTaskName );
 
-// Return Type: void
-// Name: vApplicationIdleHook
-// Parameters: void
-// Declaration
-void vApplicationIdleHook(void);
-
-
 #endif /* __HOOKS_H */

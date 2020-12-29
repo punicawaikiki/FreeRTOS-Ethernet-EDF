@@ -40,5 +40,12 @@ TickType_t calcShortestDeadline( void );
 // Declaration
 void rescheduleEDF ( void );
 
+// Return Type: void
+// Name: vApplicationIdleHook
+// Parameters: void
+// Declaration
+void vApplicationIdleHook(void);
+
+
 
 #endif /* __EDF_TASK_H */
