@@ -16,7 +16,7 @@ static float32_t fftOutputData[TOTAL_SAMPLE_SIZE];
 static float32_t fftOutputDataMag[FFT_SIZE];
 
 /* Task for receiving data from receivedQueue, calculate fft, calculate magnitude and push results to sendQueue
- * Maximum execution time: 3ms
+ * Maximum execution time: 3 Ticks
  * */
 void calculateFFT( void *pvParameters )
 {
@@ -55,9 +55,9 @@ void calculateFFT( void *pvParameters )
 					xQueueSend( sendQueue,
 								( void * ) &(fftOutputDataMag),
 								0);
-					#if DEBUG_MODE
-						debugPrintln("FFT calculated");
-					#endif
+//					#if DEBUG_MODE
+//						debugPrintln("FFT calculated");
+//					#endif
 				}
         	}
     	}

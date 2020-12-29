@@ -10,8 +10,9 @@
 
 
 //static unsigned int SIZE_OF_EDF_TASKS_ARRAY = 0;
+static unsigned timeError = 0;
 
-
+// TODO: prevent callCounter overflow
 /* struct with preferences for a EDF Task */
 struct edfTaskStruct_s
 {
@@ -80,6 +81,12 @@ TickType_t calcShortestDeadline( TickType_t currentTick )
 		// if the latest Start Time of task is lower than current tick, the task will be updated and ignored for this schedule step
 		if ( currentTick > edfTasks.tasksArray[taskCounter].latestStartTime )
 		{
+			#if DEBUG_MODE
+				char buffer[100];
+				timeError++;
+				snprintf(buffer, sizeof(buffer), "ERROR lastStartTime of Task: %d couldn`t reached",  timeError);
+				debugPrintln(buffer);
+			#endif
 			initTaskNumber++;
 			edfTasks.tasksArray[taskCounter].latestStartTime = calcLatestStartTime( currentTick );
 			edfTasks.tasksArray[taskCounter].absoluteDeadline = calcNextDeadline( currentTick );
@@ -125,13 +132,16 @@ TickType_t calcShortestDeadline( TickType_t currentTick )
 }
 
 
-/* reschedule edf tasks */
+/* reschedule edf tasks
+ * Max execution time with debug mode on: 3 Ticks
+ * Max execution time with debug mode off: 2 Ticks
+ *  */
 void rescheduleEDF( void )
 {
-	// executed task
-	unsigned int executedTask = edfTasks.activeTask;
 	// get current tick
 	TickType_t currentTick = xTaskGetTickCount();
+	// executed task
+	unsigned int executedTask = edfTasks.activeTask;
 	#if DEBUG_MODE
 		// set stop time
 		edfTasks.tasksArray[edfTasks.activeTask].stopTime = currentTick;

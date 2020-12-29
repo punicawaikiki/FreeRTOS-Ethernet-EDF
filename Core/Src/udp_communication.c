@@ -9,13 +9,14 @@
 #include "queue.h"
 #include "arm_math.h"
 #include "helper_functions.h"
+#include "edf_tasks.h"
 
 static samples_input_struct *receivedStructPtr;
 static float32_t fftInputData[TOTAL_SAMPLE_SIZE];
 static float32_t fftResults[FFT_SIZE];
 
 /*
- * Maximum execution time: 2ms
+ * Maximum execution time: 2 Ticks
  *
  */
 void udpReceivingTask( void *pvParameters )
@@ -76,9 +77,9 @@ void udpReceivingTask( void *pvParameters )
 							0 );
 				/* reset bool array */
 				resetBoolArray( receivedPackets );
-				#if DEBUG_MODE
-					debugPrintln("Data received");
-				#endif
+//				#if DEBUG_MODE
+//					debugPrintln("Data received");
+//				#endif
 			}
 	   }
        if( lBytes >= 0 )
@@ -100,7 +101,7 @@ void udpReceivingTask( void *pvParameters )
 }
 
 /* Sending data from sendQueue over UDP to Computer
- * Maximum execution time: 2ms
+ * Maximum execution time: 2 Ticks
  *
  * */
 void udpSendingTask( void *pvParameters )
@@ -156,9 +157,9 @@ void udpSendingTask( void *pvParameters )
 										 &xDestinationAddress,
 										 sizeof( xDestinationAddress ) );
 					}
-					#if DEBUG_MODE
-						debugPrintln("Data send");
-					#endif
+//					#if DEBUG_MODE
+//						debugPrintln("Data send");
+//					#endif
 				}
 			}
 		}
