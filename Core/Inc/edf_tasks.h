@@ -29,6 +29,7 @@ typedef struct
 		TickType_t maxRunningTime;					// maximum task execution time
 		TickType_t startTime;				// time when starts the task
 		TickType_t stopTime;				// time when task has finished
+		uint32_t deadlineErrorCounter;		// increase when deadline missed
 	#endif
 	uint32_t callCounter;					// how often was the task executed
 }edfTaskStruct;

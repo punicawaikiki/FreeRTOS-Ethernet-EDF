@@ -15,36 +15,11 @@ edfTasks_s edfTasks;
 	static uint32_t timeError = 0;
 #endif
 
-//#if DEBUG_MODE
-//	TickType_t calcLastRunningTime( void )
-//	{
-//		edfTasks
-//		return edfTasks.tasksArray[edfTasks.activeTask].stopTime - edfTasks.tasksArray[edfTasks.activeTask].startTime;
-//	}
-//#endif
-
-//// Prototypes
-//void vApplicationIdleHook( void );
-//TickType_t calcShortestDeadline( void );
-//void rescheduleEDF( void );
-//BaseType_t createEDFTask( TaskFunction_t taskCode,					// Pointer to the task entry function
-//						  const char* taskName,						// A descriptive name for the task
-//						  configSTACK_DEPTH_TYPE stackDepth,		// The number of words (not bytes!) to allocate for use as the task`s stack
-//						  void* pvParameters,						// A value that will passed into the created task as the task`s parameter
-//						  TickType_t capacity,						// Capacity or worst-case computation time
-//						  TickType_t period,						// Period of Task
-//						  TickType_t deadline);						// Deadline of Task
 
 //	this hook is called if no task is in ready state
 void vApplicationIdleHook( void )
 {
-	for( ;; )
-	{
-//		if (numberOfEDFTasks > 0)
-//		{
-//			rescheduleEDF();
-//		}
-	}
+	for( ;; );
 }
 
 
@@ -64,17 +39,23 @@ TickType_t calcShortestDeadline( void )
 		if ( currentTick > edfTasks.tasksArray[taskCounter].latestStartTime )
 		{
 			#if DEBUG_MODE
+				// increase debug variable
+				edfTasks.tasksArray[taskCounter].deadlineErrorCounter++;
 				char buffer[100];
 				timeError++;
 				snprintf(buffer, sizeof(buffer), "ERROR lastStartTime of Task: %s couldn`t reached (Error counter: %lu)", edfTasks.tasksArray[taskCounter].taskName, timeError);
 				debugPrintln(buffer);
 			#endif
+			// check if task was initial task, true -> increase initTaskNumber
 			initTaskNumber++;
+			// calc latest start time of current task
 			edfTasks.tasksArray[taskCounter].latestStartTime = currentTick
 					+ edfTasks.tasksArray[taskCounter].relativeDeadline
 					- edfTasks.tasksArray[taskCounter].wcet;
+			// calc absolute deadline of current task
 			edfTasks.tasksArray[taskCounter].absoluteDeadline = currentTick
 					+ edfTasks.tasksArray[taskCounter].relativeDeadline;
+			// go to the next task in array
 			continue;
 		}
 		// if first task copy latestStartTime from first task as initialization
@@ -168,25 +149,9 @@ void rescheduleEDF( void )
 				// calculate next absolute deadline of task
 				edfTasks.tasksArray[taskCounter].absoluteDeadline = edfTasks.tasksArray[taskCounter].absoluteDeadline
 						+ edfTasks.tasksArray[taskCounter].period;
-//				// set stop time
-//				edfTasks.tasksArray[taskCounter].stopTime = xTaskGetTickCount();
-//				// calculate running time if after task was one time called
-//				if ( edfTasks.tasksArray[taskCounter].callCounter > 10)
-//				{
-//					edfTasks.tasksArray[taskCounter].lastRunningTime = calcLastRunningTime();
-//				}
-//				// trace max execution time
-//				if (edfTasks.tasksArray[taskCounter].lastRunningTime > edfTasks.tasksArray[taskCounter].maxRunningTime)
-//				{
-//					edfTasks.tasksArray[taskCounter].maxRunningTime = edfTasks.tasksArray[taskCounter].lastRunningTime;
-//				}
 			#endif
 			// find shortest deadline task number
 			TickType_t shortestDeadlineTask = calcShortestDeadline();
-//			#if DEBUG_MODE
-//				// set startTime of task
-//				edfTasks.tasksArray[shortestDeadlineTask].startTime = xTaskGetTickCount();
-//			#endif
 			// set the priority of the next task one higher to get running
 			vTaskPrioritySet( edfTasks.tasksArray[shortestDeadlineTask].taskHandle, EDF_ENABLED_PRIOTIRY);
 			// set task number in edf struct

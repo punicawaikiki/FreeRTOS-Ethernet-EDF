@@ -159,9 +159,9 @@ int main(void)
   	  debugPrintln("Main Hardware init finished");
   #endif
   /* create queue for sending data between receiving UDP task and fft task */
-  receivedQueue= xQueueCreate( 1, (sizeof( float32_t * ) * TOTAL_SAMPLE_SIZE));
+  receivedQueue= xQueueCreate( 3, (sizeof( float32_t * ) * TOTAL_SAMPLE_SIZE));
   /* create queue for sending data between fft task and sending UDP task */
-  sendQueue= xQueueCreate( 1, (sizeof( float32_t * ) * FFT_SIZE) );
+  sendQueue= xQueueCreate( 3, (sizeof( float32_t * ) * FFT_SIZE) );
   /* check if queue pointers are NULL */
   if ( ( receivedQueue == NULL ) || ( sendQueue == NULL) )
   {

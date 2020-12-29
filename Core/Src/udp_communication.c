@@ -14,7 +14,11 @@
 static samples_input_struct *receivedStructPtr;
 static float32_t fftInputData[TOTAL_SAMPLE_SIZE];
 static float32_t fftResults[FFT_SIZE];
-extern edfTasks_s edfTasks;
+
+#if DEBUG_MODE
+	extern edfTasks_s edfTasks;
+#endif
+
 
 /*
  * Maximum execution time: 2 Ticks
@@ -44,6 +48,9 @@ void udpReceivingTask( void *pvParameters )
 
    for( ;; )
    {
+		#if DEBUG_MODE
+			edfTasks.tasksArray[0].startTime = xTaskGetTickCount();
+		#endif
 	   // Receive UDP Packet
        lBytes = FreeRTOS_recvfrom( xListeningSocket,
                                    &receivedStructPtr,
@@ -96,6 +103,14 @@ void udpReceivingTask( void *pvParameters )
            /* Return the buffer to the TCP/IP stack. */
            FreeRTOS_ReleaseUDPPayloadBuffer( receivedStructPtr );
        }
+		#if DEBUG_MODE
+			edfTasks.tasksArray[0].stopTime = xTaskGetTickCount();
+			edfTasks.tasksArray[0].lastRunningTime = edfTasks.tasksArray[0].stopTime - edfTasks.tasksArray[0].startTime;
+			if ( edfTasks.tasksArray[0].lastRunningTime > edfTasks.tasksArray[0].maxRunningTime )
+			{
+				edfTasks.tasksArray[0].maxRunningTime = edfTasks.tasksArray[0].lastRunningTime;
+			}
+		#endif
        // edf task rescheduling
        rescheduleEDF();
    }
@@ -107,9 +122,6 @@ void udpReceivingTask( void *pvParameters )
  * */
 void udpSendingTask( void *pvParameters )
 {
-	#if DEBUG_MODE
-		edfTasks.tasksArray[2].startTime = xTaskGetTickCount();
-	#endif
 	Socket_t xSocket;
 	struct freertos_sockaddr xDestinationAddress;
 	/* declare sendQueue */
@@ -129,6 +141,9 @@ void udpSendingTask( void *pvParameters )
 
 	for( ;; )
 	{
+		#if DEBUG_MODE
+			edfTasks.tasksArray[2].startTime = xTaskGetTickCount();
+		#endif
 		/* get number of messages in sendQueue */
 		UBaseType_t waitingMessages = uxQueueMessagesWaiting(sendQueue);
 		if (waitingMessages > 0)
@@ -166,7 +181,10 @@ void udpSendingTask( void *pvParameters )
 		#if DEBUG_MODE
 			edfTasks.tasksArray[2].stopTime = xTaskGetTickCount();
 			edfTasks.tasksArray[2].lastRunningTime = edfTasks.tasksArray[2].stopTime - edfTasks.tasksArray[2].startTime;
-//			if ( edfTasks.tasksArray[taskCounter].)
+			if ( edfTasks.tasksArray[2].lastRunningTime > edfTasks.tasksArray[2].maxRunningTime )
+			{
+				edfTasks.tasksArray[2].maxRunningTime = edfTasks.tasksArray[2].lastRunningTime;
+			}
 		#endif
 	    // edf task rescheduling
 	    rescheduleEDF();
