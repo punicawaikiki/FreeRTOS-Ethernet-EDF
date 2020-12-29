@@ -183,10 +183,8 @@ HAL_Init();
                    ucGatewayAddress,
                    ucDNSServerAddress,
                    ucMACAddress );
-//  createEDFTask(task1, "task1", (unsigned short ) 300, NULL, 5, 20, 10);
-//  createEDFTask(task2, "task2", (unsigned short ) 300, NULL, 5, 50, 40);
-  createEDFTask(task1, "task1", (unsigned short ) 300, NULL, 5, 40, 20);
-  createEDFTask(task2, "task2", (unsigned short ) 300, NULL, 5, 20, 10);
+//  createEDFTask(task1, "task1", (unsigned short ) 300, NULL, 5, 40, 20);
+//  createEDFTask(task2, "task2", (unsigned short ) 300, NULL, 5, 20, 10);
 //  createEDFTask(printTick, "printTick", (unsigned short ) 300, NULL, 5, 50, 40);
   /* start the freertos scheduler */
   #if DEBUG_MODE

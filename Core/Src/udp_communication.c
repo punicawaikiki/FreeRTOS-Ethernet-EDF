@@ -14,7 +14,10 @@ static samples_input_struct *receivedStructPtr;
 static float32_t fftInputData[TOTAL_SAMPLE_SIZE];
 static float32_t fftResults[FFT_SIZE];
 
-
+/*
+ * Maximum execution time: 2ms
+ *
+ */
 void udpReceivingTask( void *pvParameters )
 {
 	int32_t lBytes;
@@ -91,10 +94,15 @@ void udpReceivingTask( void *pvParameters )
            /* Return the buffer to the TCP/IP stack. */
            FreeRTOS_ReleaseUDPPayloadBuffer( receivedStructPtr );
        }
+       // edf task rescheduling
+       rescheduleEDF();
    }
 }
 
-/* Sending data from sendQueue over UDP to Computer */
+/* Sending data from sendQueue over UDP to Computer
+ * Maximum execution time: 2ms
+ *
+ * */
 void udpSendingTask( void *pvParameters )
 {
 	Socket_t xSocket;
@@ -154,5 +162,7 @@ void udpSendingTask( void *pvParameters )
 				}
 			}
 		}
+	    // edf task rescheduling
+	    rescheduleEDF();
 	}
 }

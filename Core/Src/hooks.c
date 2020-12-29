@@ -5,6 +5,8 @@
 #include "main.h"
 #include "fft.h"
 #include "helper_functions.h"
+#include "edf_tasks.h"
+#include "strings.h"
 
 /* Declaration of tasks pointers */
 TaskHandle_t* UDPReceiveTaskHandle = NULL;
@@ -53,9 +55,12 @@ static BaseType_t xTasksAlreadyCreated = pdFALSE;
 		#if DEBUG_MODE
     		debugPrintln("Network is up, create Tasks");
 		#endif
-    	xTaskCreate( udpReceivingTask, "UDPReceive", ( unsigned short ) 500 , NULL, 3, UDPReceiveTaskHandle );
-    	xTaskCreate( calculateFFT, "FFT", ( unsigned short ) 500 , NULL, 1, FFTTaskHandle );
-    	xTaskCreate( udpSendingTask, "UDPSend", ( unsigned short ) 500 , NULL, 1, UDPSendTaskHandle );
+		createEDFTask(udpReceivingTask, "UDPReceive", (unsigned short ) 500, NULL, 50, 400, 200);
+		createEDFTask(calculateFFT, "FFT", (unsigned short ) 500, NULL, 50, 400, 200);
+		createEDFTask(udpSendingTask, "UDPSend", (unsigned short ) 500, NULL, 50, 400, 200);
+//    	xTaskCreate( udpReceivingTask, "UDPReceive", ( unsigned short ) 500 , NULL, 3, UDPReceiveTaskHandle );
+//    	xTaskCreate( calculateFFT, "FFT", ( unsigned short ) 500 , NULL, 1, FFTTaskHandle );
+//    	xTaskCreate( udpSendingTask, "UDPSend", ( unsigned short ) 500 , NULL, 1, UDPSendTaskHandle );
         /* Create the tasks that use the TCP/IP stack if they have not already
         been created. */
         if( xTasksAlreadyCreated == pdFALSE )

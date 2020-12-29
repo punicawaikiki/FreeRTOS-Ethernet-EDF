@@ -7,6 +7,7 @@
 #include "queue.h"
 #include "main.h"
 #include "helper_functions.h"
+#include "edf_tasks.h"
 
 
 /* define module globals */
@@ -14,7 +15,9 @@ static float32_t fftInputData[TOTAL_SAMPLE_SIZE];
 static float32_t fftOutputData[TOTAL_SAMPLE_SIZE];
 static float32_t fftOutputDataMag[FFT_SIZE];
 
-/* Task for receiving data from receivedQueue, calculate fft, calculate magnitude and push results to sendQueue */
+/* Task for receiving data from receivedQueue, calculate fft, calculate magnitude and push results to sendQueue
+ * Maximum execution time: 3ms
+ * */
 void calculateFFT( void *pvParameters )
 {
 	/* declare Queue`s */
@@ -58,5 +61,7 @@ void calculateFFT( void *pvParameters )
 				}
         	}
     	}
+        // edf task rescheduling
+        rescheduleEDF();
     }
 }
