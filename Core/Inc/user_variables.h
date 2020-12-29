@@ -7,7 +7,7 @@
 #include "arm_math.h"
 
 #define SAMPLE_ARRAY_SIZE 256
-#define EPOCHES 4
+#define EPOCHES 8
 #define FFT_SIZE (SAMPLE_ARRAY_SIZE * EPOCHES) / 2
 #define TOTAL_SAMPLE_SIZE SAMPLE_ARRAY_SIZE * EPOCHES
 
