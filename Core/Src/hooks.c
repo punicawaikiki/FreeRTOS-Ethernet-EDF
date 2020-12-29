@@ -5,6 +5,8 @@
 #include "main.h"
 #include "fft.h"
 #include "helper_functions.h"
+#include "edf_tasks.h"
+#include "strings.h"
 
 /* Declaration of tasks pointers */
 TaskHandle_t* UDPReceiveTaskHandle = NULL;
@@ -50,10 +52,21 @@ static BaseType_t xTasksAlreadyCreated = pdFALSE;
     /* Both eNetworkUp and eNetworkDown events can be processed here. */
     if( eNetworkEvent == eNetworkUp )
     {
-    	debugPrintln("Network is up, create Tasks");
-    	xTaskCreate( udpReceivingTask, "UDPReceive", ( unsigned short ) 500 , NULL, 4, UDPReceiveTaskHandle );
-    	xTaskCreate( calculateFFT, "FFT", ( unsigned short ) 500 , NULL, 1, FFTTaskHandle );
-    	xTaskCreate( udpSendingTask, "UDPSend", ( unsigned short ) 500 , NULL, 1, UDPSendTaskHandle );
+		#if DEBUG_MODE
+    		debugPrintln("Network is up, create Tasks");
+		#endif
+//		createEDFTask(udpReceivingTask, "UDPReceive", (unsigned short ) 500, NULL, 2, 20, 15);
+//		createEDFTask(calculateFFT, "FFT", (unsigned short ) 500, NULL, 3, 20, 15);
+//		createEDFTask(udpSendingTask, "UDPSend", (unsigned short ) 500, NULL, 2, 20, 15);
+//		createEDFTask(udpReceivingTask, "UDPReceive", (unsigned short ) 500, NULL, 2, 10, 10);
+//		createEDFTask(calculateFFT, "FFT", (unsigned short ) 500, NULL, 3, 10, 10);
+//		createEDFTask(udpSendingTask, "UDPSend", (unsigned short ) 500, NULL, 2, 10, 10);
+		createEDFTask(udpReceivingTask, "UDPReceive", (unsigned short ) 500, NULL, 1, 5, 5);
+		createEDFTask(calculateFFT, "FFT", (unsigned short ) 500, NULL, 1, 5, 5);
+		createEDFTask(udpSendingTask, "UDPSend", (unsigned short ) 500, NULL, 1, 5, 5);
+//    	xTaskCreate( udpReceivingTask, "UDPReceive", ( unsigned short ) 500 , NULL, 3, UDPReceiveTaskHandle );
+//    	xTaskCreate( calculateFFT, "FFT", ( unsigned short ) 500 , NULL, 1, FFTTaskHandle );
+//    	xTaskCreate( udpSendingTask, "UDPSend", ( unsigned short ) 500 , NULL, 1, UDPSendTaskHandle );
         /* Create the tasks that use the TCP/IP stack if they have not already
         been created. */
         if( xTasksAlreadyCreated == pdFALSE )
@@ -68,7 +81,9 @@ static BaseType_t xTasksAlreadyCreated = pdFALSE;
     }
     else
     {
-    	debugPrintln("Network is down, waiting ...");
+		#if DEBUG_MODE == 1
+    		debugPrintln("Network is down, waiting ...");
+		#endif
     	if (HAL_GPIO_ReadPin(LD_USER1_GPIO_Port, LD_USER1_Pin) != 1)
     	{
     		HAL_GPIO_WritePin(LD_USER1_GPIO_Port, LD_USER1_Pin, 1);
@@ -101,17 +116,9 @@ void vApplicationStackOverflowHook( TaskHandle_t xTask, char * pcTaskName )
     function is called if a stack overflow is detected.  pxCurrentTCB can be
     inspected in the debugger if the task name passed into this function is
     corrupt. */
-    for( ;; );
-}
-
-void vApplicationIdleHook(void)
-{
-    /* The malloc failed hook is enabled by setting
-    configUSE_MALLOC_FAILED_HOOK to 1 in FreeRTOSConfig.h.
-    Called if a call to pvPortMalloc() fails because there is insufficient
-    free memory available in the FreeRTOS heap.  pvPortMalloc() is called
-    internally by FreeRTOS API functions that create tasks, queues, software
-    timers, and semaphores.  The size of the FreeRTOS heap is set by the
-    configTOTAL_HEAP_SIZE configuration constant in FreeRTOSConfig.h. */
-    for( ;; );
+    for( ;; )
+    {
+		/* Toggle LED for visualization */
+		HAL_GPIO_TogglePin(LD_USER2_GPIO_Port, LD_USER2_Pin);
+    }
 }

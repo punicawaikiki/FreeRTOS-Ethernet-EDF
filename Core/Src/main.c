@@ -37,6 +37,8 @@
 #include "hooks.h"
 #include "helper_functions.h"
 #include "arm_math.h"
+#include "edf_tasks.h"
+#include "stdio.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -75,6 +77,46 @@ static const uint8_t ucDNSServerAddress[ 4 ] = { configDNS_SERVER_ADDR0, configD
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
+TaskHandle_t* tickTestHandle = NULL;
+void printTick( void* pvParameters )
+{
+	char buffer[100];
+    for( ;; )
+    {
+    	snprintf(buffer, sizeof(buffer), "Tick: %lu", xTaskGetTickCount());
+    	debugPrintln(buffer);
+    }
+}
+
+// test task 1
+void task1( void* pvParameters )
+{
+    for( ;; )
+    {
+////		debugPrintln("Task 1");
+//		TickType_t currentTick = xTaskGetTickCount();
+//		while( (xTaskGetTickCount() - currentTick) < 5)
+//		{
+//		    unsigned int test = 0;
+//		}
+		rescheduleEDF();
+    }
+}
+
+// test task 2
+void task2( void* pvParameters )
+{
+    for( ;; )
+    {
+////		debugPrintln("Task 2");
+//		TickType_t currentTick = xTaskGetTickCount();
+//		while( (xTaskGetTickCount() - currentTick) < 5)
+//		{
+//		    unsigned int test = 0;
+//		}
+		rescheduleEDF();
+    }
+}
 
 /* USER CODE END PFP */
 
@@ -113,28 +155,40 @@ int main(void)
   MX_RNG_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
-  debugPrintln("Main Hardware Init finished");
-
+  #if DEBUG_MODE
+  	  debugPrintln("Main Hardware init finished");
+  #endif
   /* create queue for sending data between receiving UDP task and fft task */
-  receivedQueue= xQueueCreate( 1, (sizeof( float32_t * ) * TOTAL_SAMPLE_SIZE));
+  receivedQueue= xQueueCreate( 3, (sizeof( float32_t * ) * TOTAL_SAMPLE_SIZE));
   /* create queue for sending data between fft task and sending UDP task */
-  sendQueue= xQueueCreate( 1, (sizeof( float32_t * ) * FFT_SIZE) );
+  sendQueue= xQueueCreate( 3, (sizeof( float32_t * ) * FFT_SIZE) );
   /* check if queue pointers are NULL */
   if ( ( receivedQueue == NULL ) || ( sendQueue == NULL) )
   {
-	  debugPrintln( "--------------------------------");
-	  debugPrintln( " ONE QUEUE IS NULL !!!! ");
-	  debugPrintln( "--------------------------------");
+	  #if DEBUG_MODE == 1
+		  debugPrintln( "--------------------------------");
+		  debugPrintln( " ONE QUEUE IS NULL !!!! ");
+		  debugPrintln( "--------------------------------");
+	  #endif
   }
   /* init Freertos + TCP module */
+  #if DEBUG_MODE == 1
   debugPrintln("IP Init");
+	#endif
+  /* init freertos IP Stack */
   FreeRTOS_IPInit( ucIPAddress,
                    ucNetMask,
                    ucGatewayAddress,
                    ucDNSServerAddress,
                    ucMACAddress );
+//  createEDFTask(task1, "task1", (unsigned short ) 300, NULL, 5, 40, 20);
+//  createEDFTask(task2, "task2", (unsigned short ) 300, NULL, 5, 20, 10);
+//  createEDFTask(printTick, "printTick", (unsigned short ) 300, NULL, 5, 50, 40);
   /* start the freertos scheduler */
-  debugPrintln("Start Scheduler");
+  #if DEBUG_MODE
+  	  debugPrintln("Start Scheduler");
+  #endif
+//  xTaskCreate( printTick, "printTick", ( unsigned short ) 500 , NULL, 5, tickTestHandle );
   vTaskStartScheduler();
   /* USER CODE END 2 */
 

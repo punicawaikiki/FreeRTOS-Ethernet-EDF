@@ -52,7 +52,7 @@
 #define configMINIMAL_STACK_SIZE				( ( unsigned short ) 130 )
 #define configTOTAL_HEAP_SIZE					( ( size_t ) ( 128 * 1024 ) )
 #define configMAX_TASK_NAME_LEN					( 30 )
-#define configUSE_TRACE_FACILITY				1
+#define configUSE_TRACE_FACILITY				0
 #define configUSE_16_BIT_TICKS					0
 #define configIDLE_SHOULD_YIELD					1
 #define configUSE_MUTEXES						1
@@ -62,21 +62,21 @@
 #define configUSE_MALLOC_FAILED_HOOK			1
 #define configUSE_APPLICATION_TASK_TAG			0
 #define configUSE_COUNTING_SEMAPHORES			1
-#define configUSE_TRACE_FACILITY				1
 
 /* The full demo always has tasks to run so the tick will never be turned off.
 The blinky demo will use the default tickless idle implementation to turn the
 tick off. */
-#define configUSE_TICKLESS_IDLE					0
+#define configUSE_TICKLESS_IDLE					1
 
 /* Run time stats gathering definitions. */
 #define configGENERATE_RUN_TIME_STATS	0
+
 
 /* This demo makes use of one or more example stats formatting functions.  These
 format the raw data provided by the uxTaskGetSystemState() function in to human
 readable ASCII form.  See the notes in the implementation of vTaskList() within
 FreeRTOS/Source/tasks.c for limitations. */
-#define configUSE_STATS_FORMATTING_FUNCTIONS	1
+#define configUSE_STATS_FORMATTING_FUNCTIONS	0
 
 /* Co-routine definitions. */
 #define configUSE_CO_ROUTINES 			0
@@ -190,6 +190,9 @@ to 1 but a DNS server cannot be contacted.*/
 
 #define ipconfigUSE_RMII 1
 #define configUSE_NEWLIB_REENTRANT 1
+
+
+
 
 #endif /* FREERTOS_CONFIG_H */
 

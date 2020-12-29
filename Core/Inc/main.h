@@ -65,7 +65,7 @@ void Error_Handler(void);
 #define B_USER_Pin GPIO_PIN_0
 #define B_USER_GPIO_Port GPIOA
 /* USER CODE BEGIN Private defines */
-
+#define DEBUG_MODE ( 1 )
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

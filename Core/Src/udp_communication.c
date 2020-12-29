@@ -9,12 +9,21 @@
 #include "queue.h"
 #include "arm_math.h"
 #include "helper_functions.h"
+#include "edf_tasks.h"
 
 static samples_input_struct *receivedStructPtr;
 static float32_t fftInputData[TOTAL_SAMPLE_SIZE];
 static float32_t fftResults[FFT_SIZE];
 
+#if DEBUG_MODE
+	extern edfTasks_s edfTasks;
+#endif
 
+
+/*
+ * Maximum execution time: 2 Ticks
+ *
+ */
 void udpReceivingTask( void *pvParameters )
 {
 	int32_t lBytes;
@@ -39,6 +48,9 @@ void udpReceivingTask( void *pvParameters )
 
    for( ;; )
    {
+		#if DEBUG_MODE
+			edfTasks.tasksArray[0].startTime = xTaskGetTickCount();
+		#endif
 	   // Receive UDP Packet
        lBytes = FreeRTOS_recvfrom( xListeningSocket,
                                    &receivedStructPtr,
@@ -73,11 +85,9 @@ void udpReceivingTask( void *pvParameters )
 							0 );
 				/* reset bool array */
 				resetBoolArray( receivedPackets );
-				/* disable interrupts */
-				vPortEnterCritical();
-				debugPrintln("Data received");
-				/* enable interrupts */
-				vPortExitCritical();
+//				#if DEBUG_MODE
+//					debugPrintln("Data received");
+//				#endif
 			}
 	   }
        if( lBytes >= 0 )
@@ -93,10 +103,23 @@ void udpReceivingTask( void *pvParameters )
            /* Return the buffer to the TCP/IP stack. */
            FreeRTOS_ReleaseUDPPayloadBuffer( receivedStructPtr );
        }
+		#if DEBUG_MODE
+			edfTasks.tasksArray[0].stopTime = xTaskGetTickCount();
+			edfTasks.tasksArray[0].lastRunningTime = edfTasks.tasksArray[0].stopTime - edfTasks.tasksArray[0].startTime;
+			if ( edfTasks.tasksArray[0].lastRunningTime > edfTasks.tasksArray[0].maxRunningTime )
+			{
+				edfTasks.tasksArray[0].maxRunningTime = edfTasks.tasksArray[0].lastRunningTime;
+			}
+		#endif
+       // edf task rescheduling
+       rescheduleEDF();
    }
 }
 
-/* Sending data from sendQueue over UDP to Computer */
+/* Sending data from sendQueue over UDP to Computer
+ * Maximum execution time: 2 Ticks
+ *
+ * */
 void udpSendingTask( void *pvParameters )
 {
 	Socket_t xSocket;
@@ -118,9 +141,11 @@ void udpSendingTask( void *pvParameters )
 
 	for( ;; )
 	{
+		#if DEBUG_MODE
+			edfTasks.tasksArray[2].startTime = xTaskGetTickCount();
+		#endif
 		/* get number of messages in sendQueue */
-		int waitingMessages = uxQueueMessagesWaiting(sendQueue);
-//		UBaseType_t waitingMessages = uxQueueMessagesWaiting(sendQueue);
+		UBaseType_t waitingMessages = uxQueueMessagesWaiting(sendQueue);
 		if (waitingMessages > 0)
 		{
 			/* iterate over sendQueue */
@@ -150,11 +175,18 @@ void udpSendingTask( void *pvParameters )
 										 &xDestinationAddress,
 										 sizeof( xDestinationAddress ) );
 					}
-					vPortEnterCritical();
-					debugPrintln("Data send");
-					vPortExitCritical();
 				}
 			}
 		}
+		#if DEBUG_MODE
+			edfTasks.tasksArray[2].stopTime = xTaskGetTickCount();
+			edfTasks.tasksArray[2].lastRunningTime = edfTasks.tasksArray[2].stopTime - edfTasks.tasksArray[2].startTime;
+			if ( edfTasks.tasksArray[2].lastRunningTime > edfTasks.tasksArray[2].maxRunningTime )
+			{
+				edfTasks.tasksArray[2].maxRunningTime = edfTasks.tasksArray[2].lastRunningTime;
+			}
+		#endif
+	    // edf task rescheduling
+	    rescheduleEDF();
 	}
 }

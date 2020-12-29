@@ -11,7 +11,6 @@
 #define FFT_SIZE (SAMPLE_ARRAY_SIZE * EPOCHES) / 2
 #define TOTAL_SAMPLE_SIZE SAMPLE_ARRAY_SIZE * EPOCHES
 
-
 // define structs
 typedef struct{
 	int messageNumber;

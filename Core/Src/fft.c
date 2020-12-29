@@ -7,14 +7,21 @@
 #include "queue.h"
 #include "main.h"
 #include "helper_functions.h"
+#include "edf_tasks.h"
 
 
-/* define globals */
+/* define module globals */
 static float32_t fftInputData[TOTAL_SAMPLE_SIZE];
 static float32_t fftOutputData[TOTAL_SAMPLE_SIZE];
 static float32_t fftOutputDataMag[FFT_SIZE];
 
-/* Task for receiving data from receivedQueue, calculate fft, calculate magnitude and push results to sendQueue */
+#if DEBUG_MODE
+	extern edfTasks_s edfTasks;
+#endif
+
+/* Task for receiving data from receivedQueue, calculate fft, calculate magnitude and push results to sendQueue
+ * Maximum execution time: 3 Ticks
+ * */
 void calculateFFT( void *pvParameters )
 {
 	/* declare Queue`s */
@@ -31,6 +38,9 @@ void calculateFFT( void *pvParameters )
 	}
     for( ;; )
     {
+		#if DEBUG_MODE
+			edfTasks.tasksArray[1].startTime = xTaskGetTickCount();
+		#endif
     	/* get number of messages in receivedQueue */
     	UBaseType_t waitingMessages = uxQueueMessagesWaiting(receivedQueue);
     	if (waitingMessages > 0)
@@ -52,11 +62,18 @@ void calculateFFT( void *pvParameters )
 					xQueueSend( sendQueue,
 								( void * ) &(fftOutputDataMag),
 								0);
-					vPortEnterCritical();
-					debugPrintln("FFT calculated");
-					vPortExitCritical();
 				}
         	}
     	}
+		#if DEBUG_MODE
+			edfTasks.tasksArray[1].stopTime = xTaskGetTickCount();
+			edfTasks.tasksArray[1].lastRunningTime = edfTasks.tasksArray[1].stopTime - edfTasks.tasksArray[1].startTime;
+			if ( edfTasks.tasksArray[1].lastRunningTime > edfTasks.tasksArray[1].maxRunningTime )
+			{
+				edfTasks.tasksArray[1].maxRunningTime = edfTasks.tasksArray[1].lastRunningTime;
+			}
+		#endif
+        // edf task rescheduling
+        rescheduleEDF();
     }
 }
