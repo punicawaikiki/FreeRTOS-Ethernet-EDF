@@ -107,8 +107,6 @@ void rescheduleEDF( void )
 	TickType_t currentTick = xTaskGetTickCount();
 	// init shortest lastStartTime buffer variable
 	TickType_t shortestLastStartTimeTask = -1;
-	// suspend task itself?
-	uint32_t suspendSelf = 0;
 	// buffer for initialization of shortest lastStartTime
 	uint32_t initTaskNumber = 0;
 	#if DEBUG_MODE
@@ -118,33 +116,11 @@ void rescheduleEDF( void )
 	// iterate over all tasks and get shortest lastStartTime task
 	for (uint32_t taskCounter = 0u; taskCounter < SIZE_OF_EDF_TASKS_ARRAY; taskCounter ++)
 	{
-		// deadline could not reached, restart Task (if DEBUG_MODE is on print ERROR)
-		if( edfTasks.tasksArray[taskCounter].lastStartTime < currentTick )
+		// check tasks is to far away for execution
+		if ( edfTasks.tasksArray[taskCounter].lastStartTime > ( currentTick + edfTasks.tasksArray[taskCounter].relativeDeadline ) )
 		{
 			// increase initial task number
 			initTaskNumber++;
-			// calc next last start time of current task based on current tick
-			edfTasks.tasksArray[taskCounter].lastStartTime = currentTick
-					+ edfTasks.tasksArray[taskCounter].relativeDeadline
-					- edfTasks.tasksArray[taskCounter].wcet;
-			// calc absolute deadline of current task based on current tick
-			edfTasks.tasksArray[taskCounter].absoluteDeadline = currentTick
-					+ edfTasks.tasksArray[taskCounter].relativeDeadline;
-			#if DEBUG_MODE
-				// increase debug variable
-				edfTasks.tasksArray[taskCounter].deadlineErrorCounter++;
-				char buffer[100];
-				snprintf(buffer, sizeof(buffer), "ERROR lastStartTime of Task: %s couldn`t reached (Error counter: %lu)", edfTasks.tasksArray[taskCounter].taskName, edfTasks.tasksArray[taskCounter].deadlineErrorCounter);
-				debugPrintln(buffer);
-			#endif
-		}
-		// is deadline longer as relativeDeadline away task status set to suspended
-		if( edfTasks.tasksArray[taskCounter].lastStartTime > ( currentTick + edfTasks.tasksArray[taskCounter].relativeDeadline ) )
-		{
-			// increase initial task number
-			initTaskNumber++;
-			// set task status to suspended
-			edfTasks.tasksArray[taskCounter].taskReady = pdFALSE;
 		}
 		// set initial task to compare lastStartTime of all tasks
 		else if( taskCounter == initTaskNumber)
@@ -164,47 +140,77 @@ void rescheduleEDF( void )
 				shortestLastStartTimeTask = taskCounter;
 			}
 		}
-		// should never reached
+		// deadline could not reached, restart Task (if DEBUG_MODE is on print ERROR)
 		else
 		{
-			debugPrintln("ERROR: couldn`t determine lastStartTime of Task!");
+			// increase initial task number
+			initTaskNumber++;
+			// calc next last start time of current task based on current tick
+			edfTasks.tasksArray[taskCounter].lastStartTime = currentTick
+					+ edfTasks.tasksArray[taskCounter].relativeDeadline
+					- edfTasks.tasksArray[taskCounter].wcet;
+			// calc absolute deadline of current task based on current tick
+			edfTasks.tasksArray[taskCounter].absoluteDeadline = currentTick
+					+ edfTasks.tasksArray[taskCounter].relativeDeadline;
+			#if DEBUG_MODE
+				// increase debug variable
+				edfTasks.tasksArray[taskCounter].deadlineErrorCounter++;
+				char buffer[100];
+				snprintf(buffer, sizeof(buffer), "ERROR lastStartTime of Task: %s couldn`t reached (Error counter: %lu)", edfTasks.tasksArray[taskCounter].taskName, edfTasks.tasksArray[taskCounter].deadlineErrorCounter);
+				debugPrintln(buffer);
+			#endif
 		}
 	}
-	// should never reached
-	if ( shortestLastStartTimeTask == -1)
+	// next task should be idle task
+	if ( shortestLastStartTimeTask == -1 )
 	{
-		debugPrintln("ERROR: shortestLastStartTimeTask not set!");
+		// if current task is not idle task, priority should set back to EDF_DISABLED_PRIORITY
+		if( xTaskGetCurrentTaskHandle() != edfTasks.idleTask )
+		{
+			vTaskPrioritySet( NULL, EDF_DISABLED_PRIORITY);
+		}
 	}
-	// check if callCounter of task reach max of uint32_t
-	if (edfTasks.tasksArray[shortestLastStartTimeTask].callCounter == UINT32_MAX)
-	{
-		// prevent overflow -> set callCounter to zero
-		edfTasks.tasksArray[shortestLastStartTimeTask].callCounter = 0;
-		#if DEBUG_MODE
-			char buffer[100];
-			snprintf(buffer, sizeof(buffer), "CallCounter of Task: %s resettet to 0 (prevent overflow)", edfTasks.tasksArray[shortestLastStartTimeTask].taskName );
-			debugPrintln("ERROR in calcShortestDeadline");
-		#endif
-	}
+	// set parameters and priority for next normal task
 	else
 	{
-		// increase task call counter
-		edfTasks.tasksArray[shortestLastStartTimeTask].callCounter++;
-	}
-	// calculate next latest start time of task
-	edfTasks.tasksArray[shortestLastStartTimeTask].lastStartTime = edfTasks.tasksArray[shortestLastStartTimeTask].lastStartTime
-			+ edfTasks.tasksArray[shortestLastStartTimeTask].period;
-	#if DEBUG_MODE
-		// calculate next absolute deadline of task
-		edfTasks.tasksArray[shortestLastStartTimeTask].absoluteDeadline = edfTasks.tasksArray[shortestLastStartTimeTask].absoluteDeadline
+		// check if callCounter of task reach max of uint32_t
+		if (edfTasks.tasksArray[shortestLastStartTimeTask].callCounter == UINT32_MAX)
+		{
+			// prevent overflow -> set callCounter to zero
+			edfTasks.tasksArray[shortestLastStartTimeTask].callCounter = 0;
+			#if DEBUG_MODE
+				char buffer[100];
+				snprintf(buffer, sizeof(buffer), "CallCounter of Task: %s reset to 0 (prevent overflow)", edfTasks.tasksArray[shortestLastStartTimeTask].taskName );
+				debugPrintln("ERROR in calcShortestDeadline");
+			#endif
+		}
+		else
+		{
+			// increase task call counter
+			edfTasks.tasksArray[shortestLastStartTimeTask].callCounter++;
+		}
+		// calculate next latest start time of task
+		edfTasks.tasksArray[shortestLastStartTimeTask].lastStartTime = edfTasks.tasksArray[shortestLastStartTimeTask].lastStartTime
 				+ edfTasks.tasksArray[shortestLastStartTimeTask].period;
-	#endif
-	for (uint32_t taskCounter = 0u; taskCounter < SIZE_OF_EDF_TASKS_ARRAY; taskCounter ++)
-	{
-
+		#if DEBUG_MODE
+			// calculate next absolute deadline of task
+			edfTasks.tasksArray[shortestLastStartTimeTask].absoluteDeadline = edfTasks.tasksArray[shortestLastStartTimeTask].absoluteDeadline
+					+ edfTasks.tasksArray[shortestLastStartTimeTask].period;
+		#endif
+		// set priority to highest value -> no context switch while scheduling
+		vTaskPrioritySet( NULL, EDF_SCHEDULE_PRIORITY);
+		// set priority of choosen task to EDF_ENABLED_PRIOTIRY
+		vTaskPrioritySet( edfTasks.tasksArray[shortestLastStartTimeTask].taskHandle, EDF_ENABLED_PRIOTIRY);
+		// set current normal task to EDF_DISABLED_PRIORITY and idle task to EDF_IDLE_PRIORITY
+		if( xTaskGetCurrentTaskHandle() == edfTasks.idleTask )
+		{
+			vTaskPrioritySet( NULL, EDF_IDLE_PRIORITY);
+		}
+		else
+		{
+			vTaskPrioritySet( NULL, EDF_DISABLED_PRIORITY);
+		}
 	}
-
-
 }
 
 ///* reschedule edf tasks

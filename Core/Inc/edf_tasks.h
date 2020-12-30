@@ -8,10 +8,13 @@
 #include "main.h"
 
 
-#define SIZE_OF_EDF_TASKS_ARRAY 3
-#define EDF_DISABLED_PRIORITY configMAX_PRIORITIES - 3
-#define EDF_IDLE_PRIORITY configMAX_PRIORITIES - 2
-#define EDF_ENABLED_PRIOTIRY configMAX_PRIORITIES - 1
+#define SIZE_OF_EDF_TASKS_ARRAY 2
+
+
+#define EDF_DISABLED_PRIORITY configMAX_PRIORITIES - 4
+#define EDF_IDLE_PRIORITY configMAX_PRIORITIES - 3
+#define EDF_ENABLED_PRIOTIRY configMAX_PRIORITIES - 2
+#define EDF_SCHEDULE_PRIORITY configMAX_PRIORITIES - 1
 
 
 /* struct with preferences for a EDF Task */
@@ -19,7 +22,6 @@ typedef struct
 {
 	TaskHandle_t taskHandle;				// task handle
 	const char* taskName;					// task name
-	BaseType_t taskReady;					// if true task is ready, if not task is suspended
 	TickType_t wcet;						// worst compution execution time
 	TickType_t period;						// The priority at which the created task will execute
 	TickType_t lastStartTime;				// task relative deadline, i.e. the maximum acceptable delay for its processing
