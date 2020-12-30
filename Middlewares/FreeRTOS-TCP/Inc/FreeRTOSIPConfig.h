@@ -208,7 +208,7 @@ be queued for processing at any one time.  The event queue must be a minimum of
 #define ipconfigEVENT_QUEUE_LENGTH		( ipconfigNUM_NETWORK_BUFFER_DESCRIPTORS + 5 )
 
 /* The address of a socket is the combination of its IP address and its port
-number.  FreeRTOS_bind() is used to manually allocate a port number to a socket
+number.  Frebc eRTOS_bind() is used to manually allocate a port number to a socket
 (to 'bind' the socket to a port), but manual binding is not normally necessary
 for client sockets (those sockets that initiate outgoing connections rather than
 wait for incoming connections on a known port number).  If
