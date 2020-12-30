@@ -153,7 +153,10 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_RNG_Init();
-  MX_USART1_UART_Init();
+  // activate usart only when debug mode is enabled (prevent unnecessary interrupts)
+  #if DEBUG_MODE
+    MX_USART1_UART_Init();
+  #endif
   /* USER CODE BEGIN 2 */
   #if DEBUG_MODE
   	  debugPrintln("Main Hardware init finished");

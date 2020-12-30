@@ -8,10 +8,17 @@
 #include "edf_tasks.h"
 #include "strings.h"
 
+
+#if DEBUG_MODE
+	extern edfTasks_s edfTasks;
+#endif
+
+
 /* Declaration of tasks pointers */
 TaskHandle_t* UDPReceiveTaskHandle = NULL;
 TaskHandle_t* UDPSendTaskHandle = NULL;
 TaskHandle_t* FFTTaskHandle = NULL;
+
 
 const char *pcApplicationHostnameHook( void )
 {
@@ -61,9 +68,13 @@ static BaseType_t xTasksAlreadyCreated = pdFALSE;
 //		createEDFTask(udpReceivingTask, "UDPReceive", (unsigned short ) 500, NULL, 2, 10, 10);
 //		createEDFTask(calculateFFT, "FFT", (unsigned short ) 500, NULL, 3, 10, 10);
 //		createEDFTask(udpSendingTask, "UDPSend", (unsigned short ) 500, NULL, 2, 10, 10);
-		createEDFTask(udpReceivingTask, "UDPReceive", (unsigned short ) 500, NULL, 1, 5, 5);
-		createEDFTask(calculateFFT, "FFT", (unsigned short ) 500, NULL, 1, 5, 5);
-		createEDFTask(udpSendingTask, "UDPSend", (unsigned short ) 500, NULL, 1, 5, 5);
+//		createEDFTask(udpReceivingTask, "UDPReceive", (unsigned short ) 500, NULL, 1, 5, 5);
+//		createEDFTask(calculateFFT, "FFT", (unsigned short ) 500, NULL, 1, 5, 5);
+//		createEDFTask(udpSendingTask, "UDPSend", (unsigned short ) 500, NULL, 1, 5, 5);
+		createEDFTask(udpReceivingTask, "UDPReceive", (unsigned short ) 100, NULL, 2, 10, 10);
+//		createEDFTask(udpReceivingTask, "UDPReceive", (unsigned short ) 100, NULL, 2, 2, 2);
+		createEDFTask(calculateFFT, "FFT", (unsigned short ) 200, NULL, 2, 10, 10);
+		createEDFTask(udpSendingTask, "UDPSend", (unsigned short ) 400, NULL, 2, 10, 10);
 //    	xTaskCreate( udpReceivingTask, "UDPReceive", ( unsigned short ) 500 , NULL, 3, UDPReceiveTaskHandle );
 //    	xTaskCreate( calculateFFT, "FFT", ( unsigned short ) 500 , NULL, 1, FFTTaskHandle );
 //    	xTaskCreate( udpSendingTask, "UDPSend", ( unsigned short ) 500 , NULL, 1, UDPSendTaskHandle );
