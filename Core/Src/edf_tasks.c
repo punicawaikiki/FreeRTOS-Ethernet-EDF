@@ -36,26 +36,8 @@ void rescheduleEDF( void )
 			// increase initial task number
 			initTaskNumber++;
 		}
-		// set initial task to compare lastStartTime of all tasks
-		else if( taskCounter == initTaskNumber)
-		{
-			shortestLastStartTimeTask = taskCounter;
-		}
-		// is current task lastStartTime earlier than the earlierst yet?
-		else if( edfTasks.tasksArray[taskCounter].lastStartTime < edfTasks.tasksArray[shortestLastStartTimeTask].lastStartTime )
-		{
-			shortestLastStartTimeTask = taskCounter;
-		}
-		// if lastStartTime equal, set task which has lower callCounter
-		else if( edfTasks.tasksArray[taskCounter].lastStartTime == edfTasks.tasksArray[shortestLastStartTimeTask].lastStartTime )
-		{
-			if ( edfTasks.tasksArray[taskCounter].lastStartTime < edfTasks.tasksArray[shortestLastStartTimeTask].callCounter)
-			{
-				shortestLastStartTimeTask = taskCounter;
-			}
-		}
 		// deadline could not reached, restart Task (if DEBUG_MODE is on print ERROR)
-		else
+		else if( edfTasks.tasksArray[taskCounter].lastStartTime < currentTick)
 		{
 			// increase initial task number
 			initTaskNumber++;
@@ -73,6 +55,24 @@ void rescheduleEDF( void )
 				snprintf(buffer, sizeof(buffer), "ERROR deadline of task: %s missed (Error counter: %lu)", edfTasks.tasksArray[taskCounter].taskName, edfTasks.tasksArray[taskCounter].deadlineErrorCounter);
 				debugPrintln(buffer);
 			#endif
+		}
+		// set initial task to compare lastStartTime of all tasks
+		else if( taskCounter == initTaskNumber)
+		{
+			shortestLastStartTimeTask = taskCounter;
+		}
+		// is current task lastStartTime earlier than the earlierst yet?
+		else if( edfTasks.tasksArray[taskCounter].lastStartTime < edfTasks.tasksArray[shortestLastStartTimeTask].lastStartTime )
+		{
+			shortestLastStartTimeTask = taskCounter;
+		}
+		// if lastStartTime equal, set task which has lower callCounter
+		else if( edfTasks.tasksArray[taskCounter].lastStartTime == edfTasks.tasksArray[shortestLastStartTimeTask].lastStartTime )
+		{
+			if ( edfTasks.tasksArray[taskCounter].lastStartTime < edfTasks.tasksArray[shortestLastStartTimeTask].callCounter)
+			{
+				shortestLastStartTimeTask = taskCounter;
+			}
 		}
 	}
 	// next task should be idle task
@@ -125,6 +125,7 @@ void rescheduleEDF( void )
 			vTaskPrioritySet( NULL, EDF_DISABLED_PRIORITY);
 		}
 	}
+	taskYIELD();
 }
 
 
@@ -168,7 +169,7 @@ BaseType_t createEDFTask( TaskFunction_t taskCode,					// Pointer to the task en
 	edfTasks.tasksArray[edfTaskNumber].period = period;
 	if (edfTasks.numberOfEDFTasks == 0)
 	{
-		xTaskCreate( edfIdleTask, "EDF Idle Task", 100 , NULL, EDF_IDLE_PRIORITY, &edfTasks.idleTask );
+		xTaskCreate( edfIdleTask, "EDF Idle Task", 500 , NULL, EDF_IDLE_PRIORITY, &edfTasks.idleTask );
 	}
 	// increment number of tasks
 	edfTasks.numberOfEDFTasks++;
