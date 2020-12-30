@@ -85,9 +85,6 @@ void udpReceivingTask( void *pvParameters )
 							0 );
 				/* reset bool array */
 				resetBoolArray( receivedPackets );
-//				#if DEBUG_MODE
-//					debugPrintln("Data received");
-//				#endif
 			}
 	   }
        if( lBytes >= 0 )
