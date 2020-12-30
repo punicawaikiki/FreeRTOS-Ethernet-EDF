@@ -17,29 +17,23 @@
 /* struct with preferences for a EDF Task */
 typedef struct
 {
-	TaskHandle_t taskHandle;
-	const char* taskName;
+	TaskHandle_t taskHandle;				// task handle
+	const char* taskName;					// task name
+	BaseType_t taskReady;					// if true task is ready, if not task is suspended
 	TickType_t wcet;						// worst compution execution time
 	TickType_t period;						// The priority at which the created task will execute
-	TickType_t latestStartTime;				// task relative deadline, i.e. the maximum acceptable delay for its processing
+	TickType_t lastStartTime;				// task relative deadline, i.e. the maximum acceptable delay for its processing
 	TickType_t absoluteDeadline;	    	// task absolute deadline
 	TickType_t relativeDeadline;			// task relative deadline
+	uint32_t callCounter;					// how often was the task executed
 	#if DEBUG_MODE
 		TickType_t lastRunningTime;			// last time running
-		TickType_t maxRunningTime;					// maximum task execution time
+		TickType_t maxRunningTime;			// maximum task execution time
 		TickType_t startTime;				// time when starts the task
 		TickType_t stopTime;				// time when task has finished
 		uint32_t deadlineErrorCounter;		// increase when deadline missed
 	#endif
-	uint32_t callCounter;					// how often was the task executed
 }edfTaskStruct;
-
-//#if DEBUG_MODE
-//	edfTaskStruct = {NULL, "default", 0, 0, 0, 0, 0, 0, 0, 0};
-//#else
-//	edfTaskStruct = {NULL, "default", 0, 0, 0, 0, 0};
-//#endif
-
 
 
 /* define globals */
