@@ -111,7 +111,7 @@ void rescheduleEDF( void )
 	#endif
 	for (uint32_t taskCounter = 0u; taskCounter < SIZE_OF_EDF_TASKS_ARRAY; taskCounter ++)
 	{
-		if ( edfTasks.tasksArray[taskCounter].latestStartTime > ( currentTick + edfTasks.tasksArray[taskCounter].relativeDeadline))
+		if ( edfTasks.tasksArray[taskCounter].latestStartTime > ( currentTick + edfTasks.tasksArray[taskCounter].relativeDeadline ) )
 		{
 			vTaskPrioritySet( edfTasks.tasksArray[taskCounter].taskHandle, EDF_DISABLED_PRIORITY );
 		}
@@ -200,14 +200,7 @@ BaseType_t createEDFTask( TaskFunction_t taskCode,					// Pointer to the task en
 	// status of task creation
 	BaseType_t xReturned;
 	// create normal freeRTOS task
-	if ( edfTasks.numberOfEDFTasks == 0)
-	{
-		xReturned = xTaskCreate( taskCode, taskName, stackDepth , NULL, EDF_ENABLED_PRIOTIRY, &edfTasks.tasksArray[edfTaskNumber].taskHandle );
-	}
-	else
-	{
-		xReturned = xTaskCreate( taskCode, taskName, stackDepth , NULL, EDF_DISABLED_PRIORITY, &edfTasks.tasksArray[edfTaskNumber].taskHandle );
-	}
+	xReturned = xTaskCreate( taskCode, taskName, stackDepth , NULL, EDF_DISABLED_PRIORITY, &edfTasks.tasksArray[edfTaskNumber].taskHandle );
 	// set task name
 	edfTasks.tasksArray[edfTaskNumber].taskName = taskName;
 	// set capacity of task
