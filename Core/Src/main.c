@@ -178,14 +178,14 @@ int main(void)
   #if DEBUG_MODE == 1
   debugPrintln("IP Init");
 	#endif
-//  /* init freertos IP Stack */
-//  FreeRTOS_IPInit( ucIPAddress,
-//                   ucNetMask,
-//                   ucGatewayAddress,
-//                   ucDNSServerAddress,
-//                   ucMACAddress );
-  createEDFTask(task1, "task1", (unsigned short ) 300, NULL, 5, 10, 10);
-  createEDFTask(task2, "task2", (unsigned short ) 300, NULL, 5, 20, 10);
+  /* init freertos IP Stack */
+  FreeRTOS_IPInit( ucIPAddress,
+                   ucNetMask,
+                   ucGatewayAddress,
+                   ucDNSServerAddress,
+                   ucMACAddress );
+//  createEDFTask(task1, "task1", (unsigned short ) 300, NULL, 5, 10, 10);
+//  createEDFTask(task2, "task2", (unsigned short ) 300, NULL, 5, 20, 10);
 //  createEDFTask(printTick, "printTick", (unsigned short ) 300, NULL, 5, 50, 40);
   /* start the freertos scheduler */
   #if DEBUG_MODE

@@ -8,7 +8,7 @@
 #include "main.h"
 
 
-#define SIZE_OF_EDF_TASKS_ARRAY 2
+#define SIZE_OF_EDF_TASKS_ARRAY 3
 
 
 #define EDF_DISABLED_PRIORITY configMAX_PRIORITIES - 4
@@ -86,13 +86,6 @@ TickType_t calcShortestDeadline( void );
 // Parameters: void
 // Declaration
 void rescheduleEDF ( void );
-
-// Return Type: void
-// Name: vApplicationIdleHook
-// Parameters: void
-// Declaration
-void vApplicationIdleHook(void);
-
 
 
 #endif /* __EDF_TASK_H */

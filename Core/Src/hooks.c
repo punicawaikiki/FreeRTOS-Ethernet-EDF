@@ -71,8 +71,8 @@ static BaseType_t xTasksAlreadyCreated = pdFALSE;
 //		createEDFTask(udpReceivingTask, "UDPReceive", (unsigned short ) 500, NULL, 1, 5, 5);
 //		createEDFTask(calculateFFT, "FFT", (unsigned short ) 500, NULL, 1, 5, 5);
 //		createEDFTask(udpSendingTask, "UDPSend", (unsigned short ) 500, NULL, 1, 5, 5);
-		createEDFTask(udpReceivingTask, "UDPReceive", (unsigned short ) 100, NULL, 2, 10, 10);
 //		createEDFTask(udpReceivingTask, "UDPReceive", (unsigned short ) 100, NULL, 2, 2, 2);
+		createEDFTask(udpReceivingTask, "UDPReceive", (unsigned short ) 200, NULL, 2, 10, 10);
 		createEDFTask(calculateFFT, "FFT", (unsigned short ) 200, NULL, 2, 10, 10);
 		createEDFTask(udpSendingTask, "UDPSend", (unsigned short ) 400, NULL, 2, 10, 10);
 //    	xTaskCreate( udpReceivingTask, "UDPReceive", ( unsigned short ) 500 , NULL, 3, UDPReceiveTaskHandle );
@@ -95,10 +95,6 @@ static BaseType_t xTasksAlreadyCreated = pdFALSE;
 		#if DEBUG_MODE == 1
     		debugPrintln("Network is down, waiting ...");
 		#endif
-    	if (HAL_GPIO_ReadPin(LD_USER1_GPIO_Port, LD_USER1_Pin) != 1)
-    	{
-    		HAL_GPIO_WritePin(LD_USER1_GPIO_Port, LD_USER1_Pin, 1);
-    	}
     }
 }
 
@@ -132,4 +128,10 @@ void vApplicationStackOverflowHook( TaskHandle_t xTask, char * pcTaskName )
 		/* Toggle LED for visualization */
 		HAL_GPIO_TogglePin(LD_USER2_GPIO_Port, LD_USER2_Pin);
     }
+}
+
+//	this hook is called if no task is in ready state
+void vApplicationIdleHook( void )
+{
+	for( ;; );
 }
