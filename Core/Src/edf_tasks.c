@@ -202,6 +202,11 @@ BaseType_t deleteEDFTask( const char* taskName)
 	}
 	// delete the original last task
 	edfTasks.tasksArray[edfTasks.numberOfEDFTasks] = initTaskStruct;
+	// change priority of freeRTOS idleTask when no EDF task is pending
+	if( edfTasks.numberOfEDFTasks == 0)
+	{
+		vTaskPrioritySet( edfTasks.idleTask, tskIDLE_PRIORITY);
+	}
 	// if task deletion was successful return pdTRUE, else pdFALSE
 	if( taskDeleted == -1)
 	{
