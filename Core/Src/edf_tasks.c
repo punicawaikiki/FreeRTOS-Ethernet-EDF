@@ -19,10 +19,6 @@ void rescheduleEDF( void )
 {
 	// get current tick of system
 	TickType_t currentTick = xTaskGetTickCount();
-
-//	deleteEDFTask("task1");
-
-
 	// init shortest lastStartTime buffer variable
 	TickType_t shortestLastStartTimeTask = -1;
 	// buffer for initialization of shortest lastStartTime
@@ -173,7 +169,13 @@ BaseType_t createEDFTask( TaskFunction_t taskCode,					// Pointer to the task en
 BaseType_t deleteEDFTask( const char* taskName)
 {
 	// flag to control task deletion
-	BaseType_t taskDeleted = pdFALSE;
+	uint32_t taskDeleted = -1;
+	// init edfTaskStruct
+	#if DEBUG_MODE
+		edfTaskStruct initTaskStruct = {NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+	#else
+		edfTaskStruct initTaskStruct = {NULL, NULL, 0, 0, 0, 0, 0, 0, 0};
+	#endif
 	if( xTaskGetCurrentTaskHandle() != edfTasks.idleTask )
 	{
 		vTaskPrioritySet( NULL, EDF_IDLE_PRIORITY);
@@ -186,19 +188,28 @@ BaseType_t deleteEDFTask( const char* taskName)
 		{
 			// delete task
 			vTaskDelete( edfTasks.tasksArray[taskCounter].taskHandle );
-//			prvCheckTasksWaitingTermination();
-			taskDeleted = pdTRUE;
-//			edfTasks.tasksArray[taskCounter] edfTaskStruct;
+			// set flag
+			taskDeleted = taskCounter;
+			// decrease number of edf tasks
+			edfTasks.numberOfEDFTasks--;
 		}
 	}
-	// if task deletion was successful return pdTRUE, else pdFALSE
-	if( taskDeleted == pdTRUE)
+	// iterate over the rest tasks in the array, if neccessary
+	for (uint32_t taskCounter = taskDeleted; taskCounter < edfTasks.numberOfEDFTasks; taskCounter ++)
 	{
-		return pdTRUE;
+		// copy next task to previous
+		edfTasks.tasksArray[taskCounter] = edfTasks.tasksArray[taskCounter + 1];
+	}
+	// delete the original last task
+	edfTasks.tasksArray[edfTasks.numberOfEDFTasks] = initTaskStruct;
+	// if task deletion was successful return pdTRUE, else pdFALSE
+	if( taskDeleted == -1)
+	{
+		return pdFALSE;
 	}
 	else
 	{
-		return pdFALSE;
+		return pdTRUE;
 	};
 }
 
