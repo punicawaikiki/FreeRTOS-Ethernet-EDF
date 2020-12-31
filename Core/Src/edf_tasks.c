@@ -28,7 +28,7 @@ void rescheduleEDF( void )
 		edfTasks.currentTick = currentTick;
 	#endif
 	// iterate over all tasks and get shortest lastStartTime task
-	for (uint32_t taskCounter = 0u; taskCounter < SIZE_OF_EDF_TASKS_ARRAY; taskCounter ++)
+	for (uint32_t taskCounter = 0u; taskCounter < edfTasks.numberOfEDFTasks; taskCounter ++)
 	{
 		// check tasks is to far away for execution
 		if ( edfTasks.tasksArray[taskCounter].lastStartTime > ( currentTick + edfTasks.tasksArray[taskCounter].relativeDeadline ) )
@@ -125,17 +125,8 @@ void rescheduleEDF( void )
 			vTaskPrioritySet( NULL, EDF_DISABLED_PRIORITY);
 		}
 	}
+	// if context switch not happened, do it now
 	taskYIELD();
-}
-
-
-// edf idle task -> called when waiting for next task
-void edfIdleTask( void *pvParameters )
-{
-	while(1)
-	{
-		rescheduleEDF();
-	}
 }
 
 
@@ -161,18 +152,95 @@ BaseType_t createEDFTask( TaskFunction_t taskCode,					// Pointer to the task en
 	BaseType_t xReturned;
 	// create normal freeRTOS task
 	xReturned = xTaskCreate( taskCode, taskName, stackDepth , NULL, EDF_DISABLED_PRIORITY, &edfTasks.tasksArray[edfTaskNumber].taskHandle );
+	// suspend task till freeRTOS idleTask are called
+		vTaskSuspend( edfTasks.tasksArray[edfTaskNumber].taskHandle );
 	// set task name
 	edfTasks.tasksArray[edfTaskNumber].taskName = taskName;
 	// set capacity of task
 	edfTasks.tasksArray[edfTaskNumber].wcet = capacity;
 	// set period of task
 	edfTasks.tasksArray[edfTaskNumber].period = period;
-	if (edfTasks.numberOfEDFTasks == 0)
-	{
-		xTaskCreate( edfIdleTask, "EDF Idle Task", 500 , NULL, EDF_IDLE_PRIORITY, &edfTasks.idleTask );
-	}
 	// increment number of tasks
 	edfTasks.numberOfEDFTasks++;
 	// return pdTrue if task creation was successful, pdFalse when not
 	return xReturned;
+}
+
+BaseType_t deleteEDFTask( const char* taskName)
+{
+	// flag to control task deletion
+	uint32_t taskDeleted = -1;
+	// init edfTaskStruct
+	#if DEBUG_MODE
+		edfTaskStruct initTaskStruct = {NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+	#else
+		edfTaskStruct initTaskStruct = {NULL, NULL, 0, 0, 0, 0, 0, 0, 0};
+	#endif
+	if( xTaskGetCurrentTaskHandle() != edfTasks.idleTask )
+	{
+		vTaskPrioritySet( NULL, EDF_IDLE_PRIORITY);
+	}
+	// iterate over all tasks
+	for (uint32_t taskCounter = 0u; taskCounter < edfTasks.numberOfEDFTasks; taskCounter ++)
+	{
+		// compare tasks names
+		if( strcmp(taskName, edfTasks.tasksArray[taskCounter].taskName) == 0 )
+		{
+			// delete task
+			vTaskDelete( edfTasks.tasksArray[taskCounter].taskHandle );
+			// set flag
+			taskDeleted = taskCounter;
+			// decrease number of edf tasks
+			edfTasks.numberOfEDFTasks--;
+		}
+	}
+	// iterate over the rest tasks in the array, if neccessary
+	for (uint32_t taskCounter = taskDeleted; taskCounter < edfTasks.numberOfEDFTasks; taskCounter ++)
+	{
+		// copy next task to previous
+		edfTasks.tasksArray[taskCounter] = edfTasks.tasksArray[taskCounter + 1];
+	}
+	// delete the original last task
+	edfTasks.tasksArray[edfTasks.numberOfEDFTasks] = initTaskStruct;
+	// if task deletion was successful return pdTRUE, else pdFALSE
+	if( taskDeleted == -1)
+	{
+		return pdFALSE;
+	}
+	else
+	{
+		return pdTRUE;
+	};
+}
+
+//	this hook is called if no task is in ready state
+void vApplicationIdleHook( void )
+{
+	// set freeRTOS idle task priority to EDF_IDLE_PRIORITY once
+	if (edfTasks.numberOfEDFTasks > 0)
+	{
+		// change priority of freeRTOS idleTask
+		if( edfTasks.idleTaskCreated == pdFALSE)
+		{
+			// get freeRTOS idleTask taskhandle
+			edfTasks.idleTask = xTaskGetIdleTaskHandle();
+			// set priority of freeRTOS idleTask to EDF_IDLE_PRIORITY
+			vTaskPrioritySet( edfTasks.idleTask, EDF_IDLE_PRIORITY );
+			// set flag
+			edfTasks.idleTaskCreated = pdTRUE;
+		}
+		// iterate over all tasks and resume them if not done yet
+		for (uint32_t taskCounter = 0u; taskCounter < edfTasks.numberOfEDFTasks; taskCounter ++)
+		{
+			if( edfTasks.tasksArray[taskCounter].taskCreated == pdFALSE )
+			{
+				// resume/start task for edf scheduling
+				vTaskResume( edfTasks.tasksArray[taskCounter].taskHandle );
+				// flag signals task creation
+				edfTasks.tasksArray[taskCounter].taskCreated = pdTRUE;
+			}
+		}
+		// edf scheduling
+		rescheduleEDF();
+	}
 }

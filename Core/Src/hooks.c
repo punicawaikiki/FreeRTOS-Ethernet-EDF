@@ -130,8 +130,3 @@ void vApplicationStackOverflowHook( TaskHandle_t xTask, char * pcTaskName )
     }
 }
 
-//	this hook is called if no task is in ready state
-void vApplicationIdleHook( void )
-{
-	for( ;; );
-}

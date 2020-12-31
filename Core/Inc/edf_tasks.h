@@ -7,14 +7,19 @@
 #include "task.h"
 #include "main.h"
 
+// defines the maximum number of edf tasks
+#define MAX_EDF_TASKS 10
 
-#define SIZE_OF_EDF_TASKS_ARRAY 3
 
+#define EDF_DISABLED_PRIORITY tskIDLE_PRIORITY
+#define EDF_IDLE_PRIORITY tskIDLE_PRIORITY + 1
+#define EDF_ENABLED_PRIOTIRY tskIDLE_PRIORITY + 2
+#define EDF_SCHEDULE_PRIORITY tskIDLE_PRIORITY + 3
 
-#define EDF_DISABLED_PRIORITY configMAX_PRIORITIES - 4
-#define EDF_IDLE_PRIORITY configMAX_PRIORITIES - 3
-#define EDF_ENABLED_PRIOTIRY configMAX_PRIORITIES - 2
-#define EDF_SCHEDULE_PRIORITY configMAX_PRIORITIES - 1
+//#define EDF_DISABLED_PRIORITY configMAX_PRIORITIES - 4
+//#define EDF_IDLE_PRIORITY configMAX_PRIORITIES - 3
+//#define EDF_ENABLED_PRIOTIRY configMAX_PRIORITIES - 2
+//#define EDF_SCHEDULE_PRIORITY configMAX_PRIORITIES - 1
 
 
 /* struct with preferences for a EDF Task */
@@ -22,6 +27,7 @@ typedef struct
 {
 	TaskHandle_t taskHandle;				// task handle
 	const char* taskName;					// task name
+	BaseType_t taskCreated;					// flag to see if task is created
 	TickType_t wcet;						// worst compution execution time
 	TickType_t period;						// The priority at which the created task will execute
 	TickType_t lastStartTime;				// task relative deadline, i.e. the maximum acceptable delay for its processing
@@ -42,10 +48,10 @@ typedef struct
 /* global struct of all EDF Tasks */
 typedef struct
 {
-	edfTaskStruct tasksArray[SIZE_OF_EDF_TASKS_ARRAY];	// tasks array
+	edfTaskStruct tasksArray[MAX_EDF_TASKS];			// tasks array
 	TaskHandle_t idleTask;								// idle task used when nothing to do
+	BaseType_t idleTaskCreated;							// flag to signal if freeRTOS idle Task is optimized for EDF
 	unsigned int numberOfEDFTasks;						// total number of tasks
-	unsigned int activeTask;							// display active task number
 	#if DEBUG_MODE
 	TickType_t currentTick;								// current tick of edfScheduler
 	TickType_t wcet;									// worst execution time
@@ -74,18 +80,23 @@ BaseType_t createEDFTask( TaskFunction_t taskCode,					// Pointer to the task en
 						  TickType_t deadline);						// Deadline of Task
 
 
-// Return Type: TickType_t
-// Name: calcShortestDeadline
-// Parameters: void
-// Declaration
-TickType_t calcShortestDeadline( void );
-
-
 // Return Type: void
 // Name: rescheduleEDF
 // Parameters: void
 // Declaration
 void rescheduleEDF ( void );
+
+// Return Type: BaseType_t
+// Name: deleteEDFTask
+// Parameters: const char* taskName
+// Declaration
+BaseType_t deleteEDFTask( const char* taskName);
+
+// Return Type: void
+// Name: vApplicationIdleHook
+// Parameters: void
+// Declaration
+void vApplicationIdleHook(void);
 
 
 #endif /* __EDF_TASK_H */
