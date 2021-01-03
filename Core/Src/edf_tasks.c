@@ -1,15 +1,15 @@
 /* description */
 
 #include "edf_tasks.h"
-#include <user_variables.h>
 #include "FreeRTOS.h"
 #include "task.h"
 #include "main.h"
-#include "helper_functions.h"
 #include "stdio.h"
+#include "helper_functions.h"
+#include "string.h"
 
+// struct for task control for edf scheduler
 edfTasks_s edfTasks;
-
 
 /* reschedule edf tasks
  * Max execution time with debug mode on: 3 Ticks
@@ -134,7 +134,7 @@ BaseType_t createEDFTask( TaskFunction_t taskCode,					// Pointer to the task en
 						  const char* taskName,						// A descriptive name for the task
 						  configSTACK_DEPTH_TYPE stackDepth,		// The number of words (not bytes!) to allocate for use as the task`s stack
 						  void* pvParameters,						// A value that will passed into the created task as the task`s parameter
-						  TickType_t capacity,						// Capacity or worst-case computation time
+						  TickType_t wcet,							// worst-case computation time
 						  TickType_t period,						// Period of Task
 						  TickType_t deadline)						// Deadline of Task
 {
@@ -147,7 +147,7 @@ BaseType_t createEDFTask( TaskFunction_t taskCode,					// Pointer to the task en
 	// calculate next deadline
 	edfTasks.tasksArray[edfTaskNumber].absoluteDeadline = currentTick + deadline;
 	// calculate latest start time
-	edfTasks.tasksArray[edfTaskNumber].lastStartTime = currentTick + deadline - capacity;
+	edfTasks.tasksArray[edfTaskNumber].lastStartTime = currentTick + deadline - wcet;
 	// status of task creation
 	BaseType_t xReturned;
 	// create normal freeRTOS task
@@ -156,8 +156,8 @@ BaseType_t createEDFTask( TaskFunction_t taskCode,					// Pointer to the task en
 		vTaskSuspend( edfTasks.tasksArray[edfTaskNumber].taskHandle );
 	// set task name
 	edfTasks.tasksArray[edfTaskNumber].taskName = taskName;
-	// set capacity of task
-	edfTasks.tasksArray[edfTaskNumber].wcet = capacity;
+	// set wcet of task
+	edfTasks.tasksArray[edfTaskNumber].wcet = wcet;
 	// set period of task
 	edfTasks.tasksArray[edfTaskNumber].period = period;
 	// increment number of tasks
@@ -166,8 +166,10 @@ BaseType_t createEDFTask( TaskFunction_t taskCode,					// Pointer to the task en
 	return xReturned;
 }
 
-BaseType_t deleteEDFTask( const char* taskName)
+void deleteEDFTask( const char* taskName)
 {
+	// buffer taskhandle for deletion
+	TaskHandle_t bufferToDeleteHandle;
 	// flag to control task deletion
 	uint32_t taskDeleted = -1;
 	// init edfTaskStruct
@@ -186,8 +188,9 @@ BaseType_t deleteEDFTask( const char* taskName)
 		// compare tasks names
 		if( strcmp(taskName, edfTasks.tasksArray[taskCounter].taskName) == 0 )
 		{
-			// delete task
-			vTaskDelete( edfTasks.tasksArray[taskCounter].taskHandle );
+			// buffer to delete task
+			bufferToDeleteHandle = edfTasks.tasksArray[taskCounter].taskHandle;
+//			vTaskDelete( edfTasks.tasksArray[taskCounter].taskHandle );
 			// set flag
 			taskDeleted = taskCounter;
 			// decrease number of edf tasks
@@ -207,25 +210,18 @@ BaseType_t deleteEDFTask( const char* taskName)
 	{
 		vTaskPrioritySet( edfTasks.idleTask, tskIDLE_PRIORITY);
 	}
-	// if task deletion was successful return pdTRUE, else pdFALSE
-	if( taskDeleted == -1)
-	{
-		return pdFALSE;
-	}
-	else
-	{
-		return pdTRUE;
-	};
+	// delete selected task
+	vTaskDelete( bufferToDeleteHandle );
 }
 
 //	this hook is called if no task is in ready state
 void vApplicationIdleHook( void )
 {
 	// set freeRTOS idle task priority to EDF_IDLE_PRIORITY once
-	if (edfTasks.numberOfEDFTasks > 0)
+	if( edfTasks.numberOfEDFTasks > 0 )
 	{
 		// change priority of freeRTOS idleTask
-		if( edfTasks.idleTaskCreated == pdFALSE)
+		if( edfTasks.idleTaskCreated == pdFALSE )
 		{
 			// get freeRTOS idleTask taskhandle
 			edfTasks.idleTask = xTaskGetIdleTaskHandle();

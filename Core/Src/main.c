@@ -81,67 +81,6 @@ static const uint8_t ucDNSServerAddress[ 4 ] = { configDNS_SERVER_ADDR0, configD
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
-TaskHandle_t* tickTestHandle = NULL;
-void printTick( void* pvParameters )
-{
-	char buffer[100];
-    for( ;; )
-    {
-    	snprintf(buffer, sizeof(buffer), "Tick: %lu", xTaskGetTickCount());
-    	debugPrintln(buffer);
-    }
-}
-
-// test task 1
-void task1( void* pvParameters )
-{
-    for( ;; )
-    {
-		#if DEBUG_MODE
-			edfTasks.tasksArray[0].startTime = xTaskGetTickCount();
-		#endif
-		TickType_t currentTick = xTaskGetTickCount();
-		while( (xTaskGetTickCount() - currentTick) < 5)
-		{
-		    unsigned int test = 0;
-		}
-		#if DEBUG_MODE
-			edfTasks.tasksArray[0].stopTime = xTaskGetTickCount();
-			edfTasks.tasksArray[0].lastRunningTime = edfTasks.tasksArray[0].stopTime - edfTasks.tasksArray[0].startTime;
-			if ( edfTasks.tasksArray[0].lastRunningTime > edfTasks.tasksArray[0].maxRunningTime )
-			{
-				edfTasks.tasksArray[0].maxRunningTime = edfTasks.tasksArray[0].lastRunningTime;
-			}
-		#endif
-		rescheduleEDF();
-    }
-}
-
-// test task 2
-void task2( void* pvParameters )
-{
-    for( ;; )
-    {
-		#if DEBUG_MODE
-			edfTasks.tasksArray[1].startTime = xTaskGetTickCount();
-		#endif
-		TickType_t currentTick = xTaskGetTickCount();
-		while( (xTaskGetTickCount() - currentTick) < 5)
-		{
-		    unsigned int test = 0;
-		}
-		#if DEBUG_MODE
-			edfTasks.tasksArray[1].stopTime = xTaskGetTickCount();
-			edfTasks.tasksArray[1].lastRunningTime = edfTasks.tasksArray[1].stopTime - edfTasks.tasksArray[1].startTime;
-			if ( edfTasks.tasksArray[1].lastRunningTime > edfTasks.tasksArray[1].maxRunningTime )
-			{
-				edfTasks.tasksArray[1].maxRunningTime = edfTasks.tasksArray[1].lastRunningTime;
-			}
-		#endif
-		rescheduleEDF();
-    }
-}
-
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -208,14 +147,10 @@ int main(void)
                    ucGatewayAddress,
                    ucDNSServerAddress,
                    ucMACAddress );
-//  createEDFTask(task1, "task1", (unsigned short ) 500, NULL, 5, 10, 10);
-//  createEDFTask(task2, "task2", (unsigned short ) 500, NULL, 5, 10, 10);
-//  createEDFTask(printTick, "printTick", (unsigned short ) 300, NULL, 5, 50, 40);
   /* start the freertos scheduler */
   #if DEBUG_MODE
   	  debugPrintln("Start Scheduler");
   #endif
-//  xTaskCreate( printTick, "printTick", ( unsigned short ) 500 , NULL, 5, tickTestHandle );
   vTaskStartScheduler();
   /* USER CODE END 2 */
 

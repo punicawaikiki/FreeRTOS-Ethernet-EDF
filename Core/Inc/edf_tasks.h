@@ -90,7 +90,7 @@ void rescheduleEDF ( void );
 // Name: deleteEDFTask
 // Parameters: const char* taskName
 // Declaration
-BaseType_t deleteEDFTask( const char* taskName);
+void deleteEDFTask( const char* taskName);
 
 // Return Type: void
 // Name: vApplicationIdleHook
