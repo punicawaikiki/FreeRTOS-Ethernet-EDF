@@ -66,7 +66,7 @@ The USART print out can be disabled/enabled in main.h as under the following lin
 
 ## Portability
 
-The whole EDF Scheduler consists if two files (edf_tasks.h and edf_tasks.c) and can easily be ported to other projects and boards.  
+The whole EDF Scheduler consists of two files (edf_tasks.h and edf_tasks.c) and can easily be ported to other projects and boards.  
 :warning: **The minimum Stack size for FreeRTOS task must be adjusted at least to 200 words.**
 
 ## Contribution
