@@ -39,9 +39,30 @@ createEDFTask(udpSendingTask, "UDPSend", (unsigned short ) 400, NULL, 2, 10, 10)
 ```
 :warning: **Attention!** Modify tasks characteristics can be result to a deadlock or receiving ethernet buffer overflow. Change the values only if you know how the system is working.
 
+## Installation
+
+The binary file can be found under the folder Debug in the repository. Download this file and copy it to the STM32F769I-Disc0 board.  
+:warning: **This repository contains only the matching driver and properties for the STM32F769I-Disc0 board.** Please only use the binary file for this board.
 
 ### Interface
 There is also an interface available for cummunication between the host computer and the STM32F769I-Disc0 board, which is located under [Python EDF Interface](https://gitlab.fa-wi.de/punicawaikiki/edf-python-interface).
+
+### Enhanced EDF Scheduler informations
+
+In the "main.h" file a DEBUG_MODE flag is stored, which displays debug messages when activated via the USB port with the help of a USART.  
+The Properties of the USART Connection are as follows:
+
+- Port: STM32F769I-Disc0 USB Port 
+- Speed: 115200 B/s
+- Databits: 8
+- Parity: None
+- Stop Bits: 1
+- Flow Control: None
+
+The USART print out can be disabled/enabled in main.h as under the following line: 
+```C
+#define DEBUG_MODE ( 1 ) // switch to zero to disable USART print outs
+```
 
 ## Portability
 
