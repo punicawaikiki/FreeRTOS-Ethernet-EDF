@@ -41,7 +41,7 @@ createEDFTask(udpSendingTask, "UDPSend", (unsigned short ) 400, NULL, 2, 10, 10)
 
 ## Installation
 
-The binary file can be found under the folder Debug in the repository. Download this file and copy it to the STM32F769I-Disc0 board.  
+The binary file can be found under the folder Debug in the repository or directly download it [here](https://gitlab.fa-wi.de/punicawaikiki/freertos-ethernet-edf/-/raw/master/Debug/freertos-ethernet-edf.bin). Download this file and copy it to the STM32F769I-Disc0 board.  
 :warning: **This repository contains only the matching driver and properties for the STM32F769I-Disc0 board.** Please only use the binary file for this board.
 
 ### Interface
