@@ -62,22 +62,9 @@ static BaseType_t xTasksAlreadyCreated = pdFALSE;
 		#if DEBUG_MODE
     		debugPrintln("Network is up, create Tasks");
 		#endif
-//		createEDFTask(udpReceivingTask, "UDPReceive", (unsigned short ) 500, NULL, 2, 20, 15);
-//		createEDFTask(calculateFFT, "FFT", (unsigned short ) 500, NULL, 3, 20, 15);
-//		createEDFTask(udpSendingTask, "UDPSend", (unsigned short ) 500, NULL, 2, 20, 15);
-//		createEDFTask(udpReceivingTask, "UDPReceive", (unsigned short ) 500, NULL, 2, 10, 10);
-//		createEDFTask(calculateFFT, "FFT", (unsigned short ) 500, NULL, 3, 10, 10);
-//		createEDFTask(udpSendingTask, "UDPSend", (unsigned short ) 500, NULL, 2, 10, 10);
-//		createEDFTask(udpReceivingTask, "UDPReceive", (unsigned short ) 500, NULL, 1, 5, 5);
-//		createEDFTask(calculateFFT, "FFT", (unsigned short ) 500, NULL, 1, 5, 5);
-//		createEDFTask(udpSendingTask, "UDPSend", (unsigned short ) 500, NULL, 1, 5, 5);
-//		createEDFTask(udpReceivingTask, "UDPReceive", (unsigned short ) 100, NULL, 2, 2, 2);
-		createEDFTask(udpReceivingTask, "UDPReceive", (unsigned short ) 200, NULL, 2, 10, 10);
-		createEDFTask(calculateFFT, "FFT", (unsigned short ) 200, NULL, 2, 10, 10);
-		createEDFTask(udpSendingTask, "UDPSend", (unsigned short ) 400, NULL, 2, 10, 10);
-//    	xTaskCreate( udpReceivingTask, "UDPReceive", ( unsigned short ) 500 , NULL, 3, UDPReceiveTaskHandle );
-//    	xTaskCreate( calculateFFT, "FFT", ( unsigned short ) 500 , NULL, 1, FFTTaskHandle );
-//    	xTaskCreate( udpSendingTask, "UDPSend", ( unsigned short ) 500 , NULL, 1, UDPSendTaskHandle );
+		createEDFTask(udpReceivingTask, "UDPReceive", (unsigned short ) 200, NULL, 2, 10, 10); // create Receiving task (wcet 2ms, period 10ms, deadline 10ms)
+		createEDFTask(calculateFFT, "FFT", (unsigned short ) 200, NULL, 2, 10, 10); // create FFT task (wcet 2ms, period 10ms, deadline 10ms)
+		createEDFTask(udpSendingTask, "UDPSend", (unsigned short ) 400, NULL, 2, 10, 10); // create Sending task (wcet 2ms, period 10ms, deadline 10ms)
         /* Create the tasks that use the TCP/IP stack if they have not already
         been created. */
         if( xTasksAlreadyCreated == pdFALSE )
