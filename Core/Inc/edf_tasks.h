@@ -7,6 +7,9 @@
 #include "task.h"
 #include "main.h"
 
+/* DEBUG FLAG */
+#define DEBUG_MODE ( 1 ) // switch to zero to disable USART print outs
+
 // defines the maximum number of edf tasks
 #define MAX_EDF_TASKS 10
 
@@ -15,12 +18,6 @@
 #define EDF_IDLE_PRIORITY tskIDLE_PRIORITY + 1
 #define EDF_ENABLED_PRIOTIRY tskIDLE_PRIORITY + 2
 #define EDF_SCHEDULE_PRIORITY tskIDLE_PRIORITY + 3
-
-//#define EDF_DISABLED_PRIORITY configMAX_PRIORITIES - 4
-//#define EDF_IDLE_PRIORITY configMAX_PRIORITIES - 3
-//#define EDF_ENABLED_PRIOTIRY configMAX_PRIORITIES - 2
-//#define EDF_SCHEDULE_PRIORITY configMAX_PRIORITIES - 1
-
 
 /* struct with preferences for a EDF Task */
 typedef struct
