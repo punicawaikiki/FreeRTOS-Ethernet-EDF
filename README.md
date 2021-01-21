@@ -10,7 +10,7 @@ The Demo itselfs consists of three tasks:
 3. sending
 
 ### Task 1 Receiving
-The receiving task waits for data received over UDP port 55556. The FFT supports a 2^11 (2048) calculation, which means the received data must contain 2048 float sample points. The sample data itself is limited to the ethernet paket size of 1518 bytes. Which means, the data must be splitted in 8 UDP pakets and each of these pakets contains a struct of 256 floats and the paket number (1-8). The resulting size are $256 * 4 bytes + 1 * 4 bytes = 1024 bytes$ each UDP paket. When the task has received the 2048 samples, it sends them to a FreeRTOS queue.
+The receiving task waits for data received over UDP port 55556. The FFT supports a 2048 calculation, which means the received data must contain 2048 float sample points. The sample data itself is limited to the ethernet paket size of 1518 bytes. Which means, the data must be splitted in 8 UDP pakets and each of these pakets contains a struct of 256 floats and the paket number (1-8). The resulting size are $256 * 4 bytes + 1 * 4 bytes = 1024 bytes$ each UDP paket. When the task has received the 2048 samples, it sends them to a FreeRTOS queue.
 
 ### Task 2 FFT
 The FFT Calculation task waits for data from the receiving task. When the data are available it will calculate the FFT with the size of 2048, after this the magnitude based on the FFT results will be calculated. Finally the result of the magnitude calculation will be send to another FreeRTOS queue.
@@ -41,7 +41,7 @@ createEDFTask(udpSendingTask, "UDPSend", (unsigned short ) 400, NULL, 2, 10, 10)
 
 ## Installation
 
-The binary file can be found under the folder Debug in the repository. Download this file and copy it to the STM32F769I-Disc0 board.  
+The binary file can be found under the folder Debug in the repository or directly download it [here](https://gitlab.fa-wi.de/punicawaikiki/freertos-ethernet-edf/-/raw/master/Debug/freertos-ethernet-edf.bin). Download this file and copy it to the STM32F769I-Disc0 board.  
 :warning: **This repository contains only the matching driver and properties for the STM32F769I-Disc0 board.** Please only use the binary file for this board.
 
 ### Interface
