@@ -26,7 +26,7 @@ typedef struct
 	const char* taskName;					// task name
 	BaseType_t taskCreated;					// flag to see if task is created
 	TickType_t wcet;						// worst compution execution time
-	TickType_t period;						// The priority at which the created task will execute
+	TickType_t period;						// period of task
 	TickType_t lastStartTime;				// task relative deadline, i.e. the maximum acceptable delay for its processing
 	TickType_t absoluteDeadline;	    	// task absolute deadline
 	TickType_t relativeDeadline;			// task relative deadline
