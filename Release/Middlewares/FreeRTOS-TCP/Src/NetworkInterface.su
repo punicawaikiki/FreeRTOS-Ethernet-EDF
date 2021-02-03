@@ -1,0 +1,12 @@
+NetworkInterface.c:1116:13:prvEthernetUpdateConfig	16	static
+NetworkInterface.c:1233:13:prvEMACHandlerTask	64	static,ignoring_inline_asm
+NetworkInterface.c:1058:12:xSTM32_PhyRead	16	static
+NetworkInterface.c:1083:12:xSTM32_PhyWrite	16	static
+NetworkInterface.c:310:6:HAL_ETH_RxCpltCallback	16	static,ignoring_inline_asm
+NetworkInterface.c:328:6:HAL_ETH_TxCpltCallback	16	static,ignoring_inline_asm
+NetworkInterface.c:396:12:xNetworkInterfaceInitialise	40	static
+NetworkInterface.c:654:12:xNetworkInterfaceOutput	24	static,ignoring_inline_asm
+NetworkInterface.c:1108:6:vMACBProbePhy	8	static
+NetworkInterface.c:1195:12:xGetPhyLinkStatus	0	static
+NetworkInterface.c:1214:6:vNetworkInterfaceAllocateRAMToBuffers	8	static
+NetworkInterface.c:1324:6:ETH_IRQHandler	0	static

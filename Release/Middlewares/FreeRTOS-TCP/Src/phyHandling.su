@@ -1,0 +1,6 @@
+phyHandling.c:176:6:vPhyInitialise	16	static
+phyHandling.c:188:12:xPhyDiscover	24	static
+phyHandling.c:306:12:xPhyConfigure	56	static
+phyHandling.c:473:12:xPhyFixedValue	24	static
+phyHandling.c:509:12:xPhyStartAutoNegotiation	72	static
+phyHandling.c:699:12:xPhyCheckLinkStatus	40	static

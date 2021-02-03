@@ -1,0 +1,4 @@
+edf_tasks.c:18:6:rescheduleEDF	152	static,ignoring_inline_asm
+edf_tasks.c:133:12:createEDFTask	48	static
+edf_tasks.c:169:6:deleteEDFTask	96	static
+edf_tasks.c:218:6:vApplicationIdleHook	24	static
